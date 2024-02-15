@@ -627,7 +627,7 @@ plotCellProximityFeats(seqfish_mini,
                        method = 'dotplot')
 ```
 
-![](images/mini_seqfish/30-plotCellProximityGenes.png)
+![](images/mini_seqfish/30-plotCellProximityFeats.png)
 
 ```{r, eval=FALSE}
 ## filter genes
