@@ -29,6 +29,10 @@ Visit the Giotto [Discussions](https://github.com/drieslab/Giotto/discussions) p
 
 With Giotto version 4.0, we updated the website at http://giottosuite.com, you can still find the previous website at https://giottosuite.readthedocs.io/en/latest/
 
+## NOTE
+
+This repository hosts the Giotto website files, it should not be used to update Giotto R code. If you want to update the Giotto package, use the https://github.com/drieslab/Giotto repo.
+
 ## Website description  
 
 - **Get started:** Here you can find more advanced information about the Giotto object, Giotto ecosystem, Giotto configuration, and installation FAQs.
