@@ -7,6 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# Dataset explanation
 
 This example uses subcellular data from Nanostring's CosMx Spatial Molecular Imager. This publicly available [dataset](https://nanostring.com/resources/smi-ffpe-dataset-lung12-data/) is from an FFPE sample of non-small-cell lung cancer (NSCLC). This example works with Lung12.
 
@@ -36,6 +37,7 @@ library(Giotto)
 # pal10 = rcartocolor::carto_pal(n = 10, name = 'Pastel')
 pal10 = c("#66C5CC","#F6CF71","#F89C74","#DCB0F2","#87C55F",
           "#9EB9F3","#FE88B1","#C9DB74","#8BE0A4","#B3B3B3")
+
 # viv10 = rcartocolor::carto_pal(n = 10, name = 'Vivid')
 viv10 = c("#E58606","#5D69B1","#52BCA3","#99C945","#CC61B0",
           "#24796C","#DAA51B","#2F8AC4","#764E9F","#A5AA99")
@@ -72,10 +74,10 @@ Additionally, a comparison of the count matrix produced through the convenience 
 data_path = '/path/to/data/Lung12-Flat_files_and_images/'
 
 ## create giotto cosmx object
-fov_join = createGiottoCosMxObject(cosmx_dir = data_path,
-                                   data_to_use = 'subcellular', # only subcellular
-                                   FOVs = c(2,3,4),
-                                   instructions = instrs)
+fov_join <- createGiottoCosMxObject(cosmx_dir = data_path,
+                                    data_to_use = 'subcellular', # only subcellular
+                                    FOVs = c(2,3,4),
+                                    instructions = instrs)
 
 showGiottoFeatInfo(fov_join)
 showGiottoSpatialInfo(fov_join)
@@ -112,27 +114,6 @@ tx_coord_all[, table(z)]
 tx_coord_all[, table(CellComp)]
 ```
 
-
-
-```{r, eval=FALSE}
-# [1] "fov"         "cell_ID"     "x_global_px" "y_global_px"
-# [5] "x_local_px"  "y_local_px"  "z"           "target"     
-# [9] "CellComp" 
-# 
-# z
-#      -1       0       1       2       3       4       5       6 
-#   23723 3466178 2522315 2694973 2686531 2648926 2660346 2711105 
-#       7       8       9      10      11      12      13      14 
-# 2855259 3700831   36840    6594    6466    6787    6944    6959 
-#      15      16 
-#   17603       2 
-#   
-# CellComp
-#         0 Cytoplasm  Membrane   Nuclear 
-#   6619744   5770549   3368411  10299678
-```
-
-
 ## 2.2 Split detections by features vs negative probes
 
 `tx_file.csv` contains information on both actual features (960 targeted gene probes in this dataset) and negative probes (20) that are targeted to alien sequences defined by the External RNA Controls  Consortium (ERCC) that do not exist in human tissue. These two types of detections will be treated as separate feature types (`feat_type`) and placed in separate expression matrices.
@@ -157,21 +138,6 @@ cat('\nFeatures: ', feat_coords_all[, .N], '\n',
     'NegProbes: ', neg_coords_all[, .N])
 ```
 
-```{r, eval=FALSE}
-# Negative Probe IDs
-#  [1] "NegPrb15" "NegPrb18" "NegPrb7"  "NegPrb21" "NegPrb13"
-#  [6] "NegPrb10" "NegPrb11" "NegPrb9"  "NegPrb3"  "NegPrb16"
-# [11] "NegPrb23" "NegPrb14" "NegPrb20" "NegPrb8"  "NegPrb19"
-# [16] "NegPrb6"  "NegPrb5"  "NegPrb12" "NegPrb17" "NegPrb22"
-# 
-# Number of feature IDs
-# [1] 960
-# 
-# Features:  25875734
-# NegProbes:  182648
-```
-
-
 ### 2.2.1 Preview negative probes (optional)
 
 Previewing the probe information can be done by converting to `giottoPoints` and then using `plot()`. Here we show a preview of the negative probes.
@@ -183,9 +149,11 @@ Previewing the probe information can be done by converting to `giottoPoints` and
 neg_points = createGiottoPoints(
   x = neg_coords_all[, .(target, x_global_px, y_global_px)]
 )
-plot(neg_points, point_size = 0.2, feats = neg_IDs)
-```
 
+plot(neg_points, 
+     point_size = 0.2, 
+     feats = neg_IDs)
+```
 
 ![](images/nanostring_cosmx_lung_cancer/preview_negprb.png)
 
@@ -214,15 +182,12 @@ gobjects_list = list()
 id_set = c('02', '03', '04')
 ```
 
-
 # 3. Create a Giotto Object for each FOV
-
 
 ```{r, eval=FALSE}
 for(fov_i in 1:length(id_set)) {
 
   fov_id = id_set[fov_i]
-
 
   # 1. original composite image as png
   original_composite_image = paste0(data_path, 'CellComposite/CellComposite_F0', fov_id,'.jpg')
@@ -269,7 +234,6 @@ for(fov_i in 1:length(id_set)) {
 
 
   fovsubset = convertGiottoLargeImageToMG(giottoLargeImage = composite,
-                                          #mg_name = 'composite',
                                           gobject = fovsubset,
                                           return_gobject = TRUE)
 
@@ -290,11 +254,11 @@ x_shifts = fov_offset_file[id_match]$x_global_px
 y_shifts = fov_offset_file[id_match]$y_global_px
 
 # Create Giotto object that includes all selected FOVs
-fov_join = joinGiottoObjects(gobject_list = gobjects_list,
-                             gobject_names = new_names,
-                             join_method = 'shift',
-                             x_shift = x_shifts,
-                             y_shift = y_shifts)
+fov_join <- joinGiottoObjects(gobject_list = gobjects_list,
+                              gobject_names = new_names,
+                              join_method = 'shift',
+                              x_shift = x_shifts,
+                              y_shift = y_shifts)
 ```
 
 
@@ -328,13 +292,11 @@ spatInSituPlotPoints(fov_join,
                                        save_name = '1_inSituFeats'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/1_inSituFeats.png)
 
 ## 5.1 Visualize Cell Centroids
 
 The standard `spatPlot2D()` function can also be used, but this works off only the aggregated information that is assembled based on the subcellular information. Plotting information based on cell centroids can be done through this function.
-
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = fov_join,
@@ -348,7 +310,6 @@ spatPlot2D(gobject = fov_join,
                              save_name = '2_spatCentroids'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/2_spatCentroids.png)
 
 # 6. Aggregate subcellular features
@@ -357,27 +318,29 @@ Giotto supports working directly with the subcellular features in order to gener
 
 When both the raw subcellular information and the pre-made expression matrix are loaded in at the same time, the subcellular data and all data generated from it should be given the spatial unit `'cell'` and the pre-generated aggregated information should be given a different spatial unit such as `'cell_agg'` to differentiate between the two sources of information.
 
-
 In this step, we will be aggregating the feature points of `'rna'` and `'neg_probe'` into the `'cell'` spatial unit.
-
 
 ```{r, eval=FALSE}
 # Find the feature points overlapped by polygons. This overlap information is then
 # returned to the relevant giottoPolygon object's overlaps slot.
-fov_join = calculateOverlapRaster(fov_join, feat_info = 'rna')
-fov_join = calculateOverlapRaster(fov_join, feat_info = 'neg_probe')
+fov_join <- calculateOverlapRaster(fov_join, 
+                                   feat_info = 'rna')
+
+fov_join <- calculateOverlapRaster(fov_join, 
+                                   feat_info = 'neg_probe')
 
 # Convert the overlap information into a cell by feature expression matrix which
 # is then stored in the Giotto object's expression slot
-fov_join = overlapToMatrix(fov_join, feat_info = 'rna')
-fov_join = overlapToMatrix(fov_join, feat_info = 'neg_probe')
+fov_join <- overlapToMatrix(fov_join, 
+                            feat_info = 'rna')
+
+fov_join <- overlapToMatrix(fov_join, 
+                            feat_info = 'neg_probe')
 
 showGiottoExpression(fov_join)
 ```
 
-
 ## 6.1 Plot histograms of total counts per cell
-
 
 ```{r, eval=FALSE}
 filterDistributions(fov_join,
@@ -410,7 +373,6 @@ filterDistributions(fov_join,
 
 Density-based representations may sometimes be preferred instead of viewing the raw points information, especially when points are dense enough that there is overplotting. After overlaps information has been calculated, `spatInSituPlotDensity()` can be used in order to get a general idea of how much expression there is of a feature.
 
-
 ```{r, eval=FALSE}
 spatInSituPlotDensity(gobject = fov_join,
                       feats = c("MMP2", "VEGFA", "IGF1R",
@@ -420,11 +382,9 @@ spatInSituPlotDensity(gobject = fov_join,
                                         save_name = '4_inSituDens'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/4_inSituDens.png)
 
 ## 6.3 Extract Data from Giotto Object
-
 
 ```{r, eval=FALSE}
 # combine cell data
@@ -440,15 +400,12 @@ featoverlapmeta = combineFeatureOverlapData(fov_join,
                                             feat_type = c('rna'))
 ```
 
-
 ## 6.4 Comparison of Giotto aggregated and Nanostring provided matrices
 
 Comparison of Giotto's aggregated matrix results and those provided by Nanostring. Only FOV2 will be used in this comparison. Matrices are expected to be similar when the same sets of cell polygons/masks are used for both.
 
-
 ```{r, eval=FALSE}
 # Load and prepare data
-
 nanoDT = data.table::fread(paste0(data_path, 'Lung12_exprMat_file.csv'))
 test1 = nanoDT[fov == 2]
 
@@ -457,7 +414,7 @@ test1[, cell_ID := paste0('cell_', cell_ID)]
 test1[, cell_ID := paste0('f', fov, '-', cell_ID)]
 test1[, fov := NULL]
 
-test1mat = GiottoClass::t_flex(GiottoUtils::dt_to_matrix(test1))
+test1mat = t_flex(GiottoUtils::dt_to_matrix(test1))
 testnano_f2 = test1mat
 
 # Remove cell_0 (all tx counts that do not fall within a polygon)
@@ -506,11 +463,12 @@ pl_g = pl_g + theme(panel.grid.major = element_blank(),
                     panel.grid.minor = element_blank(),
                     panel.background = element_rect(fill = "black"))
 
-
 combplot = cowplot::plot_grid(pl_n, pl_g,
                               nrow = 2,
                               labels = 'AUTO')
 combplot
+
+ggsave(paste0(results_folder,"mat_comparison.png"))
 ```
 
 ![](images/nanostring_cosmx_lung_cancer/mat_comparison.png)
@@ -518,6 +476,7 @@ combplot
 ```{r, eval=FALSE}
 # directly compare differences in matrix values (counts assigned)
 vartestDT = testDT[, list(var = var(x), diff = diff(x), mean = mean(x)), by = .(i,j)]
+
 data.table::setorder(vartestDT, var)
 
 # check arbitrary index values
@@ -532,6 +491,8 @@ pl = pl + theme_bw()
 pl = pl + labs(x = 'difference nanostring - Giotto')
 pl
 
+ggsave(paste0(results_folder,"values_diff.png"))
+
 testDT[order(x)]
 ```
 
@@ -541,14 +502,6 @@ testDT[order(x)]
 testDT[, .N, by = 'method']
 
 testDT[, method, by = combo][, sum(duplicated(combo))]
-```
-
-```{r, eval=FALSE}
-#        method      N
-# 1:     giotto 415952
-# 2: nanostring 416099
-# 
-# 411050
 ```
 
 
@@ -601,13 +554,13 @@ showGiottoExpression(fov_join)
 
 ```{r, eval=FALSE}
 # add statistics based on log normalized values for features rna and negative probes
-fov_join = addStatistics(gobject = fov_join,
-                         expression_values = 'normalized',
-                         feat_type = 'rna')
+fov_join <- addStatistics(gobject = fov_join,
+                          expression_values = 'normalized',
+                          feat_type = 'rna')
 
-fov_join = addStatistics(gobject = fov_join,
-                         expression_values = 'normalized',
-                         feat_type = 'neg_probe')
+fov_join <- addStatistics(gobject = fov_join,
+                          expression_values = 'normalized',
+                          feat_type = 'neg_probe')
 
 # View cellular data (default is feat = 'rna')
 showGiottoCellMetadata(fov_join)
@@ -621,7 +574,6 @@ showGiottoFeatMetadata(fov_join)
 # 8. View Transcript Total Expression Distribution
 
 ## 8.1 Histogram of log normalized data
-
 
 ```{r, eval=FALSE}
 filterDistributions(fov_join,
@@ -654,7 +606,6 @@ filterDistributions(fov_join,
 
 ## 8.2 Plot spatially as centroids
 
-
 ```{r, eval=FALSE}
 spatPlot2D(gobject = fov_join,
            cell_color = 'total_expr',
@@ -667,11 +618,9 @@ spatPlot2D(gobject = fov_join,
                              save_name = '5.3_color_centroids'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/5.3_color_centroids.png)
 
 ## 8.3 Plot spatially as color-scaled polygons
-
 
 ```{r, eval=FALSE}
 spatInSituPlotPoints(fov_join,
@@ -711,13 +660,12 @@ Detect highly variable genes using the pearson residuals method based on the 'pe
 
 PCA generation will also be based on the 'pearson' matrix. Scaling and centering of the PCA which is usually done by default will be skipped since the pearson matrix is already scaled.
 
-
 ```{r, eval=FALSE}
-fov_join = calculateHVF(fov_join,
-                        method = 'var_p_resid',
-                        expression_values = 'pearson',
-                        save_param = list(base_height = 5,
-                                          save_name = '6.1_pearson_HVF'))
+fov_join <- calculateHVF(fov_join,
+                         method = 'var_p_resid',
+                         expression_values = 'pearson',
+                         save_param = list(base_height = 5,
+                                           save_name = '6.1_pearson_HVF'))
 
 # print HVFs
 gene_meta = fDataDT(fov_join)
@@ -727,10 +675,10 @@ gene_meta[hvf == 'yes', feat_ID]
 ![](images/nanostring_cosmx_lung_cancer/6.1_pearson_HVF.png)
 
 ```{r, eval=FALSE}
-fov_join = runPCA(fov_join,
-                  scale_unit = FALSE,
-                  center = FALSE,
-                  expression_values = 'pearson')
+fov_join <- runPCA(fov_join,
+                   scale_unit = FALSE,
+                   center = FALSE,
+                   expression_values = 'pearson')
 
 # screeplot uses the generated PCA. No need to specify expr values
 screePlot(fov_join, 
@@ -745,12 +693,10 @@ plotPCA(fov_join,
         save_param = list(save_name = '6.3_PCA'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/6.2_screeplot.png)
 ![](images/nanostring_cosmx_lung_cancer/6.3_PCA.png)
 
 ## 9.2 Run UMAP
-
 
 ```{r, eval=FALSE}
 # Generate UMAP from PCA
@@ -762,11 +708,9 @@ plotUMAP(gobject = fov_join,
          save_param = list(save_name = '6.4_UMAP'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/6.4_UMAP.png)
 
 ## 9.3 Plot features on expression space
-
 
 ```{r, eval=FALSE}
 dimFeatPlot2D(gobject = fov_join,
@@ -781,13 +725,11 @@ dimFeatPlot2D(gobject = fov_join,
                                 save_name = '6.5_UMAP_feats'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/6.5_UMAP_feats.png)
 
 # 10. Cluster
 
 ## 10.1 Visualize clustering
-
 
 ```{r, eval=FALSE}
 fov_join <- createNearestNetwork(gobject = fov_join,
@@ -821,7 +763,6 @@ spatDimPlot2D(gobject = fov_join,
               spat_point_size = 1,
               save_param = list(save_name = '7.2_spatdim_leiden'))
 ```
-
 
 ![](images/nanostring_cosmx_lung_cancer/7.2_spatdim_leiden.png)
 
@@ -903,13 +844,11 @@ spatInSituPlotPoints(smallfov,
 
 Find spatially organized gene expression by examining the binarized expression of cells and their spatial neighbors.
 
-
 ```{r, eval=FALSE}
 # create spatial network based on physical distance of cell centroids
-fov_join = createSpatialNetwork(gobject = fov_join,
-                                minimum_k = 2,
-                                maximum_distance_delaunay = 50)
-
+fov_join <- createSpatialNetwork(gobject = fov_join,
+                                 minimum_k = 2,
+                                 maximum_distance_delaunay = 50)
 
 # perform Binary Spatial Extraction of genes - NOTE: Depending on your system this could take time
 km_spatialgenes = binSpect(fov_join)
@@ -925,13 +864,11 @@ spatFeatPlot2D(fov_join,
                save_param = list(save_name = '9_binspect_genes'))
 ```
 
-
 ![](images/nanostring_cosmx_lung_cancer/9_binspect_genes.png)
 
 # 13. Identify cluster differential expression genes
 
 ## 13.1 Violin plot
-
 
 ```{r, eval=FALSE}
 # Gini
@@ -941,6 +878,7 @@ markers = findMarkers_one_vs_all(gobject = fov_join,
                                  cluster_column = 'leiden_clus',
                                  min_feats = 1,
                                  rank_score = 2)
+
 # First 5 results by cluster
 markers[, head(.SD, 5), by = 'cluster']
 
@@ -1002,10 +940,10 @@ clusters_cell_types_lung = c('Normal Epithelial 1', 'Cancer', 'Stromal', 'B-line
 
 names(clusters_cell_types_lung) = 1:10
 
-fov_join = annotateGiotto(gobject = fov_join,
-                          annotation_vector = clusters_cell_types_lung,
-                          cluster_column = 'leiden_clus',
-                          name = 'cell_types')
+fov_join <- annotateGiotto(gobject = fov_join,
+                           annotation_vector = clusters_cell_types_lung,
+                           cluster_column = 'leiden_clus',
+                           name = 'cell_types')
 
 plotUMAP(fov_join,
          cell_color = 'cell_types',
@@ -1082,7 +1020,6 @@ Giotto uses many objects that include pointers to information that live on disk 
 
 `saveGiotto()` is a function that can save Giotto Suite projects into a contained structured directory that can then be properly loaded again later using `loadGiotto()`.
 
-
 ```{r, eval=FALSE}
 saveGiotto(gobject = fov_join,
            foldername = 'new_folder_name',
@@ -1096,7 +1033,7 @@ sessionInfo()
 ```{r, eval=FALSE}
 R version 4.3.2 (2023-10-31)
 Platform: x86_64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.3
+Running under: macOS Sonoma 14.3.1
 
 Matrix products: default
 BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
@@ -1118,36 +1055,36 @@ loaded via a namespace (and not attached):
   [1] tidyselect_1.2.0            viridisLite_0.4.2           dplyr_1.1.4                
   [4] farver_2.1.1                GiottoVisuals_0.1.4         bitops_1.0-7               
   [7] fastmap_1.1.1               SingleCellExperiment_1.24.0 RCurl_1.98-1.14            
- [10] rsvd_1.0.5                  digest_0.6.34               lifecycle_1.0.4            
+ [10] digest_0.6.34               rsvd_1.0.5                  lifecycle_1.0.4            
  [13] terra_1.7-71                dbscan_1.1-12               magrittr_2.0.3             
  [16] compiler_4.3.2              rlang_1.1.3                 tools_4.3.2                
  [19] igraph_2.0.1.1              utf8_1.2.4                  yaml_2.3.8                 
  [22] data.table_1.15.0           knitr_1.45                  S4Arrays_1.2.0             
  [25] labeling_0.4.3              reticulate_1.35.0           DelayedArray_0.28.0        
- [28] RColorBrewer_1.1-3          BiocParallel_1.36.0         abind_1.4-5                
+ [28] RColorBrewer_1.1-3          abind_1.4-5                 BiocParallel_1.36.0        
  [31] withr_3.0.0                 BiocGenerics_0.48.1         grid_4.3.2                 
  [34] stats4_4.3.2                fansi_1.0.6                 beachmat_2.18.0            
- [37] colorspace_2.1-0            future_1.33.1               progressr_0.14.0           
- [40] globals_0.16.2              scales_1.3.0                gtools_3.9.5               
- [43] MASS_7.3-60.0.1             SummarizedExperiment_1.32.0 cli_3.6.2                  
+ [37] future_1.33.1               colorspace_2.1-0            progressr_0.14.0           
+ [40] globals_0.16.2              MASS_7.3-60.0.1             scales_1.3.0               
+ [43] gtools_3.9.5                SummarizedExperiment_1.32.0 cli_3.6.2                  
  [46] rmarkdown_2.25              crayon_1.5.2                ragg_1.2.7                 
- [49] generics_0.1.3              rstudioapi_0.15.0           future.apply_1.11.1        
+ [49] generics_0.1.3              future.apply_1.11.1         rstudioapi_0.15.0          
  [52] rjson_0.2.21                zlibbioc_1.48.0             parallel_4.3.2             
  [55] XVector_0.42.0              matrixStats_1.2.0           vctrs_0.6.5                
  [58] Matrix_1.6-5                jsonlite_1.8.8              BiocSingular_1.18.0        
  [61] IRanges_2.36.0              S4Vectors_0.40.2            ggrepel_0.9.5              
  [64] irlba_2.3.5.1               scattermore_1.2             listenv_0.9.1              
- [67] systemfonts_1.0.5           magick_2.8.2                GiottoUtils_0.1.3          
+ [67] systemfonts_1.0.5           magick_2.8.2                GiottoUtils_0.1.5          
  [70] parallelly_1.36.0           glue_1.7.0                  codetools_0.2-19           
- [73] uwot_0.1.16                 cowplot_1.1.3               RcppAnnoy_0.0.22           
- [76] gtable_0.3.4                deldir_2.0-2                GenomeInfoDb_1.38.5        
+ [73] cowplot_1.1.3               uwot_0.1.16                 RcppAnnoy_0.0.22           
+ [76] gtable_0.3.4                deldir_2.0-2                GenomeInfoDb_1.38.6        
  [79] GenomicRanges_1.54.1        ScaledMatrix_1.10.0         munsell_0.5.0              
  [82] tibble_3.2.1                pillar_1.9.0                htmltools_0.5.7            
  [85] GenomeInfoDbData_1.2.11     R6_2.5.1                    textshaping_0.3.7          
  [88] evaluate_0.23               lattice_0.22-5              Biobase_2.62.0             
  [91] png_0.1-8                   backports_1.4.1             SpatialExperiment_1.12.0   
- [94] Rcpp_1.0.12                 SparseArray_1.2.3           checkmate_2.3.1            
- [97] colorRamp2_0.1.0            xfun_0.41                   MatrixGenerics_1.14.0      
-[100] pkgconfig_2.0.3  
+ [94] Rcpp_1.0.12                 SparseArray_1.2.4           checkmate_2.3.1            
+ [97] colorRamp2_0.1.0            xfun_0.42                   MatrixGenerics_1.14.0      
+[100] pkgconfig_2.0.3
 ```
 
