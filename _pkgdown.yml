@@ -10,6 +10,17 @@ authors:
 
 
 template:
+  includes:
+    in_header: |
+       <!-- Global site tag (gtag.js) - Google Analytics -->
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-2V1K0KPLJC"></script>
+       <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+
+         gtag('config', 'G-2V1K0KPLJC');
+       </script>
   bootstrap: 3
   bslib:
     bg: "#FFFFFF"
@@ -46,7 +57,7 @@ navbar:
         href: articles/structure.html
       - text: FAQs
         href: articles/faqs.html
-      - text: How to report a bug 
+      - text: How to report a bug
         href: articles/github_issues.html
       - text: Contributing guide
         href: articles/contributing.html
