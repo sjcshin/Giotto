@@ -365,7 +365,6 @@ reference:
   - GiottoData::getSpatialDataset
   - GiottoClass::readExprMatrix
   - get10Xmatrix
-  - get10XmatrixOLD
   - get10Xmatrix_h5
   - GiottoClass::stitchFieldCoordinates
   - GiottoClass::stitchTileCoordinates
