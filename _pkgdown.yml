@@ -370,6 +370,7 @@ reference:
   - GiottoClass::stitchTileCoordinates
   - readPolygonFilesVizgen
   - readPolygonFilesVizgenHDF5
+  - readPolygonVizgenParquet
   - getGEFtxCoords
 - title: Images
   desc: Functions to work with images for a Giotto object.

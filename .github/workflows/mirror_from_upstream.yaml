@@ -1,0 +1,39 @@
+name: Mirror from Upstream
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+  workflow_dispatch:    # Allow manual trigger
+
+jobs:
+  mirror-from-upstream:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
+
+    - name: Set up Git
+      run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+
+    - name: Fastforward from upstream
+      run: |
+        git remote add upstream https://github.com/drieslab/Giotto.git
+        git fetch upstream
+        git checkout suite
+        git merge --ff-only upstream/suite
+
+    - name: Check for fast-forward
+      run: |
+        if ! git merge-base --is-ancestor HEAD upstream/suite; then
+          echo "Fast-forward not possible. Aborting merge."
+          exit 1
+        fi
+
+    - name: Push changes
+      run: |
+        git push origin suite
