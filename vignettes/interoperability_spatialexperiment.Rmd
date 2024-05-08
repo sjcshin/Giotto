@@ -237,7 +237,7 @@ plotExpression(spe,
 ![](images/interoperability_spatialexperiment/8-expression.png)
 
 
-## 2. SpatialExperiment to Giotto object
+# 2. SpatialExperiment to Giotto object
 
 In this section, we load a sample dataset in the form of a SpatialExperiment object, convert it to Giotto and drive the downstream analysis with the Giotto toolkit.
 
@@ -413,6 +413,8 @@ heatmSpatialCorFeats(
     use_clus_name = 'spat_netw_clus',
     heatmap_legend_param = list(title = NULL),
     save_plot = TRUE,
+    show_plot =  TRUE,
+    return_plot = FALSE,
     save_param = list(base_height = 6, base_width = 8, units = 'cm'))
 ```
 
