@@ -1,15 +1,13 @@
 ---
-title: "Giotto_Seurat_interoperability"
+title: "Interoperability: Seurat"
 author: "Iqra Amin"
 date: "2024-03-06"
-output:
-  html_document: default
-  pdf_document: default
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Interoperability: Seurat}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # Introduction
 
