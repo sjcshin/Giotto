@@ -2,14 +2,12 @@
 title: "Giotto_Seurat_interoperability"
 author: "Iqra Amin"
 date: "2024-03-06"
-output:
-  html_document: default
-  pdf_document: default
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Interoperability: Seurat}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # Introduction
 
