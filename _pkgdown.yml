@@ -275,6 +275,7 @@ articles:
   contents:
   - interoperability_anndata
   - interoperability_spatialexperiment
+  - interoperability_seurat
 - title: Seq-Scope
   navbar: ~
   contents:
