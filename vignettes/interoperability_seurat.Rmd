@@ -80,6 +80,7 @@ First, we find HVF (highly varialble features) using the loess regression predic
 brainG <- calculateHVF(gobject = brainG, method = 'cov_loess')
 ```
 
+![](images/interoperability_seurat/0-HVF.png)
 then use HVF to compute the reduced dimensions using PCA.
 
 ```{r, eval=FALSE}
@@ -90,7 +91,11 @@ featgenes = feature_metadata[hvf == 'yes' & perc_cells > 4 & mean_expr_det > 0.5
 
 ## run PCA on expression values (default)
 brainG <- Giotto::runPCA(gobject = brainG, feats_to_use = featgenes, scale_unit = F, center = F)
+Giotto::plotPCA(brainG,
+                save_plot = TRUE)
 ```
+
+![](images/interoperability_seurat/1-PCA.png)
 
 Here, we'll proceed with running UMAP based on PCA dimension reduction and visualize the pre-clustering UMAP.
 
@@ -99,6 +104,8 @@ brainG <- Giotto::runUMAP(brainG, dimensions_to_use = 1:15)
 graph1 <- Giotto::plotUMAP(gobject = brainG)
 
 ```
+
+![](images/interoperability_seurat/2-UMAP.png)
 
 #### Clustering
 
@@ -124,7 +131,7 @@ graph2 <- Giotto::plotUMAP(
     point_size = 2.5
 )
 ```
-
+![](images/interoperability_seurat/3-UMAP.png)
 #### Spatial co-expression
 
 Using the spatial network previously established, we can employ the binSpect method to identify spatially variable genes.
@@ -175,7 +182,7 @@ graph3 <- heatmSpatialCorFeats(
     save_plot = TRUE
 )
 ```
-
+![](images/interoperability_seurat/4-heatmSpatialCorFeats.png)
 We'll proceed by isolating genes from individual co-expression modules and then consolidate them into meta-genes through aggregation.
 
 ```{r, eval=FALSE}
@@ -195,6 +202,7 @@ graph4 <- spatCellPlot(
 )   
 ```
 
+![](images/interoperability_seurat/5-spatCellPlot2D.png)
 
 ## Conversion of Giotto to Seurat V5
 
@@ -241,7 +249,7 @@ plot2 <- SpatialFeaturePlot(brain2, features = "nCount_rna") + theme(legend.posi
 wrap_plots(plot1, plot2)
 
 ```
-
+![](images/interoperability_seurat/6-cellCountdist.png)
 ####  Data Transformation
 
 To enhance the analysis, we apply SCTransform to perform data transformation on the RNA assay:
@@ -271,6 +279,7 @@ p2 <- SpatialDimPlot(brain2, label = TRUE, label.size = 3)
 p1 + p2
 ```
 
+![](images/interoperability_seurat/7-seuratUMAP.png)
 Additionally, we can highlight specific cell populations within the spatial dimensional plot:
 
 ```{r, eval=FALSE}
@@ -278,6 +287,7 @@ SpatialDimPlot(brain2, cells.highlight = CellsByIdentities(object = brain2, iden
     5, 8)), facet.highlight = TRUE, ncol = 3)
 ```
 
+![](images/interoperability_seurat/8-spatialDim.png)
 #### Identification of Spatially Variable Features
 
 To identify spatially variable features between clusters, the FindMarkers function is employed. Subsequently, we visualize the top spatially variable features using SpatialFeaturePlot:
@@ -286,6 +296,8 @@ To identify spatially variable features between clusters, the FindMarkers functi
 de_markers <- FindMarkers(brain2, ident.1 = 5, ident.2 = 6)
 SpatialFeaturePlot(object = brain2, features = rownames(de_markers)[1:3], alpha = c(0.1, 1), ncol = 3)
 ```
+
+![](images/interoperability_seurat/9-spatVarFeat.png)
 
 we identify spatially variable features within the spatial data. This is achieved through the `FindSpatiallyVariableFeatures` function, which calculates spatial statistics to determine the variability of features across spatial locations. In the following code chunk, we focus on the top 1000 variable features selected from the SCT assay using the Moransi selection method.
 
@@ -307,6 +319,8 @@ p2 <- SpatialDimPlot(cortex, crop = FALSE, label = TRUE, pt.size.factor = 1, lab
 p1 + p2
 ```
 
+![](images/interoperability_seurat/10-anatomicalRegionSubset.png)
+
 #### Working with multiple slices in Seurat
 
 To incorporate data from multiple slices in our analysis, we first load and transform the posterior slice:
@@ -322,7 +336,6 @@ Next, we merge the datasets obtained from the anterior and posterior slices:
 
 brain.merge <- merge(brain2, brainP)
 ```
-
 We set the default assay to "SCT" and combine variable features from both datasets:
 
 ```{r, eval=FALSE}
@@ -339,15 +352,17 @@ After performing PCA, identifying neighbors, clustering, and running UMAP, we vi
 ```{r, eval=FALSE}
 DimPlot(brain.merge, reduction = "umap", group.by = c("ident", "orig.ident"))
 ```
+![](images/interoperability_seurat/11-dimPlot.png)
 
 ```{r, eval=FALSE}
 SpatialDimPlot(brain.merge)
 ```
+![](images/interoperability_seurat/12-brainMerge.png)
 
 ```{r, eval=FALSE}
 SpatialFeaturePlot(brain.merge, features = c("Hpca", "Plp1"))
 ```
-
+![](images/interoperability_seurat/13-brainMerge2.png)
 ```{r, eval=FALSE}
 sessionInfo()
 ```
