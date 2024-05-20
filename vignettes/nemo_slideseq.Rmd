@@ -11,32 +11,49 @@ vignette: >
 
 Log in to your [Terra bio](https://app.terra.bio/) account and go to the left menu, select Library > Datasets
 
-![](images/nemo_slideseq/01_menu.png)
+```{r, echo=FALSE, out.width='30%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/01_menu.png")
+```
 
 On the datasets page, scroll down until you find the NeMO database
 
-![](images/nemo_slideseq/02_datasets.png)
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/02_datasets.png")
+```
 
-![](images/nemo_slideseq/03_datasets.png)
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/03_datasets.png")
+```
 
 # Load the dataset to a terra workspace
 
 By clicking on the Browse data button, you will be re-directed to the NeMO website. Use the filters menu to select the Slide-seq technology, then chose a sample to download and ddd the file to the cart.
 
-![](images/nemo_slideseq/04_nemo.png)
-![](images/nemo_slideseq/05_samples.png)
+
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/04_nemo.png")
+```
+
+
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/05_samples.png")
+```
 
 When selecting the sample, you will see multiple files available to download, including the fasta files. Uncheck the fasta files boxes and keep only the expression.mex.tar.gz file. 
 
 Click the Download button and select the option "Export to terra".
 
-![](images/nemo_slideseq/06_files.png)
+```{r, echo=FALSE, out.width='80%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/06_files.png")
+```
 
 You will be directed back to your terra bio account. Select the Workspace to add your dataset.
 
 You will find the new file under the Data tab > file section.
 
-![](images/nemo_slideseq/07_data.png)
+```{r, echo=FALSE, out.width='90%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/07_data.png")
+```
 
 # Open the dataset
 
@@ -46,7 +63,9 @@ https://data.nemoarchive.org/biccn/grant/rf1_macosko/macosko/spatial_transcripto
 Open an cloud environment, either using Jupyter notebooks or RStudio. Open the terminal and load the file to your session by running the command `wget <file url>`.
 Uncompress the file, you will get a folder with three files:
 
-![](images/nemo_slideseq/08_files.png)
+```{r, echo=FALSE, out.width='50%', fig.align='center'}
+knitr::include_graphics("images/nemo_slideseq/08_files.png")
+```
 
 
 Use these files to create a Giotto object and start running the analysis. 
