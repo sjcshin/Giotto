@@ -113,6 +113,8 @@ navbar:
         href: articles/docker.html
       - text: Singularity
         href: articles/singularity.html
+      - text: NeMO Slide-seq on Terra.bio
+        href: articles/nemo_slideseq.html
     articles:
       text: Examples
       menu:
@@ -251,6 +253,7 @@ articles:
   - terra
   - docker
   - singularity
+  - nemo_slideseq
 - title: Spatial Manipulation
   navbar: ~
   contents:
