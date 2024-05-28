@@ -105,6 +105,8 @@ navbar:
         href: articles/interoperability_spatialexperiment.html
       - text: Seurat
         href: articles/interoperability_seurat.html
+      - text: Integrate Bento Analysis
+        href: articles/bento.html
       - text: -------
       - text: Try Giotto in the Cloud
       - text: Terra.bio
@@ -281,6 +283,7 @@ articles:
   - interoperability_anndata
   - interoperability_spatialexperiment
   - interoperability_seurat
+  - bento
 - title: Seq-Scope
   navbar: ~
   contents:
