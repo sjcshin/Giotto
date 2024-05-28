@@ -711,12 +711,12 @@ reference:
   desc: Functions to create an in silico 2D cross sections from 3D data.
 - contents:
   - createCrossSection
-  - crossSectionGenePlot
   - crossSectionPlot
-  - crossSectionGenePlot3D
+  - crossSectionFeatPlot
   - crossSectionPlot3D
-  - insertCrossSectionGenePlot3D
+  - crossSectionFeatPlot3D
   - insertCrossSectionSpatPlot3D
+  - insertCrossSectionFeatPlot3D
   - create_crossSection_object
 - title: Cell Neighborhood, Cell-Type/Cell-Type Enrichment
   desc: Functions to calculate and visualize cell-type/cell-type spatial enrichment or depletion.
