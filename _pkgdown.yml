@@ -426,6 +426,11 @@ reference:
   - createArchRProj
   - createGiottoXeniumObject
   - readPolygonFilesVizgenHDF5_old
+- title: Load and Save Giotto Object
+  desc: Functions to help loading and saving a giotto object from and to a local folder.
+- contents:
+  - loadGiotto
+  - saveGiotto
 - title: Giotto Helper Functions
   desc: Common functions to help working with Giotto objects.
 - contents:
