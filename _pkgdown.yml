@@ -105,6 +105,8 @@ navbar:
         href: articles/interoperability_spatialexperiment.html
       - text: Seurat
         href: articles/interoperability_seurat.html
+      - text: Integrate Bento Analysis
+        href: articles/bento.html
       - text: -------
       - text: Try Giotto in the Cloud
       - text: Terra.bio
@@ -113,6 +115,8 @@ navbar:
         href: articles/docker.html
       - text: Singularity
         href: articles/singularity.html
+      - text: NeMO Slide-seq on Terra.bio
+        href: articles/nemo_slideseq.html
     articles:
       text: Examples
       menu:
@@ -185,6 +189,8 @@ navbar:
         menu:
         - text: Resolve Bioscience Breast Cancer Subcellular
           href: articles/resolve_biosciences.html
+        - text: Resolve Bioscience Human lung
+          href: articles/resolve_biosciences_human_lung.html
       - text: -------
       - text: CODEX
         menu:
@@ -249,6 +255,7 @@ articles:
   - terra
   - docker
   - singularity
+  - nemo_slideseq
 - title: Spatial Manipulation
   navbar: ~
   contents:
@@ -276,6 +283,7 @@ articles:
   - interoperability_anndata
   - interoperability_spatialexperiment
   - interoperability_seurat
+  - bento
 - title: Seq-Scope
   navbar: ~
   contents:
@@ -329,6 +337,7 @@ articles:
   navbar: ~
   contents:
   - resolve_biosciences
+  - resolve_biosciences_human_lung
 - title: CODEX
   navbar: ~
   contents:
@@ -417,6 +426,11 @@ reference:
   - createArchRProj
   - createGiottoXeniumObject
   - readPolygonFilesVizgenHDF5_old
+- title: Load and Save Giotto Object
+  desc: Functions to help loading and saving a giotto object from and to a local folder.
+- contents:
+  - GiottoClass::loadGiotto
+  - GiottoClass::saveGiotto
 - title: Giotto Helper Functions
   desc: Common functions to help working with Giotto objects.
 - contents:
@@ -705,12 +719,12 @@ reference:
   desc: Functions to create an in silico 2D cross sections from 3D data.
 - contents:
   - createCrossSection
-  - crossSectionGenePlot
   - crossSectionPlot
-  - crossSectionGenePlot3D
+  - crossSectionFeatPlot
   - crossSectionPlot3D
-  - insertCrossSectionGenePlot3D
+  - crossSectionFeatPlot3D
   - insertCrossSectionSpatPlot3D
+  - insertCrossSectionFeatPlot3D
   - create_crossSection_object
 - title: Cell Neighborhood, Cell-Type/Cell-Type Enrichment
   desc: Functions to calculate and visualize cell-type/cell-type spatial enrichment or depletion.
@@ -833,3 +847,9 @@ reference:
   - GiottoClass::anndataToGiotto
   - GiottoClass::giottoMasterToSuite
   - convertEnsemblToGeneSymbol
+- title: Kriging
+  desc:
+- contents:
+  - interpolateFeature
+
+
