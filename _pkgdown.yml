@@ -117,6 +117,10 @@ navbar:
         href: articles/singularity.html
       - text: NeMO Slide-seq on Terra.bio
         href: articles/nemo_slideseq.html
+      - text: -------
+      - text: Scalability
+      - text: Using dbMatrix with Giotto
+        href: articles/dbMatrix.html
     articles:
       text: Examples
       menu:
@@ -284,6 +288,10 @@ articles:
   - interoperability_spatialexperiment
   - interoperability_seurat
   - bento
+- title: Scalability
+  navbar: ~
+  contents:
+  - dbMatrix
 - title: Seq-Scope
   navbar: ~
   contents:
