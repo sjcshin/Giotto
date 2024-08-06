@@ -641,7 +641,6 @@ reference:
 - contents:
   - clusterSpatialCorFeats
   - detectSpatialCorFeats
-  - detectSpatialCorGenes
   - clusterSpatialCorGenes
   - detectSpatialCorFeatsMatrix
   - detectSpatialPatterns
