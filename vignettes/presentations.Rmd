@@ -7,6 +7,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# Giotto workshop 2024
+
+[![](images/presentations/giottoworkshop2024.png){.align-center}](https://www.youtube.com/playlist?list=PL48rCHQx71I1ZptEotKvvCYRliGrqVXLW)
+
 # BioC 2023
 
 [![](images/presentations/bioc-giotto-pres.png){.align-center}](https://www.youtube.com/watch?v=vJhZtfTDK9I)
