@@ -68,3 +68,36 @@ getSpatialDataset(dataset = 'merfish_preoptic',
                   extra = '--no-check-certificate')
 ```
 
+
+# Matrix error
+
+- Why am I getting the error `function 'as_cholmod_sparse' not provided by package 'Matrix'`?
+
+Matrix underwent a breaking change after versoin 1.6-2. Reinstalling _irlba_ from source will fix this.
+See this [issue](https://github.com/bwlewis/irlba/issues/70) for more info.
+
+```{r, eval=FALSE}
+install.packages("irlba", type = "source")
+```
+
+# Arrow and ZSTD
+
+- Why am I getting an error about arrow and ZSTD support when loading Xenium or VisiumHD data?
+
+*arrow* is a suggested package Giotto uses to open `parquet` files. The parquet files that 10X provides use ZSTD compression which the default *arrow* installation may not provide.
+The following code will check for whether arrow is installed with ZSTD support, and reinstall if it is not present.
+
+```{r, eval=FALSE}
+has_arrow <- requireNamespace("arrow", quietly = TRUE)
+zstd <- TRUE
+if (has_arrow) {
+    zstd <- arrow::arrow_info()$capabilities[["zstd"]]
+}
+if (!has_arrow || !zstd) {
+    Sys.setenv(ARROW_WITH_ZSTD = "ON") 
+    install.packages("assertthat", "bit64")
+    install.packages("arrow", repos = c("https://apache.r-universe.dev"))
+}
+```
+
+
