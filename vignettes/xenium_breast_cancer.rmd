@@ -29,15 +29,7 @@ library(Giotto)
 # 1. ** SET WORKING DIRECTORY WHERE PROJECT OUPUTS WILL SAVE TO **
 results_folder = '/path/to/save/directory/'
 
-# 2. set giotto python path
-# set python path to your preferred python version path
-# set python path to NULL if you want to automatically install (only the 1st time) and use the giotto miniconda environment
-python_path = NULL 
-if(is.null(python_path)) {
-  installGiottoEnvironment()
-}
-
-# 3. Create Giotto instructions
+# 2. Create Giotto instructions
 # Directly saving plots to the working directory without rendering them in the editor saves time.
 instrs = createGiottoInstructions(save_dir = results_folder,
                                   save_plot = TRUE,
@@ -48,8 +40,8 @@ instrs = createGiottoInstructions(save_dir = results_folder,
 
 # 2. Dataset explanation
 
-This vignette covers Giotto object creation and simple exploratory analysis with 10x Genomics' subcellular *Xenium In Situ* platform data using their [Human Breast Cancer Dataset](https://www.10xgenomics.com/products/xenium-in-situ/preview-dataset-human-breast) provided with their recent [bioRxiv
-pre-print](https://www.biorxiv.org/content/10.1101/2022.10.06.510405v1). 
+This vignette covers Giotto object creation and simple exploratory analysis with 10x Genomics' subcellular *Xenium In Situ* platform data using their [Human Breast Cancer Dataset](https://www.10xgenomics.com/products/xenium-in-situ/preview-dataset-human-breast) provided with their [bioRxiv
+pre-print](https://www.biorxiv.org/content/10.1101/2022.10.06.510405v1). This is a legacy pre-release dataset, and some aspects such as file and QC probe naming and image alignment have changed since.
 
 The data from the first tissue replicate will be worked with:
 
@@ -57,8 +49,7 @@ The data from the first tissue replicate will be worked with:
 
 # 3. Project data paths
 
-Xenium's exact output folder structure and which file/formats will be available in the final release are still subject to change. This tutorial will be updated for any differences at release.
-
+The folder structure within the dataset is as shown below.
 **Note:** The cell_feature_matrix.tar.gz must be unpacked into a subdirectory within the xenium working directory before starting.
 
 
