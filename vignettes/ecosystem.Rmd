@@ -29,7 +29,7 @@ Find more information [here](https://drieslab.github.io/GiottoClass/)
 To install GiottoClass run:
 
 ```{r, eval=FALSE}
-pak::pkg_install('drieslab/GiottoClass')
+pak::pkg_install("drieslab/GiottoClass")
 ```
 
 # 3. GiottoUtils
@@ -41,7 +41,7 @@ Find more information [here](https://drieslab.github.io/GiottoUtils/)
 To install GiottoUtils run:
 
 ```{r, eval=FALSE}
-pak::pkg_install('drieslab/GiottoUtils')
+pak::pkg_install("drieslab/GiottoUtils")
 ```
 
 # 4. GiottoVisuals
@@ -53,7 +53,7 @@ Find more information [here](https://drieslab.github.io/GiottoVisuals/)
 To install GiottoVisuals run:
 
 ```{r, eval=FALSE}
-pak::pkg_install('drieslab/GiottoVisuals')
+pak::pkg_install("drieslab/GiottoVisuals")
 ```
 
 # 5. GiottoData
@@ -67,7 +67,7 @@ Find more information [here](https://drieslab.github.io/GiottoData/)
 To install GiottoData run:
 
 ```{r, eval=FALSE}
-pak::pkg_install('drieslab/GiottoData')
+pak::pkg_install("drieslab/GiottoData")
 ```
 
 
@@ -92,7 +92,7 @@ if(!"GiottoData" %in% installed.packages()) {
 library(GiottoData)
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = checkGiottoEnvironment()
+genv_exists <- checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   installGiottoEnvironment()
@@ -104,7 +104,7 @@ if(!genv_exists){
 
 
 ```{r, eval=FALSE}
-visium_mini = loadGiottoMini(dataset = 'visium')
+visium_mini <- loadGiottoMini(dataset = "visium")
 ```
 
 

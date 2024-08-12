@@ -109,7 +109,7 @@ str(my_giotto_object, max.level = 3)
 ```
 
 ```{r, eval=FALSE}
-Formal class 'giotto' [package "Giotto"] with 23 slots
+Formal class "giotto" [package "Giotto"] with 23 slots
   ..@ expression         :List of 1
   .. ..$ cell:List of 1
   ..@ expression_feat    : chr "rna"
@@ -136,7 +136,7 @@ Formal class 'giotto' [package "Giotto"] with 23 slots
   .. ..$ cell:List of 1
   ..@ images             : NULL
   ..@ largeImages        :List of 1
-  .. ..$ image:Formal class 'giottoLargeImage' [package "Giotto"] with 13 slots
+  .. ..$ image:Formal class "giottoLargeImage" [package "Giotto"] with 13 slots
   ..@ parameters         :List of 18
   .. ..$ 0_normalize                : Named chr [1:14] "mini_visium" "raw" "standard" "TRUE" ...
   .. .. ..- attr(*, "names")= chr [1:14] "gobject" "expression_values" "norm_methods" "library_size_norm" ...
@@ -254,7 +254,7 @@ library(Matrix)
 
 ### How to create a reproducible example
 
-For us to be able to help you at the best of our ability, it\'s helpful if you can provide a reproducible example. This just means that anyone who reads your GitHub issue should be able to accurately reproduce your error.
+For us to be able to help you at the best of our ability, it\"s helpful if you can provide a reproducible example. This just means that anyone who reads your GitHub issue should be able to accurately reproduce your error.
 
 For more information on minimal reproducible examples check out [this link](https://stackoverflow.com/help/minimal-reproducible-example).
 
@@ -280,9 +280,9 @@ following code:
 my_giotto_object <- GiottoData::loadGiottoMini("visium")
 
 my_giotto_object <- adjustGiottoMatrix(gobject = my_giotto_object, 
-                                       expression_values = c('normalized'),
-                                       covariate_columns = c('nr_genes',
-                                                             'total_expr'))
+                                       expression_values = c("normalized"),
+                                       covariate_columns = c("nr_genes",
+                                                             "total_expr"))
 ```
 
 I expected that my matrix would be appropriately adjusted, but I got the following error:

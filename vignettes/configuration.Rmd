@@ -35,7 +35,7 @@ library(GiottoData)
 ```{r, eval=FALSE}
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = checkGiottoEnvironment()
+genv_exists <- checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   installGiottoEnvironment()
@@ -48,7 +48,7 @@ The function [installGiottoEnvironment](../md_rst/installGiottoEnvironment.html)
 - **force_miniconda**: force reinstallation of miniconda, default is FALSE
 - **force_environment**: force reinstallation of the Giotto environment, default is FALSE
 
-**Note that, by default,** [installGiottoEnvironment](../md_rst/installGiottoEnvironment.html) **installs a specific version of Python and each required package. At the time of this tutorial's creation, the following versions are utilized:**
+**Note that, by default,** [installGiottoEnvironment](../md_rst/installGiottoEnvironment.html) **installs a specific version of Python and each required package. At the time of this tutorial"s creation, the following versions are utilized:**
 
 - [Python](https://www.python.org/) 3.10.2
 - [pandas](https://pandas.pydata.org/) 1.5.1
@@ -73,30 +73,30 @@ Note that machine type is not relevant when providing *packages_to_install* to *
 ### intentionally commented out so that it will not run and overwrite the 
 ### default versions unless deliberately edited.
 
-### new_pkg_versions <- c('pandas==1.4.4',
-###                       'networkx==2.6.3',
-###                       'python-igraph==0.9.6',
-###                       'leidenalg==0.8.7',
-###                       'python-louvain==0.15',
-###                       'scikit-learn==0.24.2',
-###                       'python.app==2')
+### new_pkg_versions <- c("pandas == 1.4.4",
+###                       "networkx == 2.6.3",
+###                       "python-igraph == 0.9.6",
+###                       "leidenalg == 0.8.7",
+###                       "python-louvain == 0.15",
+###                       "scikit-learn == 0.24.2",
+###                       "python.app == 2")
 ### 
 ### ############################
 ### # If altering the original Giotto Installation is not desired, DO NOT
 ### # run the following command as written.
 ### ############################
 ### installGiottoEnvironment(packages_to_install = new_pkg_versions,
-###                          python_version = '3.8') # Default is 3.10.2
+###                          python_version = "3.8") # Default is 3.10.2
 ```
 
 
 # 4. Advanced: Using a non-default Conda Environment with Giotto
 
-If using [reticulate\'s](https://rstudio.github.io/reticulate/) default miniconda path to create an environment is undesirable, the Giotto environment may be created within an existing anaconda/miniconda environment by specifying the `mini_install_path` argument:
+If using [reticulate\"s](https://rstudio.github.io/reticulate/) default miniconda path to create an environment is undesirable, the Giotto environment may be created within an existing anaconda/miniconda environment by specifying the `mini_install_path` argument:
 
 
 ```{r, eval=FALSE}
-installGiottoEnvironment(mini_install_path = "C:/my/conda/lives/here")
+installGiottoEnvironment(mini_install_path = "path/to/conda")
 ```
 
 
@@ -129,19 +129,20 @@ Here is a brief troubleshooting workflow to investigate if [reticulate](https://
 ```{r, eval=FALSE}
 # Creating Giotto Instructions without specifying a Python path will make 
 # reticulate activate the default Giotto environment. 
-default_instrs <- createGiottoInstructions()
+instructions <- createGiottoInstructions()
 
 # Extract python path information
-default_python_path <- default_instrs$python_path
+python_path <- instructions$python_path
 
 # Make reticulate iteratively check for the packages
 pkg_check <- function(){
-  py_pkgs = c('pandas','networkx', 'igraph', 'leidenalg','community','sklearn','python.app')
+  py_pkgs = c("pandas", "networkx", "igraph", "leidenalg", "community", "sklearn", 
+              "python.app")
   py_pkg_error = character()
   test_availability = TRUE
   
   for (i in py_pkgs){
-    if(i == 'python.app' & Sys.info()[['sysname']] != "Darwin"){
+    if(i == "python.app" & Sys.info()[["sysname"]] != "Darwin"){
       # If the machine OS is not OSX (Mac), break out of the loop
       # Otherwise, also check for python.app
       break
@@ -151,9 +152,10 @@ pkg_check <- function(){
   }
   
   if(test_availability){
-    cat('All Python packages for Giotto are accessible at environment:\n', default_python_path)
+    cat("All Python packages for Giotto are accessible at environment:\n", python_path)
   }else{
-    for (x in py_pkg_error) cat(x,'was not found within environment:\n',default_python_path,'\n\n')
+    for (x in py_pkg_error) 
+      cat(x, "was not found within environment:\n", python_path, "\n")
   }
   
   return(py_pkg_error)
@@ -172,7 +174,7 @@ pkg_check()
 .rs.restartR()
 
 # Direct reticulate to use Python within the Giotto Environment
-reticulate::use_python(default_python_path)
+reticulate::use_python(python_path)
 
 # Check if packages exist again. Ensure function from above code block is defined.
 missing_packages <- pkg_check()
@@ -182,35 +184,34 @@ retry_install <- length(missing_packages) > 0
 if(retry_install){
   
   # Attempt to reinstall all packages.
-  pkgs_w_versions <- c('pandas==1.5.1',
-                       'networkx==2.8.8',
-                       'python-igraph==0.10.2',
-                       'leidenalg==0.9.0',
-                       'python-louvain==0.16',
-                       'python.app==1.4',
-                       'scikit-learn==1.1.3')
+  pkgs_w_versions <- c("pandas == 1.5.1",
+                       "networkx == 2.8.8",
+                       "python-igraph == 0.10.2",
+                       "leidenalg == 0.9.0",
+                       "python-louvain == 0.16",
+                       "python.app == 1.4",
+                       "scikit-learn == 1.1.3")
   
-  python_version = "3.10.2"
+  python_version <- "3.10.2"
   
-  py_pkgs = c('pandas','networkx',
-              'igraph', 'leidenalg',
-              'python-louvain','scikit-learn','python.app')
+  py_pkgs <- c("pandas", "networkx", "igraph", "leidenalg",
+              "python-louvain", "scikit-learn", "python.app")
   
-  if(Sys.info()[['sysname']] != "Darwin"){
-    pkgs_w_versions = pkgs_w_versions[!grepl(pattern = 'python.app', x = pkgs_w_versions)]
-    py_pkgs = py_pkgs[!grepl(pattern = 'python.app', x = py_pkgs)]
+  if(Sys.info()[["sysname"]] != "Darwin"){
+    pkgs_w_versions <- pkgs_w_versions[!grepl(pattern = "python.app", x = pkgs_w_versions)]
+    py_pkgs <- py_pkgs[!grepl(pattern = "python.app", x = py_pkgs)]
   }
   
   env_location <- reticulate::py_discover_config()$pythonhome
-  partial_path_to_conda <- paste0(reticulate::miniconda_path(),'/envs/giotto_env')
+  partial_path_to_conda <- paste0(reticulate::miniconda_path(),"/envs/giotto_env")
   
-  py_lou = pkgs_w_versions[grepl(pattern = 'python-louvain',x = pkgs_w_versions)]
-  pip_packages = c("smfishhmrf", py_lou)
-  pkgs_w_versions = pkgs_w_versions[!grepl(pattern = 'python-louvain',x = pkgs_w_versions)]
+  py_lou <- pkgs_w_versions[grepl(pattern = "python-louvain", x = pkgs_w_versions)]
+  pip_packages <- c("smfishhmrf", py_lou)
+  pkgs_w_versions <- pkgs_w_versions[!grepl(pattern = "python-louvain", x = pkgs_w_versions)]
   
-  if(.Platform[['OS.type']] == 'unix') {
+  if(.Platform[["OS.type"]] == "unix") {
     
-    conda_full_path = paste0(partial_path_to_conda,'/','bin/conda')
+    conda_full_path = paste0(partial_path_to_conda, "/bin/conda")
     
     # Remove all previous installations
     reticulate::conda_remove(envname = env_location,
@@ -220,20 +221,20 @@ if(retry_install){
     # Reinstall
     reticulate::conda_install(packages = pkgs_w_versions,
                               envname = env_location,
-                              method = 'conda',
+                              method = "conda",
                               conda = conda_full_path,
                               python_version = python_version)
     
     # Reinstall with pip
     reticulate::conda_install(packages = pip_packages,
                               envname = env_location,
-                              method = 'conda',
+                              method = "conda",
                               conda = conda_full_path,
                               pip = TRUE,
                               python_version = python_version)
   }
-  else if(.Platform[['OS.type']] == 'windows'){
-    conda_full_path = paste0(partial_path_to_conda,'/','condabin/conda.bat')
+  else if(.Platform[["OS.type"]] == "windows"){
+    conda_full_path = paste0(partial_path_to_conda,"/","condabin/conda.bat")
     
     # Remove all previous installations
     reticulate::conda_remove(envname = env_location,
@@ -243,15 +244,15 @@ if(retry_install){
     # Reinstall
     reticulate::conda_install(packages = pkgs_w_versions,
                               envname = env_location,
-                              method = 'conda',
+                              method = "conda",
                               conda = conda_full_path,
                               python_version = python_version,
-                              channel = c('conda-forge', 'vtraag'))
+                              channel = c("conda-forge", "vtraag"))
     
     # Reinstall with pip
     reticulate::conda_install(packages = pip_packages,
                               envname = env_location,
-                              method = 'conda',
+                              method = "conda",
                               conda = conda_full_path,
                               pip = TRUE,
                               python_version = python_version)

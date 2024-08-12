@@ -29,7 +29,7 @@ if(!"GiottoData" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   Giotto::installGiottoEnvironment()
@@ -39,14 +39,14 @@ if(!genv_exists){
 
 # 3. Load mini giotto object example
 
-First we will load in the a mini dataset put together from Vizgen's Mouse Brain Receptor Map data release. This mini giotto object has been pre-analyzed and comes with many analyses and data objects attached. Most of these analyses have been performed on the 'aggregate' spatial unit so we will set it as the active spatial unit in order to default to it.
+First we will load in the a mini dataset put together from Vizgen's Mouse Brain Receptor Map data release. This mini giotto object has been pre-analyzed and comes with many analyses and data objects attached. Most of these analyses have been performed on the "aggregate" spatial unit so we will set it as the active spatial unit in order to default to it.
 
 
 ```{r, eval=FALSE}
 library(Giotto)
 
-viz <- GiottoData::loadGiottoMini(dataset = 'vizgen')
-activeSpatUnit(viz) <- 'aggregate'
+viz <- GiottoData::loadGiottoMini(dataset = "vizgen")
+activeSpatUnit(viz) <- "aggregate"
 ```
 
 
@@ -56,17 +56,26 @@ Then we will extract the spatial subobjects that we will use. These will be all 
 
 
 ```{r, eval=FALSE}
-image <- getGiottoImage(viz, image_type = 'largeImage', name = 'dapi_z0')
+image <- getGiottoImage(viz, 
+                        image_type = "largeImage", 
+                        name = "dapi_z0")
+
 spat_locs <- getSpatialLocations(viz)
+
 spat_net <- getSpatialNetwork(viz)
-gpoints <- getFeatureInfo(viz, return_giottoPoints = TRUE)
-gpoly <- getPolygonInfo(viz, polygon_name = 'aggregate', return_giottoPolygon = TRUE)
+
+gpoints <- getFeatureInfo(viz, 
+                          return_giottoPoints = TRUE)
+
+gpoly <- getPolygonInfo(viz, 
+                        polygon_name = "aggregate", 
+                        return_giottoPolygon = TRUE)
 ```
 
 
 # 5. Defining bounds and extent
 
-One of the most convenient descriptors of where an object is in space is its minima and maxima in the coordinate plane, also known as the boundaries or spatial **extent** of that information. It can be thought of as bounding box around where your information exists in space. *Giotto* incorporates usage of the `SpatExtent` class and associated `ext()` generic from *terra* to describe objects spatially.
+One of the most convenient descriptors of where an object is in space is its minimal and maximal in the coordinate plane, also known as the boundaries or spatial **extent** of that information. It can be thought of as bounding box around where your information exists in space. *Giotto* incorporates usage of the `SpatExtent` class and associated `ext()` generic from *terra* to describe objects spatially.
 
 
 ```{r, eval=FALSE}
@@ -74,15 +83,7 @@ ext(image)     # giottoLargeImage
 ```
 
 ```{r, eval=FALSE}
-SpatExtent : 6400.029, 6900.037, -5150.007, -4699.967 (xmin, xmax, ymin, ymax)
-```
-
-```{r, eval=FALSE}
 ext(spat_locs) # spatLocsObj
-```
-
-```{r, eval=FALSE}
-SpatExtent : 6401.41164725267, 6899.10802819571, -5146.74746408943, -4700.32590047134 (xmin, xmax, ymin, ymax)
 ```
 
 ```{r, eval=FALSE}
@@ -90,23 +91,11 @@ ext(spat_net)  # spatNetObj
 ```
 
 ```{r, eval=FALSE}
-SpatExtent : 6401.411647, 6899.108028, -5146.747464, -4700.3259 (xmin, xmax, ymin, ymax)
-```
-
-```{r, eval=FALSE}
 ext(gpoints)   # giottoPoints
 ```
 
 ```{r, eval=FALSE}
-SpatExtent : 6400.037, 6900.0317, -5149.9834, -4699.9785 (xmin, xmax, ymin, ymax)
-```
-
-```{r, eval=FALSE}
 ext(gpoly)     # giottoPolygon
-```
-
-```{r, eval=FALSE}
-SpatExtent : 6391.46568586489, 6903.57332779812, -5153.89721175534, -4694.86823300896 (xmin, xmax, ymin, ymax)
 ```
 
 
@@ -169,13 +158,13 @@ plot(spatShift(spat_locs, dx = 5e3))
 
 ## 6.2 flip
 
-`flip()` will flip the data over a defined line of either 'vertical' or 'horizontal' symmetry (default is 'vertical' with the line of symmetry being y = 0. The `direction` param partial matches for either 'vertical' or 'horizontal'. The `y0` and `x0` params define where the line of symmetry is.
+`flip()` will flip the data over a defined line of either "vertical" or "horizontal" symmetry (default is "vertical" with the line of symmetry being y = 0. The `direction` param partial matches for either "vertical" or "horizontal". The `y0` and `x0` params define where the line of symmetry is.
 
 This is useful for assembling datasets where the data is based on coordinates where the y values increase negatively. This behavior is different from the default behavior in *terra* where objects are flipped over the minima of their extents. This difference is needed because often, values are defined in reference to the coordinate origin and any distance away from the axes is meaningful for alignment after flipping. If the default behavior of flipping over the extent is desired, NULL can be passed to the relevant `y0` or `x0` param.
 
 
 ```{r, eval=FALSE}
-rb = getRainbowColors(100)
+rb <- getRainbowColors(100)
 plot(gpoly, col = rb)
 ```
 
@@ -192,7 +181,7 @@ plot(flip(gpoly), col = rb) # flip to positive y
 
 
 ```{r, eval=FALSE}
-plot(flip(gpoly, direction = 'h', x0 = 1e4), col = rb) # flip across x = 10000
+plot(flip(gpoly, direction = "h", x0 = 1e4), col = rb) # flip across x = 10000
 ```
 
  

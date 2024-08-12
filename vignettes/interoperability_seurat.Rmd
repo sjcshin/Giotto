@@ -11,7 +11,7 @@ vignette: >
 
 # Introduction
 
-Giotto facilitates seamless interoperability with various tools, including Seurat. The conversion between Giotto and Seurat relies on four primary functions. 'giottoToSeurat_v4' and 'SeuratToGiotto_v4' cater to Seurat version 4 , while 'giottoToSeurat_v5' and 'SeuratToGiotto_v5' are specifically for Seurat version 5. These functions play a vital role in ensuring effortless data transitions between Giotto and Seurat across different versions, ensuring compatibility and ease of use.
+Giotto facilitates seamless interoperability with various tools, including Seurat. The conversion between Giotto and Seurat relies on four primary functions. "giottoToSeurat_v4" and "SeuratToGiotto_v4" cater to Seurat version 4 , while "giottoToSeurat_v5" and "SeuratToGiotto_v5" are specifically for Seurat version 5. These functions play a vital role in ensuring effortless data transitions between Giotto and Seurat across different versions, ensuring compatibility and ease of use.
 
 ## Conversion of Seurat V5 to Giotto
 
@@ -63,12 +63,12 @@ brainG <- processGiotto(
     filter_params = list(expression_threshold = 1,
                          feat_det_in_min_cells = 100,
                          min_det_feats_per_cell = 10),
-    norm_params = list(norm_methods = 'standard',
+    norm_params = list(norm_methods = "standard",
                        scale_feats = TRUE,
                        scalefactor = 6000),
-    stat_params = list(expression_values = 'normalized'),
-    adjust_params = list(expression_values = c('normalized'),
-                         covariate_columns = 'nr_feats')
+    stat_params = list(expression_values = "normalized"),
+    adjust_params = list(expression_values = c("normalized"),
+                         covariate_columns = "nr_feats")
 )
 ```
 
@@ -77,7 +77,7 @@ brainG <- processGiotto(
 First, we find HVF (highly varialble features) using the loess regression prediction model.
 
 ```{r, eval=FALSE}
-brainG <- calculateHVF(gobject = brainG, method = 'cov_loess')
+brainG <- calculateHVF(gobject = brainG, method = "cov_loess")
 ```
 
 ![](images/interoperability_seurat/0-HVF.png)
@@ -86,11 +86,15 @@ then use HVF to compute the reduced dimensions using PCA.
 ```{r, eval=FALSE}
 ## Select genes highly variable genes that fit specified statistics
 # These are both found within feature metadata
-feature_metadata = getFeatureMetadata(brainG)[]
-featgenes = feature_metadata[hvf == 'yes' & perc_cells > 4 & mean_expr_det > 0.5]$feat_ID
+feature_metadata <- getFeatureMetadata(brainG)[]
+featgenes <- feature_metadata[hvf == "yes" & perc_cells > 4 & mean_expr_det > 0.5]$feat_ID
 
 ## run PCA on expression values (default)
-brainG <- Giotto::runPCA(gobject = brainG, feats_to_use = featgenes, scale_unit = F, center = F)
+brainG <- Giotto::runPCA(gobject = brainG, 
+                         feats_to_use = featgenes, 
+                         scale_unit = FALSE, 
+                         center = FALSE)
+
 Giotto::plotPCA(brainG,
                 save_plot = TRUE)
 ```
@@ -111,27 +115,32 @@ graph1 <- Giotto::plotUMAP(gobject = brainG)
 
 Before proceeding with clustering cells based on their expression profiles, ensure that the Giotto Object has undergone PCA dimension reduction and includes either t-SNE or UMAP dimension reduction, as well as a defined neighbor network.
 
-To initialize the clustering process, create a shared nearest neighbor network (sNN) with a specified number of nearest neighbors ('k'):
+To initialize the clustering process, create a shared nearest neighbor network (sNN) with a specified number of nearest neighbors ("k"):
 
 ```{r, eval=FALSE}
-brainG <- createNearestNetwork(gobject = brainG, type = "sNN", dimensions_to_use = 1:15, k = 15)
+brainG <- createNearestNetwork(gobject = brainG, 
+                               type = "sNN", 
+                               dimensions_to_use = 1:15, 
+                               k = 15)
 ```
 
-In Giotto, various clustering algorithms are available, such as k-means, Leiden, or Louvain. These algorithms automatically store cluster information within cell metadata, typically following default naming conventions. However, you can easily customize the cluster name by specifying the 'name' argument.
+In Giotto, various clustering algorithms are available, such as k-means, Leiden, or Louvain. These algorithms automatically store cluster information within cell metadata, typically following default naming conventions. However, you can easily customize the cluster name by specifying the "name" argument.
 
 ```{r, eval=FALSE}
 ## k-means clustering
-brainG <- doKmeans(gobject = brainG, dim_reduction_to_use = 'pca')
+brainG <- doKmeans(gobject = brainG, dim_reduction_to_use = "pca")
 
 #Plot UMAP post-clustering to visualize kmeans
 graph2 <- Giotto::plotUMAP(
     gobject = brainG,
-    cell_color = 'kmeans',
-    show_NN_network = T,
+    cell_color = "kmeans",
+    show_NN_network = TRUE,
     point_size = 2.5
 )
 ```
+
 ![](images/interoperability_seurat/3-UMAP.png)
+
 #### Spatial co-expression
 
 Using the spatial network previously established, we can employ the binSpect method to identify spatially variable genes.
@@ -141,64 +150,76 @@ brainG <- Giotto::createSpatialDelaunayNetwork(gobject = brainG)
 showGiottoSpatNetworks(brainG)
 
 ranktest = binSpect(
-    brainG, bin_method = 'rank',
-    calc_hub = T, hub_min_int = 5,
-    spatial_network_name = 'Delaunay_network'
+    brainG, 
+    bin_method = "rank",
+    calc_hub = TRUE, 
+    hub_min_int = 5,
+    spatial_network_name = "Delaunay_network"
 )
 ```
 
-Here, we'll narrow down our analysis by selecting the top 300 spatial genes identified through binSpect. Additionally, we'll illustrate how to identify the genes that exhibit the highest spatial correlation.
+Here, we'll narrow down our analysis by selecting the top 300 spatial genes identified through binSpect. Additionally, we"ll illustrate how to identify the genes that exhibit the highest spatial correlation.
 
 ```{r, eval=FALSE}
 # 3.1 cluster the top 500 spatial genes into 20 clusters
-ext_spatial_genes = ranktest[1:300,]$feats
+ext_spatial_genes <- ranktest[1:300,]$feats
 
-# here we use existing detectSpatialCorGenes function to calculate pairwise distances between genes (but set network_smoothing=0 to use default clustering)
+# here we use existing detectSpatialCorFeats function to calculate pairwise distances between genes (but set network_smoothing=0 to use default clustering)
 spat_cor_netw_DT = detectSpatialCorFeats(
     brainG,
-    method = 'network',
-    spatial_network_name = 'Delaunay_network',
+    method = "network",
+    spatial_network_name = "Delaunay_network",
     subset_feats = ext_spatial_genes
 )
 # 3.2 identify most similar spatially correlated genes for one gene
-top10_genes = showSpatialCorFeats(spat_cor_netw_DT, feats = 'Dsp', show_top_feats = 10)
+top10_genes <- showSpatialCorFeats(spat_cor_netw_DT, 
+                                   feats = "Dsp", 
+                                   show_top_feats = 10)
 ```
 
 Employing the pheatmap function, we can visualize spatial co-expression modules and iteratively adjust the number of clusters (k) for optimal representation.
 
 ```{r, eval=FALSE}
 # 3.3 identify potenial spatial co-expression
-spat_cor_netw_DT = clusterSpatialCorFeats(spat_cor_netw_DT, name = 'spat_netw_clus', k = 7)
+spat_cor_netw_DT <- clusterSpatialCorFeats(spat_cor_netw_DT, 
+                                           name = "spat_netw_clus", 
+                                           k = 7)
 
 # visualize clusters
 graph3 <- heatmSpatialCorFeats(
     brainG,
     spatCorObject = spat_cor_netw_DT,
-    use_clus_name = 'spat_netw_clus',
+    use_clus_name = "spat_netw_clus",
     heatmap_legend_param = list(title = NULL),
-    save_param = list(base_height = 6, base_width = 8, units = 'cm'), 
+    save_param = list(base_height = 6, base_width = 8, units = "cm"), 
     show_plot =  TRUE,
     return_plot = FALSE,
     save_plot = TRUE
 )
 ```
+
 ![](images/interoperability_seurat/4-heatmSpatialCorFeats.png)
+
 We'll proceed by isolating genes from individual co-expression modules and then consolidate them into meta-genes through aggregation.
 
 ```{r, eval=FALSE}
 # 3.4 create metagenes / co-expression modules
-cluster_genes = getBalancedSpatCoexpressionFeats(spat_cor_netw_DT, maximum = 30)
+cluster_genes <- getBalancedSpatCoexpressionFeats(spat_cor_netw_DT, 
+                                                  maximum = 30)
 ```
 
 ```{r, eval=FALSE}
-brainG = createMetafeats(brainG, feat_clusters = cluster_genes, name = 'cluster_metagene')                     
-    
+brainG <- createMetafeats(brainG, 
+                          feat_clusters = cluster_genes, 
+                          name = "cluster_metagene")                     
     
 graph4 <- spatCellPlot(
     brainG,
-    spat_enr_names = 'cluster_metagene',
+    spat_enr_names = "cluster_metagene",
     cell_annotation_values = as.character(c(1:7)),
-    point_size = 1, cow_n_col = 3, gradient_style = 'sequential'
+    point_size = 1, 
+    cow_n_col = 3, 
+    gradient_style = "sequential"
 )   
 ```
 
@@ -206,7 +227,7 @@ graph4 <- spatCellPlot(
 
 ## Conversion of Giotto to Seurat V5
 
-With Seurat's recent upgrade to version 5, ensuring compatibility is essential. The 'giottoToSeuratV5()' function simplifies the process by seamlessly converting Giotto objects to the latest Seurat object.
+With Seurat's recent upgrade to version 5, ensuring compatibility is essential. The "giottoToSeuratV5()" function simplifies the process by seamlessly converting Giotto objects to the latest Seurat object.
 
 ### Reverting GiottoObj to Seurat
 
@@ -249,7 +270,9 @@ plot2 <- SpatialFeaturePlot(brain2, features = "nCount_rna") + theme(legend.posi
 wrap_plots(plot1, plot2)
 
 ```
+
 ![](images/interoperability_seurat/6-cellCountdist.png)
+
 ####  Data Transformation
 
 To enhance the analysis, we apply SCTransform to perform data transformation on the RNA assay:
@@ -283,11 +306,13 @@ p1 + p2
 Additionally, we can highlight specific cell populations within the spatial dimensional plot:
 
 ```{r, eval=FALSE}
-SpatialDimPlot(brain2, cells.highlight = CellsByIdentities(object = brain2, idents = c(2, 1, 4, 3,
+SpatialDimPlot(brain2, 
+               cells.highlight = CellsByIdentities(object = brain2, idents = c(2, 1, 4, 3,
     5, 8)), facet.highlight = TRUE, ncol = 3)
 ```
 
 ![](images/interoperability_seurat/8-spatialDim.png)
+
 #### Identification of Spatially Variable Features
 
 To identify spatially variable features between clusters, the FindMarkers function is employed. Subsequently, we visualize the top spatially variable features using SpatialFeaturePlot:
@@ -302,9 +327,12 @@ SpatialFeaturePlot(object = brain2, features = rownames(de_markers)[1:3], alpha 
 we identify spatially variable features within the spatial data. This is achieved through the `FindSpatiallyVariableFeatures` function, which calculates spatial statistics to determine the variability of features across spatial locations. In the following code chunk, we focus on the top 1000 variable features selected from the SCT assay using the Moransi selection method.
 
 ```{r, eval=FALSE}
-brain2 <- FindSpatiallyVariableFeatures(brain2, assay = "SCT", features = VariableFeatures(brain2)[1:1000],
-    selection.method = "moransi")
+brain2 <- FindSpatiallyVariableFeatures(brain2, 
+                                        assay = "SCT", 
+                                        features = VariableFeatures(brain2)[1:1000],
+                                        selection.method = "moransi")
 ```
+
 #### Subset out anatomical regions
 
 This section focuses on subsetting anatomical regions from the dataset and visualizing them using spatial dimensional plots.
@@ -336,6 +364,7 @@ Next, we merge the datasets obtained from the anterior and posterior slices:
 
 brain.merge <- merge(brain2, brainP)
 ```
+
 We set the default assay to "SCT" and combine variable features from both datasets:
 
 ```{r, eval=FALSE}
@@ -363,6 +392,7 @@ SpatialDimPlot(brain.merge)
 SpatialFeaturePlot(brain.merge, features = c("Hpca", "Plp1"))
 ```
 ![](images/interoperability_seurat/13-brainMerge2.png)
+
 ```{r, eval=FALSE}
 sessionInfo()
 ```

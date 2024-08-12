@@ -21,7 +21,7 @@ if(!"Giotto" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   Giotto::installGiottoEnvironment()
@@ -35,54 +35,56 @@ Read expression matrix 22846 genes, 22 proteins, 901 cells
 ```{r, eval = FALSE}
 library(Giotto)
 
-data_dir = "/path/to/your/data/"
+data_path <- "/path/to/data/"
 
 ## RNA
-rna_expression = read.table(paste0(data_dir,"GSE137986_RAW/GSM4189613_0702cL.tsv.gz"), 
+rna_expression <- read.table(paste0(data_path, "GSE137986_RAW/GSM4189613_0702cL.tsv.gz"), 
                             sep = "\t",
                             header = TRUE)
-rownames(rna_expression) = rna_expression$X
+rownames(rna_expression) <- rna_expression$X
 ```
 
 ```{r, eval = FALSE}
 ## Protein
-protein_expression = read.table(paste0(data_dir,"GSE137986_RAW/GSM4202307_0702aL.tsv.gz"), 
+protein_expression <- read.table(paste0(data_path, "GSE137986_RAW/GSM4202307_0702aL.tsv.gz"), 
                                 sep = "\t",
                                 header = TRUE)
-rownames(protein_expression) = protein_expression$X
+rownames(protein_expression) <- protein_expression$X
 ```
 
 Transpose matrix
 
 ```{r, eval = FALSE}
-rna_expression = t(rna_expression[-1])
-protein_expression = t(protein_expression[-1])
+rna_expression <- t(rna_expression[-1])
+protein_expression <- t(protein_expression[-1])
 ```
 
 Get the spatial coordinates
 
 ```{r, eval = FALSE}
-spatial_coords = data.frame(cell_ID = colnames(rna_expression))
-spatial_coords = cbind(spatial_coords, 
+spatial_coords <- data.frame(cell_ID = colnames(rna_expression))
+spatial_coords <- cbind(spatial_coords, 
                        tidyr::separate(spatial_coords, cell_ID, c("x","y"), sep = "x"))
 
-spatial_coords$x = as.numeric(spatial_coords$x)
-spatial_coords$y = as.numeric(spatial_coords$y)*-1
+spatial_coords$x <- as.numeric(spatial_coords$x)
+spatial_coords$y <- as.numeric(spatial_coords$y)*-1
 ```
 
 Create the Giotto object
 
 ```{r, eval = FALSE}
-save_dir = 'results'
-instrs = createGiottoInstructions(save_dir = save_dir,
-                                  save_plot = TRUE,
-                                  show_plot = TRUE)
+results_folder <- "/path/to/results/"
+
+instructions <- createGiottoInstructions(results_folder = results_folder,
+                                         save_plot = TRUE,
+                                         show_plot = FALSE,
+                                         return_plot = FALSE)
 
 giottoObject <- createGiottoObject(expression = list(raw = rna_expression,
                                                      raw = protein_expression),
-                                   expression_feat = c('rna', 'protein'),
+                                   expression_feat = c("rna", "protein"),
                                    spatial_locs = spatial_coords,
-                                   instructions = instrs)
+                                   instructions = instructions)
 ```
 
 # 4. Processing
@@ -95,17 +97,17 @@ giottoObject <- filterGiotto(gobject = giottoObject,
                              expression_threshold = 1,
                              feat_det_in_min_cells = 1,
                              min_det_feats_per_cell = 1,
-                             expression_values = 'raw',
+                             expression_values = "raw",
                              verbose = TRUE)
 
 ## Protein
 giottoObject <- filterGiotto(gobject = giottoObject,
-                             spat_unit = 'cell',
-                             feat_type = 'protein',
+                             spat_unit = "cell",
+                             feat_type = "protein",
                              expression_threshold = 1,
                              feat_det_in_min_cells = 1,
                              min_det_feats_per_cell = 1,
-                             expression_values = 'raw',
+                             expression_values = "raw",
                              verbose = TRUE)
 ```
 
@@ -119,8 +121,8 @@ giottoObject <- normalizeGiotto(gobject = giottoObject,
 
 ## Protein
 giottoObject <- normalizeGiotto(gobject = giottoObject, 
-                                spat_unit = 'cell',
-                                feat_type = 'protein',
+                                spat_unit = "cell",
+                                feat_type = "protein",
                                 scalefactor = 6000, 
                                 verbose = TRUE)
 ```
@@ -132,8 +134,8 @@ giottoObject <- normalizeGiotto(gobject = giottoObject,
 giottoObject <- addStatistics(gobject = giottoObject)
 
 spatPlot2D(giottoObject,
-           spat_unit = 'cell',
-           feat_type = 'rna',
+           spat_unit = "cell",
+           feat_type = "rna",
            cell_color = "nr_feats",
            color_as_factor = FALSE,
            point_size = 3.5)
@@ -151,12 +153,12 @@ spatPlot2D(giottoObject,
 ```{r, eval = FALSE}
 ## Protein
 giottoObject <- addStatistics(gobject = giottoObject,
-                              spat_unit = 'cell',
-                              feat_type = 'protein')
+                              spat_unit = "cell",
+                              feat_type = "protein")
 
 spatPlot2D(giottoObject,
-           spat_unit = 'cell',
-           feat_type = 'protein',
+           spat_unit = "cell",
+           feat_type = "protein",
            cell_color = "total_expr",
            color_as_factor = FALSE,
            point_size = 3.5)
@@ -169,7 +171,7 @@ spatPlot2D(giottoObject,
 ## 5.1 Identify highly variable features (HVF)
 
 ```{r, eval = FALSE}
-giottoObject = calculateHVF(gobject = giottoObject)
+giottoObject <- calculateHVF(gobject = giottoObject)
 ```
 
 ![](images/mouse_embryo_dbitseq/3-HVFplot.png)
@@ -198,14 +200,14 @@ plotPCA(gobject = giottoObject)
 ```{r, eval = FALSE}
 # Protein
 giottoObject <- runPCA(gobject = giottoObject,
-                       spat_unit = 'cell',
-                       feat_type = 'protein')
+                       spat_unit = "cell",
+                       feat_type = "protein")
 ```
 
 ```{r, eval = FALSE}
 screePlot(giottoObject, 
-          spat_unit = 'cell',
-          feat_type = 'protein',
+          spat_unit = "cell",
+          feat_type = "protein",
           ncp = 30)
 ```
 
@@ -213,8 +215,8 @@ screePlot(giottoObject,
 
 ```{r, eval = FALSE}
 plotPCA(gobject = giottoObject,
-        spat_unit = 'cell',
-        feat_type = 'protein')
+        spat_unit = "cell",
+        feat_type = "protein")
 ```
 
 ![](images/mouse_embryo_dbitseq/7-PCA.png)
@@ -238,15 +240,15 @@ plotUMAP(gobject = giottoObject)
 ```{r, eval = FALSE}
 # Protein
 giottoObject <- runUMAP(giottoObject, 
-                        spat_unit = 'cell',
-                        feat_type = 'protein',
+                        spat_unit = "cell",
+                        feat_type = "protein",
                         dimensions_to_use = 1:10)
 ```
 
 ```{r, eval = FALSE}
 plotUMAP(gobject = giottoObject,
-         spat_unit = 'cell',
-         feat_type = 'protein')
+         spat_unit = "cell",
+         feat_type = "protein")
 ```
 
 ![](images/mouse_embryo_dbitseq/9-UMAP.png)
@@ -265,14 +267,14 @@ giottoObject <- doLeidenCluster(gobject = giottoObject,
 
 # Protein
 giottoObject <- createNearestNetwork(gobject = giottoObject, 
-                                     spat_unit = 'cell', 
-                                     feat_type = 'protein', 
+                                     spat_unit = "cell", 
+                                     feat_type = "protein", 
                                      dimensions_to_use = 1:10, 
                                      k = 30)
 
 giottoObject <- doLeidenCluster(gobject = giottoObject, 
-                                spat_unit = 'cell', 
-                                feat_type = 'protein', 
+                                spat_unit = "cell", 
+                                feat_type = "protein", 
                                 resolution = 1,
                                 n_iterations = 1000)
 ```
@@ -282,7 +284,7 @@ giottoObject <- doLeidenCluster(gobject = giottoObject,
 ```{r, eval = FALSE}
 # RNA
 plotUMAP(gobject = giottoObject, 
-         cell_color = 'leiden_clus', 
+         cell_color = "leiden_clus", 
          show_NN_network = FALSE, 
          point_size = 2,
          title = "",
@@ -296,9 +298,9 @@ plotUMAP(gobject = giottoObject,
 ```{r, eval = FALSE}
 # Protein
 plotUMAP(gobject = giottoObject, 
-         spat_unit = 'cell', 
-         feat_type = 'protein',
-         cell_color = 'leiden_clus', 
+         spat_unit = "cell", 
+         feat_type = "protein",
+         cell_color = "leiden_clus", 
          show_NN_network = FALSE, 
          point_size = 2,
          title = "",
@@ -315,7 +317,7 @@ plotUMAP(gobject = giottoObject,
 # RNA
 spatPlot2D(gobject = giottoObject, 
            show_image = FALSE,
-           cell_color = 'leiden_clus',
+           cell_color = "leiden_clus",
            point_size = 3.5,
            title = "",
            axis_text = 14,
@@ -328,10 +330,10 @@ spatPlot2D(gobject = giottoObject,
 ```{r, eval = FALSE}
 # Protein
 spatPlot2D(gobject = giottoObject, 
-           spat_unit = 'cell', 
-           feat_type = 'protein',
+           spat_unit = "cell", 
+           feat_type = "protein",
            show_image = FALSE,
-           cell_color = 'leiden_clus',
+           cell_color = "leiden_clus",
            point_size = 3.5,
            title = "",
            axis_text = 14,
@@ -346,15 +348,15 @@ spatPlot2D(gobject = giottoObject,
 ```{r, eval = FALSE}
 # RNA
 giottoObject <- createNearestNetwork(gobject = giottoObject, 
-                                     type = 'kNN',
+                                     type = "kNN",
                                      dimensions_to_use = 1:10, 
                                      k = 20)
 
 # Protein
 giottoObject <- createNearestNetwork(gobject = giottoObject, 
-                                     spat_unit = 'cell', 
-                                     feat_type = 'protein', 
-                                     type = 'kNN',
+                                     spat_unit = "cell", 
+                                     feat_type = "protein", 
+                                     type = "kNN",
                                      dimensions_to_use = 1:10, 
                                      k = 20)
 ```
@@ -393,7 +395,7 @@ giottoObject <- doLeidenCluster(gobject = giottoObject,
 plotUMAP(gobject = giottoObject,
          spat_unit = "cell",
          feat_type = "rna",
-         cell_color = 'integrated_leiden_clus',
+         cell_color = "integrated_leiden_clus",
          dim_reduction_name = "integrated.umap",
          point_size = 2,
          title = "",
@@ -427,19 +429,19 @@ We used the scRNAseq from [Cao et al., 2019](https://www.nature.com/articles/s41
 
 ```{r, eval = FALSE}
 # read single cell procesed object
-gene_count_cleaned_sampled_100k <- readRDS(paste0(data_dir,"gene_count_cleaned_sampled_100k.RDS"))
+gene_count_cleaned_sampled_100k <- readRDS(paste0(data_path, "gene_count_cleaned_sampled_100k.RDS"))
 
 # download cell annotations
 download.file(url = "https://shendure-web.gs.washington.edu/content/members/cao1025/public/mouse_embryo_atlas/cell_annotate.csv",
-              destfile = paste0(data_dir,"cell_annotate.csv"))
+              destfile = paste0(data_path, "cell_annotate.csv"))
 
 # or run in your terminal: wget https://shendure-web.gs.washington.edu/content/members/cao1025/public/mouse_embryo_atlas/cell_annotate.csv
 
-cell_annotation = data.table::fread(paste0(data_dir,"cell_annotate.csv"))
-cell_annotation = cell_annotation[,c("sample", "Total_mRNAs", "num_genes_expressed", "Main_cell_type")]
-colnames(cell_annotation)[1] = "cell_ID"
+cell_annotation <- data.table::fread(paste0(data_path, "cell_annotate.csv"))
+cell_annotation <- cell_annotation[, c("sample", "Total_mRNAs", "num_genes_expressed", "Main_cell_type")]
+colnames(cell_annotation)[1] <- "cell_ID"
 
-cell_annotation = cell_annotation[cell_annotation$cell_ID %in% colnames(gene_count_cleaned_sampled_100k),]
+cell_annotation <- cell_annotation[cell_annotation$cell_ID %in% colnames(gene_count_cleaned_sampled_100k),]
 ```
 
 ```{r, eval = FALSE}
@@ -465,10 +467,10 @@ Find markergenes
 markers_scran <- findMarkers_one_vs_all(gobject = sc_giotto,
                                         method = "scran",
                                         expression_values = "normalized",
-                                        cluster_column = 'Main_cell_type',
+                                        cluster_column = "Main_cell_type",
                                         min_feats = 3)
 
-markergenes_scran <- unique(markers_scran[, head(.SD, 30), by = "cluster"][["feats"]])
+topgenes_scran <- unique(markers_scran[, head(.SD, 30), by = "cluster"][["feats"]])
 ```
 
 Create DWLS matrix
@@ -479,7 +481,7 @@ DWLS_matrix_direct <- makeSignMatrixDWLSfromMatrix(
                          values = "normalized",
                          output = "matrix"),
   cell_type = pDataDT(sc_giotto)$Main_cell_type,
-  sign_gene = markergenes_scran)
+  sign_gene = topgenes_scran)
 ```
 
 Fix gene names
@@ -487,14 +489,14 @@ Fix gene names
 ```{r, eval = FALSE}
 # download gene annotations
 download.file(url = "https://shendure-web.gs.washington.edu/content/members/cao1025/public/mouse_embryo_atlas/gene_annotate.csv",
-              destfile = paste0(data_dir,"gene_annotate.csv"))
+              destfile = paste0(data_path, "gene_annotate.csv"))
 
-sc_gene_names = read.csv(paste0(data_dir,"gene_annotate.csv"))
+sc_gene_names <- read.csv(paste0(data_path, "gene_annotate.csv"))
 
-ENSMUS_names = rownames(DWLS_matrix_direct)
-sc_gene_names = sc_gene_names[sc_gene_names$gene_id %in% ENSMUS_names,]
+ENSMUS_names <- rownames(DWLS_matrix_direct)
+sc_gene_names <- sc_gene_names[sc_gene_names$gene_id %in% ENSMUS_names,]
 
-rownames(DWLS_matrix_direct) = sc_gene_names$gene_short_name
+rownames(DWLS_matrix_direct) <- sc_gene_names$gene_short_name
 ```
 
 ## 8.2 Run deconvolution

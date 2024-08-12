@@ -25,9 +25,10 @@ library(Giotto)
 # Ensure the Python environment for Giotto Has been installed.
 
 # Set python path to your preferred python path. The python packages that Giotto depends on will be installed here if not installed before.
+python_path <- "path/to/conda-env/envs/giotto_suite/bin/python"
+
 # Set python path to NULL if you want to automatically install (only the 1st time) and use the giotto miniconda environment
-python_path <- "/sc/arion/work/wangw32/conda-env/envs/giotto_suite/bin/python"
-# python_path = NULL
+python_path <- NULL
 
 genv_exists <- checkGiottoEnvironment()
 if (!genv_exists & is.null(python_path)) {
@@ -40,11 +41,11 @@ if (!genv_exists & is.null(python_path)) {
 
 ```{r, eval=FALSE}
 # 1. ** SET WORKING DIRECTORY WHERE PROJECT OUPUTS WILL SAVE TO **
-results_folder <- paste0(getwd(), "/Xenium_results")
+results_folder <- "/path/to/results/"
 
 # 2. Create Giotto instructions
 # Directly saving plots to the working directory without rendering them in the editor saves time.
-instrs <- createGiottoInstructions(
+instructions <- createGiottoInstructions(
     python_path = python_path,
     save_dir = results_folder,
     save_plot = TRUE,
@@ -68,7 +69,7 @@ Note: The cell_feature_matrix.tar.gz must be unpacked into a sub directory withi
 
 ```{r, eval=FALSE}
 # ** SET PATH TO FOLDER CONTAINING XENIUM DATA **
-xenium_folder <- paste0(getwd(), "/Xenium/")
+xenium_folder <- "path/to/Xenium/"
 
 # General files (some are supplemental files)
 settings_path <- paste0(xenium_folder, "experiment.xenium")
@@ -121,9 +122,6 @@ This dataset has 313 probes that are dedicated for gene expression transcript de
 - blank codeword IDs
 - negative control codeword IDs
 - negative control probe IDs
-
-```{r, eval=FALSE}
-```
 
 # Loading Xenium data
 
@@ -253,7 +251,7 @@ xenium_gobj <- createGiottoObjectSubcellular(
         cell = gpoly_cells,
         nucleus = gpoly_nucs
     ),
-    instructions = instrs
+    instructions = instructions
 )
 ```
 
@@ -267,16 +265,20 @@ Large dataset may cause prolonged processing time for Bento.
 
 ```{r, eval=FALSE}
 subset_xenium_gobj <- subsetGiottoLocs(xenium_gobj,
-    spat_unit = "cell", feat_type = "rna",
-    x_max = 200, x_min = 0, y_max = 200, y_min = 0
-)
+                                       spat_unit = "cell", 
+                                       feat_type = "rna",
+                                       x_max = 200, 
+                                       x_min = 0, 
+                                       y_max = 200, 
+                                       y_min = 0
+                                       )
 ```
 
 ### Create AnnData Object
 
 ```{r, eval=FALSE}
 bento_adata <- createBentoAdata(subset_xenium_gobj,
-    env_to_use = "/sc/arion/work/wangw32/conda-env/envs/giotto" # use the default value 'giotto_env' when you installed python dependencies automatically
+                                env_to_use = "path/to/conda-env/envs/giotto" # use the default value "giotto_env" when you installed python dependencies automatically
 )
 ```
 
@@ -286,7 +288,8 @@ bento_adata <- createBentoAdata(subset_xenium_gobj,
 
 ```{r, eval=FALSE}
 bento_analysis_path <- system.file("python", "python_bento_analysis.py",
-                                   package = "Giotto")
+                                   package = "Giotto"
+)
 
 reticulate::source_python(bento_analysis_path)
 ```
@@ -310,14 +313,18 @@ knitr::include_graphics("images/bento/Bento_rna_forest_radvis1.png")
 ### Colocalization Analysis
 
 ```{r, eval=FALSE}
-analysis_colocalization(adata = bento_adata, 
-                        fname = "Bento_colocalization_knee_pos.png", 
-                        ranks = seq(10))
+analysis_colocalization(
+    adata = bento_adata,
+    fname = "Bento_colocalization_knee_pos.png",
+    ranks = seq(10)
+)
 
 # Set the rank according output hint.
-plot_colocalization_analysis_results(adata = bento_adata, 
-                                     rank = 5, 
-                                     fname = "Bento_colocalization.png")
+plot_colocalization_analysis_results(
+    adata = bento_adata,
+    rank = 5,
+    fname = "Bento_colocalization.png"
+)
 ```
 
 ```{r, echo=FALSE}

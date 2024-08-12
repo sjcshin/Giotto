@@ -23,7 +23,7 @@ if(!"Giotto" %in% installed.packages()) {
 }
   
 # Ensure the Python environment for Giotto has been installed.
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
 # The following command need only be run once to install the Giotto environment.
   Giotto::installGiottoEnvironment()
@@ -34,18 +34,19 @@ if(!genv_exists){
 library(Giotto)
 
 # 1. set working directory
-results_folder = 'path/to/result'
-  
+results_folder <- "/path/to/results/"
+
 # Optional: Specify a path to a Python executable within a conda or miniconda 
 # environment. If set to NULL (default), the Python executable within the previously
 # installed Giotto environment will be used.
-my_python_path = NULL # alternatively, "/local/python/path/python" if desired.
+python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 
 # 3. create giotto instructions
-instrs = createGiottoInstructions(save_dir = results_folder,
-                                  save_plot = TRUE,
-                                  show_plot = FALSE,
-                                  python_path = my_python_path)  
+instructions <- createGiottoInstructions(save_dir = results_folder,
+                                         save_plot = TRUE,
+                                         show_plot = FALSE,
+                                         return_plot = FALSE,
+                                         python_path = python_path)  
 ```
   
 
@@ -54,22 +55,22 @@ instrs = createGiottoInstructions(save_dir = results_folder,
 Load data
 
 ```{r, eval=FALSE}
-data_dir = "Data_input/csv_files/"
+data_path <- "/path/to/data/"
 
-raw.data <- read.csv(paste0(data_dir, "S01_datafinal.csv"), 
-                     header = T, 
+raw.data <- read.csv(paste0(data_path, "S01_datafinal.csv"), 
+                     header = TRUE, 
                      row.names = 1)
 ```
 
 Load metadata
 
 ```{r, eval=FALSE}
-metadata <- read.csv(paste0(data_dir, "S01_metacells.csv"),
+metadata <- read.csv(paste0(data_path, "S01_metacells.csv"),
                      row.names = 1,
-                     header = T)
+                     header = TRUE)
 ```
 
-Find ERCC's, compute the percent ERCC, and drop them from the raw data.
+Find ERCC"s, compute the percent ERCC, and drop them from the raw data.
 
 ```{r, eval=FALSE}
 erccs <- grep(pattern = "^ERCC-", 
@@ -89,7 +90,7 @@ Create Giotto object
 
 ``` {r, eval=FALSE}
 giotto_SC <- createGiottoObject(expression = raw.data,
-                                instructions = instrs)
+                                instructions = instructions)
 ```
 
 Calculate percent ribosomal genes and add to metadata
@@ -113,8 +114,8 @@ giotto_SC <- filterGiotto(gobject = giotto_SC,
                           expression_threshold = 1,
                           feat_det_in_min_cells = 10,
                           min_det_feats_per_cell = 500,
-                          expression_values = c('raw'),
-                          verbose = T)
+                          expression_values = "raw",
+                          verbose = TRUE)
 
 ## normalize
 giotto_SC <- normalizeGiotto(gobject = giotto_SC, 
@@ -122,7 +123,7 @@ giotto_SC <- normalizeGiotto(gobject = giotto_SC,
 
 ## add gene & cell statistics
 giotto_SC <- addStatistics(gobject = giotto_SC,
-                           expression_values = 'raw')
+                           expression_values = "raw")
 ```
 
 # 3. Dimension Reduction
@@ -137,7 +138,7 @@ giotto_SC <- runPCA(gobject = giotto_SC,
 
 screePlot(giotto_SC, 
           ncp = 30, 
-          save_param = list(save_name = '3_scree_plot'))
+          save_param = list(save_name = "3_scree_plot"))
 ```
 
 ![](images/singlecell_lung_adenocarcinoma/3_scree_plot.png)
@@ -148,8 +149,8 @@ screePlot(giotto_SC,
 ## cluster and run UMAP ##
 # sNN network (default)
 giotto_SC <- createNearestNetwork(gobject = giotto_SC,
-                                  dim_reduction_to_use = 'pca', 
-                                  dim_reduction_name = 'pca',
+                                  dim_reduction_to_use = "pca", 
+                                  dim_reduction_name = "pca",
                                   dimensions_to_use = 1:10, 
                                   k = 15)
 
@@ -163,8 +164,8 @@ giotto_SC <- doLeidenCluster(gobject = giotto_SC,
                              n_iterations = 1000)
 
 plotUMAP(gobject = giotto_SC,
-         cell_color = 'leiden_clus', 
-         show_NN_network = T, 
+         cell_color = "leiden_clus", 
+         show_NN_network = TRUE, 
          point_size = 1.5,
          save_param = list(save_name = "4_Cluster"))
 ```
@@ -174,21 +175,21 @@ plotUMAP(gobject = giotto_SC,
 # 5. Differential Expression
 
 ``` {r, eval=FALSE}
-markers_scran = findMarkers_one_vs_all(gobject = giotto_SC, 
+markers_scran <- findMarkers_one_vs_all(gobject = giotto_SC, 
                                        method = "scran",
                                        expression_values = "normalized", 
-                                       cluster_column = 'leiden_clus', 
+                                       cluster_column = "leiden_clus", 
                                        min_feats = 3)
 
-markergenes_scran = unique(markers_scran[, head(.SD, 2), by = "cluster"][["feats"]])
+topgenes_scran <- unique(markers_scran[, head(.SD, 2), by = "cluster"][["feats"]])
 
 plotMetaDataHeatmap(giotto_SC, 
                     expression_values = "normalized", 
-                    metadata_cols = 'leiden_clus', 
-                    selected_feats = markergenes_scran,
+                    metadata_cols = "leiden_clus", 
+                    selected_feats = topgenes_scran,
                     y_text_size = 8, 
-                    show_values = 'zscores_rescaled',
-                    save_param = list(save_name = '5_metaheatmap'))
+                    show_values = "zscores_rescaled",
+                    save_param = list(save_name = "5_metaheatmap"))
 ```
 
 ![](images/singlecell_lung_adenocarcinoma/5_metaheatmap.png)
@@ -208,7 +209,7 @@ dimFeatPlot2D(giotto_SC,
 # 7. Cell type Annotation
 
 ```{r}
-marker_genes = list(
+marker_genes <- list(
   T_cells = c("CD2", "CD3D", "CD3E", "CD3G"),
   macrophages = c("MARCO", "CSF1R", "CD68", "GLDN", "APOE", "CCL3L1", "TREM2", "C1QB", "NUPR1", "FOLR2", "RNASE1", "C1QA"),
   dendritic = c("CD1E", "CD1C", "FCER1A", "PKIB", "CYP2S1", "NDRG2"),
@@ -229,14 +230,14 @@ library(dplyr)
 library(ComplexHeatmap)
 
 heatmap_table <- calculateMetaTable(gobject = giotto_SC,
-                                    expression_values = 'normalized',
-                                    metadata_cols = 'leiden_clus',
+                                    expression_values = "normalized",
+                                    metadata_cols = "leiden_clus",
                                     selected_feats = unlist(marker_genes))
 
 zscores = value = zscores_rescaled_per_feat = NULL
 
-heatmap_table[, zscores := scale(value), by = c('variable')]
-heatmap_table[, zscores_rescaled_per_feat := scales::rescale(zscores, to = c(-1,1)), by = c('variable')]
+heatmap_table[, zscores := scale(value), by = c("variable")]
+heatmap_table[, zscores_rescaled_per_feat := scales::rescale(zscores, to = c(-1,1)), by = c("variable")]
 
 heatmap_table$cell_types_markers <- heatmap_table$variable
 
@@ -272,7 +273,7 @@ colnames(cell_types_heatmap)[2] <- "cell_types"
 
 cell_types_heatmap <- cell_types_heatmap[order(cell_types),]
 
-n_leiden_clusters = max(giotto_SC@cell_metadata$cell$rna@metaDT$leiden_clus)
+n_leiden_clusters <- max(pDataDT(giotto_SC)$leiden_clus)
 
 panel_fun = function(index, nm) {
   grid.rect()
@@ -318,7 +319,7 @@ dev.off()
 ![](images/singlecell_lung_adenocarcinoma/6_heatmap_all_clusters_cell_types.png)
 
 ``` {r, eval=FALSE}
-lung_labels<-c("carcinoma_cells",#1
+lung_labels <- c("carcinoma_cells",#1
                "epithelial",#2
                "T_cells",#3
                "macrophages",#4
@@ -356,18 +357,19 @@ names(lung_labels) <- 1:32
 
 giotto_SC <- annotateGiotto(gobject = giotto_SC, 
                             annotation_vector = lung_labels ,
-                            cluster_column = 'leiden_clus',
-                            name = 'lung_labels')
+                            cluster_column = "leiden_clus",
+                            name = "lung_labels")
 
 dimPlot2D(gobject = giotto_SC,     
-          dim_reduction_name = 'umap',
+          dim_reduction_name = "umap",
           cell_color = "lung_labels", 
-          show_NN_network = T, 
+          show_NN_network = TRUE, 
           point_size = 1.5,
           save_param = list(save_name = "7_Annotation"))
 ```
 
 ![](images/singlecell_lung_adenocarcinoma/7_Annotation.png)
+
 # 8. Session Info
 
 ```{r, eval=FALSE}

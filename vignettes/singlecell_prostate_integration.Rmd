@@ -26,7 +26,7 @@ if(!"Giotto" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed.
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment.
   Giotto::installGiottoEnvironment()
@@ -37,18 +37,18 @@ if(!genv_exists){
 library(Giotto)
 
 # 1. set working directory
-results_folder = 'path/to/result'
+results_folder <- "/path/to/results/"
 
 # Optional: Specify a path to a Python executable within a conda or miniconda 
 # environment. If set to NULL (default), the Python executable within the previously
 # installed Giotto environment will be used.
-my_python_path = NULL # alternatively, "/local/python/path/python" if desired.
+python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 
 # 2. create giotto instructions
-instrs = createGiottoInstructions(save_dir = results_folder,
-                                  save_plot = TRUE,
-                                  show_plot = FALSE,
-                                  python_path = my_python_path)
+instructions <- createGiottoInstructions(save_dir = results_folder,
+                                         save_plot = TRUE,
+                                         show_plot = FALSE,
+                                         python_path = python_path)
 ```
 
 
@@ -56,20 +56,20 @@ instrs = createGiottoInstructions(save_dir = results_folder,
 
 
 ``` {r, eval=FALSE}
-data_dir = "path/to/data/"
+data_path <- "/path/to/data/"
 
-expression1 = read.table(paste0(data_dir, "GSM4773521_PCa1_gene_counts_matrix.txt"))
+expression1 <- read.table(paste0(data_path, "GSM4773521_PCa1_gene_counts_matrix.txt"))
 
 giotto_P1 <- createGiottoObject(expression = expression1,
-                                instructions = instrs) 
+                                instructions = instructions) 
 
-expression2 = read.table(paste0(data_dir, "GSM4773522_PCa2_gene_counts_matrix.txt"))
+expression2 <- read.table(paste0(data_path, "GSM4773522_PCa2_gene_counts_matrix.txt"))
 
 giotto_P2 <- createGiottoObject(expression = expression2,
-                                instructions = instrs) 
+                                instructions = instructions) 
 
 giotto_SC_join <- joinGiottoObjects(gobject_list = list(giotto_P1, giotto_P2),
-                                    gobject_names = c('P1', 'P2'),
+                                    gobject_names = c("P1", "P2"),
                                     join_method = "z_stack")
 ```
 
@@ -82,8 +82,8 @@ giotto_SC_join <- filterGiotto(gobject = giotto_SC_join,
                                expression_threshold = 1,
                                feat_det_in_min_cells = 50,
                                min_det_feats_per_cell = 500,
-                               expression_values = c('raw'),
-                               verbose = T)
+                               expression_values = "raw",
+                               verbose = TRUE)
 
 ## normalize
 giotto_SC_join <- normalizeGiotto(gobject = giotto_SC_join,
@@ -91,7 +91,7 @@ giotto_SC_join <- normalizeGiotto(gobject = giotto_SC_join,
 
 ## add gene & cell statistics
 giotto_SC_join <- addStatistics(gobject = giotto_SC_join,
-                                expression_values = 'raw')
+                                expression_values = "raw")
 ```
 
 
@@ -106,7 +106,7 @@ giotto_SC_join <- runPCA(gobject = giotto_SC_join,
                          scale_unit = TRUE)
 
 # Check screeplot to select number of PCs for clustering
-# screePlot(giotto_SC_join, ncp = 30, save_param = list(save_name = '3_scree_plot'))
+# screePlot(giotto_SC_join, ncp = 30, save_param = list(save_name = "3_scree_plot"))
 
 ## WITHOUT INTEGRATION ##
 # --------------------- #
@@ -116,8 +116,8 @@ giotto_SC_join <- runPCA(gobject = giotto_SC_join,
 showGiottoDimRed(giotto_SC_join)
 
 giotto_SC_join <- createNearestNetwork(gobject = giotto_SC_join,
-                                       dim_reduction_to_use = 'pca',
-                                       dim_reduction_name = 'pca',
+                                       dim_reduction_to_use = "pca",
+                                       dim_reduction_name = "pca",
                                        dimensions_to_use = 1:10,
                                        k = 15)
 
@@ -130,8 +130,8 @@ giotto_SC_join <- doLeidenCluster(gobject = giotto_SC_join,
 giotto_SC_join <- runUMAP(giotto_SC_join)
 
 plotUMAP(gobject = giotto_SC_join,
-         cell_color = 'leiden_clus',
-         show_NN_network = T,
+         cell_color = "leiden_clus",
+         show_NN_network = TRUE,
          point_size = 1.5,
          save_param = list(save_name = "4_cluster_without_integration"))
 ```
@@ -142,14 +142,14 @@ plotUMAP(gobject = giotto_SC_join,
 
 ``` {r, eval=FALSE}
 dimPlot2D(gobject = giotto_SC_join,
-          dim_reduction_name = 'umap',
-          point_shape = 'no_border',
+          dim_reduction_name = "umap",
+          point_shape = "no_border",
           cell_color = "leiden_clus",
           group_by = "list_ID",
-          show_NN_network = F,
+          show_NN_network = FALSE,
           point_size = 0.5, 
-          show_center_label = F,
-          show_legend = F,
+          show_center_label = FALSE,
+          show_legend = FALSE,
           save_param = list(save_name = "4_list_without_integration"))
 ```
 
@@ -172,37 +172,37 @@ library(harmony)
 
 #pDataDT(giotto_SC_join)
 giotto_SC_join <- runGiottoHarmony(giotto_SC_join,
-                                   vars_use = 'list_ID',
-                                   do_pca = F)
+                                   vars_use = "list_ID",
+                                   do_pca = FALSE)
 
 
 ## sNN network (default)
 #showGiottoDimRed(giotto_SC_join)
 giotto_SC_join <- createNearestNetwork(gobject = giotto_SC_join,
-                                       dim_reduction_to_use = 'harmony',
-                                       dim_reduction_name = 'harmony',
-                                       name = 'NN.harmony',
+                                       dim_reduction_to_use = "harmony",
+                                       dim_reduction_name = "harmony",
+                                       name = "NN.harmony",
                                        dimensions_to_use = 1:10,
                                        k = 15)
 
 ## Leiden clustering
 giotto_SC_join <- doLeidenCluster(gobject = giotto_SC_join,
-                                  network_name = 'NN.harmony',
+                                  network_name = "NN.harmony",
                                   resolution = 0.2,
                                   n_iterations = 1000,
-                                  name = 'leiden_harmony')
+                                  name = "leiden_harmony")
 
 # UMAP dimension reduction
 #showGiottoDimRed(giotto_SC_join)
 giotto_SC_join <- runUMAP(giotto_SC_join,
-                          dim_reduction_name = 'harmony',
-                          dim_reduction_to_use = 'harmony',
-                          name = 'umap_harmony')
+                          dim_reduction_name = "harmony",
+                          dim_reduction_to_use = "harmony",
+                          name = "umap_harmony")
 
 plotUMAP(gobject = giotto_SC_join,
-         dim_reduction_name = 'umap_harmony',
-         cell_color = 'leiden_harmony',
-         show_NN_network = T,
+         dim_reduction_name = "umap_harmony",
+         cell_color = "leiden_harmony",
+         show_NN_network = TRUE,
          point_size = 1.5,
          save_param = list(save_name = "4_cluster_with_integration"))
 ```
@@ -213,19 +213,20 @@ plotUMAP(gobject = giotto_SC_join,
 
 ``` {r, eval=FALSE}
 dimPlot2D(gobject = giotto_SC_join,
-          dim_reduction_name = 'umap_harmony',
-          point_shape = 'no_border',
+          dim_reduction_name = "umap_harmony",
+          point_shape = "no_border",
           cell_color = "leiden_harmony",
           group_by = "list_ID",
-          show_NN_network = F,
+          show_NN_network = FALSE,
           point_size = 0.5, 
-          show_center_label = F,
-          show_legend =F ,
+          show_center_label = FALSE,
+          show_legend = FALSE,
           save_param = list(save_name = "4_list_with_integration"))
 ```
 
 
 ![](images/singlecell_prostate_integration/4_list_with_integration.png){width="50.0%"}
+
 # 4. Session Info
 
 ```{r, eval=FALSE}

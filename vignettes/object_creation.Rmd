@@ -20,24 +20,22 @@ To download this data, please ensure that [wget](https://www.gnu.org/software/wg
 library(Giotto)
 library(GiottoData)
 
-genv_exists = checkGiottoEnvironment()
+genv_exists <- checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment.
   installGiottoEnvironment()
 }
 
 # Specify path from which data may be retrieved/stored
-data_directory = paste0(getwd(),'/gobject_data/')
-# alternatively, "/path/to/where/the/data/lives/"
+data_path <- "/path/to/data/"
 
 # Specify path to which results may be saved
-results_directory = paste0(getwd(),'/gobject_results/') 
-# alternatively, "/path/to/store/the/results/"
+results_folder <- "/path/to/results/"
 
-# Download osmFISH dataset to data_directory
-getSpatialDataset(dataset = 'osmfish_SS_cortex', 
-                  directory = data_directory, 
-                  method = 'wget')
+# Download osmFISH dataset to data_path
+getSpatialDataset(dataset = "osmfish_SS_cortex", 
+                  directory = data_path, 
+                  method = "wget")
 ```
 
 
@@ -52,16 +50,16 @@ Here, creating a `giotto` object with the minimum requirements is shown in two e
 ```{r, eval=FALSE}
 # Example 1.
 # Create a Giotto object using data directly from file paths 
-osm_exprs = paste0(data_directory, "osmFISH_prep_expression.txt")
-osm_locs = paste0(data_directory, "osmFISH_prep_cell_coordinates.txt")
+osm_exprs <- paste0(data_path, "osmFISH_prep_expression.txt")
+osm_locs <- paste0(data_path, "osmFISH_prep_cell_coordinates.txt")
 
 minimum_gobject1 <- createGiottoObject(expression = osm_exprs,
                                        spatial_locs = osm_locs)
 
 # Example 2.
 # Create a Giotto object using objects already loaded into workspace
-expression_matrix = readExprMatrix(path = osm_exprs) # fast method to read expression matrix
-cell_locations = data.table::fread(file = osm_locs)
+expression_matrix <- readExprMatrix(path = osm_exprs) # fast method to read expression matrix
+cell_locations <- data.table::fread(file = osm_locs)
 
 minimum_gobject2 <- createGiottoObject(expression = expression_matrix,
                                        spatial_locs = cell_locations)
@@ -87,8 +85,8 @@ Numerical columns will be interpreted in order of x, y, and (optionally) z coord
 
 ```{r, eval=FALSE}
 # Arbitrary modifications
-scaled_matrix = expression_matrix * 1.2
-custom_matrix = expression_matrix * 0.5
+scaled_matrix <- expression_matrix * 1.2
+custom_matrix <- expression_matrix * 0.5
 
 # Provide multiple expression matrices at once to the Giotto Object
 # If these matrices are stored in files rather than in the workspace,
@@ -128,36 +126,39 @@ Here is an example of a more customized Giotto object.
 
 ```{r, eval=FALSE}
 # Specify data with file paths 
-osm_exprs = paste0(data_directory, "osmFISH_prep_expression.txt")
-osm_locs = paste0(data_directory, "osmFISH_prep_cell_coordinates.txt")
-meta_path = paste0(data_directory, "osmFISH_prep_cell_metadata.txt")
+osm_exprs <- paste0(data_path, "osmFISH_prep_expression.txt")
+osm_locs <- paste0(data_path, "osmFISH_prep_cell_coordinates.txt")
+meta_path <- paste0(data_path, "osmFISH_prep_cell_metadata.txt")
 
 # Create instructions
 
 # Optional: Specify a path to a Python executable within a conda or miniconda 
 # environment. If set to NULL (default), the Python executable within the previously
 # installed Giotto environment will be used.
-my_python_path = NULL # alternatively, "/local/python/path/python" if desired.
+python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 
-instrs = createGiottoInstructions(python_path = my_python_path,
-                                  save_dir = results_directory,
-                                  plot_format = 'png',
+instructions <- createGiottoInstructions(python_path = python_path,
+                                  save_dir = results_folder,
+                                  plot_format = "png",
                                   dpi = 200,
                                   height = 9,
-                                  width = 9)
+                                  width = 9,
+                                  save_plot = TRUE,
+                                  show_plot = FALSE,
+                                  return_plot = FALSE)
 
 # Create Giotto object
 custom_gobject <- createGiottoObject(expression = osm_exprs,
                                      spatial_locs = osm_locs,
-                                     instructions = instrs)
+                                     instructions = instructions)
 
 # Add field annotations as cell metadata
-metadata = data.table::fread(file = meta_path)
+metadata <- data.table::fread(file = meta_path)
 
 custom_gobject <- addCellMetadata(custom_gobject, 
                                   new_metadata = metadata,
-                                  by_column = T, 
-                                  column_cell_ID = 'CellID')
+                                  by_column = TRUE, 
+                                  column_cell_ID = "CellID")
 
 # Show the Giotto instructions associated with the Giotto object
 showGiottoInstructions(custom_gobject)
@@ -174,30 +175,30 @@ The `giottoInstructions` may be changed, or completely replaced:
 ```{r, eval=FALSE}
 # Change a specific previously set parameter, e.g. change dpi = 200 to dpi = 300
 custom_gobject <- changeGiottoInstructions(custom_gobject, 
-                                           params = 'dpi',
+                                           params = "dpi",
                                            new_values = 300)
 
 # Observe that the instructions have changed
-instructions(custom_gobject, 'dpi')
+instructions(custom_gobject, "dpi")
 
 # Create new instructions using a named list
-sub_results_directory = paste0(results_directory, 'specific_results/')
-my_python_path = instructions(custom_gobject, 'python_path')
+sub_results_folder <- paste0(results_folder, "specific_results/")
+python_path <- instructions(custom_gobject, "python_path")
 
-new_instrs = list(python_path = my_python_path,
-                  show_plot = TRUE,
-                  return_plot = FALSE,
-                  save_plot = TRUE,
-                  save_dir = sub_results_directory,
-                  plot_format = 'jpg',
-                  dpi = 250,
-                  units = 'in',
-                  height = 12,
-                  width = 12,
-                  is_docker = FALSE)
+new_instructions <- list(python_path = python_path,
+                         show_plot = TRUE,
+                         return_plot = FALSE,
+                         save_plot = TRUE,
+                         save_dir = sub_results_folder,
+                         plot_format = "jpg",
+                         dpi = 250,
+                         units = "in",
+                         height = 12,
+                         width = 12,
+                         is_docker = FALSE)
 
 # Change all instructions
-instructions(custom_gobject) = new_instrs
+instructions(custom_gobject) <- new_instructions
 
 # Observe that the instructions have changed
 showGiottoInstructions(custom_gobject)
@@ -206,7 +207,7 @@ showGiottoInstructions(custom_gobject)
 
 ### 1.3.1 Active spatial unit and feature type
 
-Many of *Giotto*'s functions have `spat_unit` and `feat_type` parameters that govern which set of data to use. The active spatial unit and feature type is visible when directly returning the `giotto` object and decides what defaults are used when those parameters are not supplied.
+Many of *Giotto*"s functions have `spat_unit` and `feat_type` parameters that govern which set of data to use. The active spatial unit and feature type is visible when directly returning the `giotto` object and decides what defaults are used when those parameters are not supplied.
 
 This setting is also stored within `giottoInstructions` and there are convenient accessors specific for those two settings:
 
@@ -237,14 +238,14 @@ spatPlot(custom_gobject)
 ```{r, eval=FALSE}
 # Plot clusters, create, and save to a new subdirectory, all while overwriting formatting
 spatPlot(custom_gobject, 
-         cell_color = 'ClusterName', 
+         cell_color = "ClusterName", 
          save_plot = TRUE,
          return_plot = TRUE,
          show_plot = TRUE,
-         save_param = list(save_folder = 'plots/', # Create subdirectory
-                           save_name = 'cell_clusters', 
-                           save_format = 'png', 
-                           units = 'in',
+         save_param = list(save_folder = "plots/", # Create subdirectory
+                           save_name = "cell_clusters", 
+                           save_format = "png", 
+                           units = "in",
                            base_height = 9,
                            base_width = 9))
 ```

@@ -30,7 +30,7 @@ if(!"GiottoData" %in% installed.packages()) {
 library(GiottoData)
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = checkGiottoEnvironment()
+genv_exists <- checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   installGiottoEnvironment()
@@ -43,55 +43,55 @@ if(!genv_exists){
 
 ```{r, eval=FALSE}
 # Specify path to which results may be saved
-results_directory = paste0(getwd(),'/giotto_anndata_conversion/') 
+results_folder <- "/path/to/results/"
 
 # Optional: Specify a path to a Python executable within a conda or miniconda 
 # environment. If set to NULL (default), the Python executable within the previously
 # installed Giotto environment will be used.
-my_python_path = NULL # alternatively, "/local/python/path/python" if desired.
+python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 
-mini_gobject = loadGiottoMini(dataset = 'vizgen', 
-                              python_path = my_python_path)
+mini_gobject <- loadGiottoMini(dataset = "vizgen", 
+                               python_path = python_path)
 
-instrs = showGiottoInstructions(mini_gobject)
-instrs$save_dir = results_directory
+instructions <- showGiottoInstructions(mini_gobject)
+instructions$save_dir <- results_directory
 
-mini_gobject = replaceGiottoInstructions(gobject = mini_gobject,
-                                         instructions = instrs)
+mini_gobject <- replaceGiottoInstructions(gobject = mini_gobject,
+                                          instructions = instructions)
 ```
 
 
 # 4. Convert Giotto to AnnData
 
-Since Giotto is structured hierarchally, converting Giotto to AnnData will result in multiple `.h5ad` files. Each file will correspond to a Giotto `spat_unit` `feat_type` pair. Furthermore, each expression slot will be treated as a `layer` in the resulting AnnData slot.
+Since Giotto is structured hierarchically, converting Giotto to AnnData will result in multiple `.h5ad` files. Each file will correspond to a Giotto `spat_unit` `feat_type` pair. Furthermore, each expression slot will be treated as a `layer` in the resulting AnnData slot.
 
-Squidpy anndata objects take different defaults for various operations compared to Giotto. For instance, the default nearest neighbor network is a kNN for squidpy, while the default for Giotto is a sNN. We'll create a kNN in addition to the sNN within this object already to show how it they are handled.
+Squidpy anndata objects take different defaults for various operations compared to Giotto. For instance, the default nearest neighbor network is a kNN for squidpy, while the default for Giotto is a sNN. We"ll create a kNN in addition to the sNN within this object already to show how it they are handled.
 
 
 ```{r, eval=FALSE}
-mini_gobject = createNearestNetwork(gobject = mini_gobject,
-                                    spat_unit = "aggregate",
-                                    feat_type = "rna",
-                                    type = "kNN",
-                                    dim_reduction_to_use = "umap",
-                                    dim_reduction_name = "umap",
-                                    k = 15,
-                                    name = "kNN.umap")
+mini_gobject <- createNearestNetwork(gobject = mini_gobject,
+                                     spat_unit = "aggregate",
+                                     feat_type = "rna",
+                                     type = "kNN",
+                                     dim_reduction_to_use = "umap",
+                                     dim_reduction_name = "umap",
+                                     k = 15,
+                                     name = "kNN.umap")
 ```
 
 
-The above cell creates a nearest network with almost all default parameters. We'll change some and make a new network to show how the converter handles this.
+The above cell creates a nearest network with almost all default parameters. We"ll change some and make a new network to show how the converter handles this.
 
 
 ```{r, eval=FALSE}
-mini_gobject = createNearestNetwork(gobject = mini_gobject,
-                                    spat_unit = "aggregate",
-                                    feat_type = "rna",
-                                    type = "kNN",
-                                    dim_reduction_to_use = "umap",
-                                    dim_reduction_name = "umap",
-                                    k = 6,
-                                    name = "new_network")
+mini_gobject <- createNearestNetwork(gobject = mini_gobject,
+                                     spat_unit = "aggregate",
+                                     feat_type = "rna",
+                                     type = "kNN",
+                                     dim_reduction_to_use = "umap",
+                                     dim_reduction_name = "umap",
+                                     k = 6,
+                                     name = "new_network")
 ```
 
 
@@ -99,9 +99,9 @@ Since we have multiple `spat_unit` `feat_type` pairs, there will be multiple fil
 
 
 ```{r, eval=FALSE}
-anndata_conversions = giottoToAnnData(gobject = mini_gobject,
-                                      save_directory = results_directory,
-                                      python_path = my_python_path)
+anndata_conversions <- giottoToAnnData(gobject = mini_gobject,
+                                       save_directory = results_directory,
+                                       python_path = my_python_path)
 ```
 
 
@@ -109,18 +109,18 @@ anndata_conversions = giottoToAnnData(gobject = mini_gobject,
 
 To convert an AnnData Object back into a Giotto object, it must first be saved as a `.h5ad` file. The name of said file may then be provided to `anndataToGiotto()` for conversion.
 
-If a nearest neighbor network or spatial netowkr was created using the `key_added` argument, they may be provided to arguments n_key_added and/or spatial_n\_key_added, respectively. If converting an anndata object that was originally a giotto object, the `.txt` files generated by `giottoToAnnData()` may be provided to these arguments as well.
+If a nearest neighbor network or spatial network was created using the `key_added` argument, they may be provided to arguments n_key_added and/or spatial_n\_key_added, respectively. If converting an anndata object that was originally a giotto object, the `.txt` files generated by `giottoToAnnData()` may be provided to these arguments as well.
 
 
 ```{r, eval=FALSE}
 z0_rna_gobject <- anndataToGiotto(anndata_path = "./giotto_anndata_conversion/z0_rna_converted_gobject.h5ad",
-                                  python_path = my_python_path)
+                                  python_path = python_path)
 
 z1_rna_gobject <- anndataToGiotto(anndata_path = "./giotto_anndata_conversion/z1_rna_converted_gobject.h5ad",
-                                  python_path = my_python_path)
+                                  python_path = python_path)
 
 aggregate_rna_gobject <- anndataToGiotto(anndata_path = "./giotto_anndata_conversion/aggregate_rna_converted_gobject.h5ad",
-                                         python_path = my_python_path,
+                                         python_path = python_path,
                                          n_key_added = list("sNN.pca","new_network"),
                                          spatial_n_key_added = "aggregate_rna_spatial_network_keys_added.txt")
 ```

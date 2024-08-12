@@ -21,7 +21,7 @@ if(!"GiottoData" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed.
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment.
   Giotto::installGiottoEnvironment()
@@ -60,10 +60,11 @@ showGiottoInstructions(seqfish_mini)
 
 # Change one or more instructions
 # to automatically save figures in save_dir, set save_plot to TRUE
-results_dir = 'results'
+results_folder <- "/path/to/results/"
+
 seqfish_mini <- changeGiottoInstructions(seqfish_mini,
                                          params = c("save_dir", "save_plot", "show_plot"),
-                                         new_values = c(results_dir,TRUE, TRUE))
+                                         new_values = c(results_folder,TRUE, TRUE))
 ```
 
 # 2. Processing steps
@@ -82,14 +83,13 @@ seqfish_mini <- filterGiotto(gobject = seqfish_mini,
 
 seqfish_mini <- normalizeGiotto(gobject = seqfish_mini, 
                                 scalefactor = 6000, 
-                                verbose = T)
+                                verbose = TRUE)
 
 seqfish_mini <- addStatistics(gobject = seqfish_mini)
 
 seqfish_mini <- adjustGiottoMatrix(gobject = seqfish_mini, 
-                                   expression_values = c('normalized'), 
-                                   covariate_columns = c('nr_feats',
-                                                         'total_expr'))
+                                   expression_values = "normalized", 
+                                   covariate_columns = c("nr_feats", "total_expr"))
 ```
 
 # 3. Dimension reduction
@@ -157,8 +157,8 @@ seqfish_mini <- doLeidenCluster(gobject = seqfish_mini,
 
 # visualize UMAP cluster results
 plotUMAP(gobject = seqfish_mini, 
-         cell_color = 'leiden_clus', 
-         show_NN_network = T, 
+         cell_color = "leiden_clus", 
+         show_NN_network = TRUE, 
          point_size = 2.5)
 ```
 
@@ -167,8 +167,8 @@ plotUMAP(gobject = seqfish_mini,
 ```{r, eval=FALSE}
 # visualize UMAP and spatial results
 spatDimPlot(gobject = seqfish_mini, 
-            cell_color = 'leiden_clus', 
-            spat_point_shape = 'voronoi')
+            cell_color = "leiden_clus", 
+            spat_point_shape = "voronoi")
 ```
 
 ![](images/mini_seqfish/6-spatDimPlot2D.png)
@@ -176,7 +176,7 @@ spatDimPlot(gobject = seqfish_mini,
 ```{r, eval=FALSE}
 # heatmap and dendrogram
 showClusterHeatmap(gobject = seqfish_mini, 
-                   cluster_column = 'leiden_clus')
+                   cluster_column = "leiden_clus")
 ```
 
 ![](images/mini_seqfish/7-showClusterHeatmap.png)
@@ -184,13 +184,13 @@ showClusterHeatmap(gobject = seqfish_mini,
 The following step requires the installation of {ggdendro}.
 
 ```{r, eval=FALSE}
-# install.packages('ggdendro')
+# install.packages("ggdendro")
 library(ggdendro)
 
 showClusterDendrogram(seqfish_mini, 
                       h = 0.5, 
-                      rotate = T, 
-                      cluster_column = 'leiden_clus')
+                      rotate = TRUE, 
+                      cluster_column = "leiden_clus")
 ```
 
 ![](images/mini_seqfish/8-showClusterDendrogram.png)
@@ -198,31 +198,31 @@ showClusterDendrogram(seqfish_mini,
 # 5. Differential expression
 
 ```{r, eval=FALSE}
-gini_markers = findMarkers_one_vs_all(gobject = seqfish_mini,
-                                      method = 'gini',
-                                      expression_values = 'normalized',
-                                      cluster_column = 'leiden_clus',
-                                      min_feats = 20,
-                                      min_expr_gini_score = 0.5,
-                                      min_det_gini_score = 0.5)
+markers_gini <- findMarkers_one_vs_all(gobject = seqfish_mini,
+                                       method = "gini",
+                                       expression_values = "normalized",
+                                       cluster_column = "leiden_clus",
+                                       min_feats = 20,
+                                       min_expr_gini_score = 0.5,
+                                       min_det_gini_score = 0.5)
 
 # get top 2 genes per cluster and visualize with violin plot
-topgenes_gini = gini_markers[, head(.SD, 2), by = 'cluster']
+topgenes_gini = markers_gini[, head(.SD, 2), by = "cluster"]
 
 violinPlot(seqfish_mini, 
            feats = topgenes_gini$feats[1:4], 
-           cluster_column = 'leiden_clus')
+           cluster_column = "leiden_clus")
 ```
 
 ![](images/mini_seqfish/9-violinPlot.png)
 
 ```{r, eval=FALSE}
 # get top 6 genes per cluster and visualize with heatmap
-topgenes_gini2 = gini_markers[, head(.SD, 6), by = 'cluster']
+topgenes_gini <- markers_gini[, head(.SD, 6), by = "cluster"]
 
 plotMetaDataHeatmap(seqfish_mini, 
-                    selected_feats = topgenes_gini2$feats,
-                    metadata_cols = c('leiden_clus'))
+                    selected_feats = topgenes_gini$feats,
+                    metadata_cols = "leiden_clus")
 ```
 
 ![](images/mini_seqfish/10-plotMetaDataHeatmap.png)
@@ -230,22 +230,22 @@ plotMetaDataHeatmap(seqfish_mini,
 # 6. Cell type annotation
 
 ```{r, eval=FALSE}
-clusters_cell_types = c('cell A', 'cell B', 'cell C', 'cell D',
-                        'cell E', 'cell F', 'cell G', 'cell H')
+clusters_cell_types <- c("cell A", "cell B", "cell C", "cell D",
+                        "cell E", "cell F", "cell G", "cell H")
 
-names(clusters_cell_types) = 1:8
+names(clusters_cell_types) <- 1:8
 
 seqfish_mini <- annotateGiotto(gobject = seqfish_mini, 
                                annotation_vector = clusters_cell_types, 
-                               cluster_column = 'leiden_clus', 
-                               name = 'cell_types')
+                               cluster_column = "leiden_clus", 
+                               name = "cell_types")
 
 # check new cell metadata
 pDataDT(seqfish_mini)
 
 # visualize annotations
 spatDimPlot(gobject = seqfish_mini, 
-            cell_color = 'cell_types', 
+            cell_color = "cell_types", 
             spat_point_size = 3, 
             dim_point_size = 3)
 ```
@@ -254,13 +254,13 @@ spatDimPlot(gobject = seqfish_mini,
 
 ```{r, eval=FALSE}
 # heatmap
-topgenes_heatmap = gini_markers[, head(.SD, 4), by = 'cluster']
+topgenes_heatmap <- markers_gini[, head(.SD, 4), by = "cluster"]
 
 plotHeatmap(gobject = seqfish_mini,
             feats = topgenes_heatmap$feats, 
-            feat_order = 'custom',
+            feat_order = "custom",
             feat_custom_order = unique(topgenes_heatmap$feats),
-            cluster_column = 'cell_types',
+            cluster_column = "cell_types",
             legend_nrows = 1)
 ```
 
@@ -280,7 +280,7 @@ showGiottoSpatGrids(seqfish_mini)
 
 # visualize grid
 spatPlot(gobject = seqfish_mini,
-         show_grid = T, 
+         show_grid = TRUE, 
          point_size = 1.5)
 ```
 
@@ -306,29 +306,29 @@ seqfish_mini <- createSpatialNetwork(gobject = seqfish_mini,
 
 seqfish_mini <- createSpatialNetwork(gobject = seqfish_mini,
                                      minimum_k = 2, 
-                                     method = 'kNN', 
+                                     method = "kNN", 
                                      k = 10)
 
 showGiottoSpatNetworks(seqfish_mini)
 
 # visualize the two different spatial networks  
 spatPlot(gobject = seqfish_mini, 
-         show_network = T,
-         network_color = 'blue', 
-         spatial_network_name = 'Delaunay_network',
+         show_network = TRUE,
+         network_color = "blue", 
+         spatial_network_name = "Delaunay_network",
          point_size = 2.5, 
-         cell_color = 'leiden_clus')
+         cell_color = "leiden_clus")
 ```
 
 ![](images/mini_seqfish/15-spatPlot2D.png)
 
 ```{r, eval=FALSE}
 spatPlot(gobject = seqfish_mini, 
-         show_network = T,
-         network_color = 'blue', 
-         spatial_network_name = 'kNN_network',
+         show_network = TRUE,
+         network_color = "blue", 
+         spatial_network_name = "kNN_network",
          point_size = 2.5, 
-         cell_color = 'leiden_clus')
+         cell_color = "leiden_clus")
 ```
 
 ![](images/mini_seqfish/16-spatPlot2D.png)
@@ -344,15 +344,15 @@ Identify spatial genes with 3 different methods:
 Visualize top 4 genes per method.
 
 ```{r, eval=FALSE}
-km_spatialgenes = binSpect(seqfish_mini)
+km_spatialfeats <- binSpect(seqfish_mini)
 
 spatFeatPlot2D(seqfish_mini,
-               expression_values = 'scaled', 
-               feats = km_spatialgenes[1:4]$feats,
-               point_shape = 'border', 
+               expression_values = "scaled", 
+               feats = km_spatialfeats[1:4]$feats,
+               point_shape = "border", 
                point_border_stroke = 0.1,
-               show_network = F, 
-               network_color = 'lightgrey', 
+               show_network = FALSE, 
+               network_color = "lightgrey", 
                point_size = 2.5,
                cow_n_col = 2)
 ```
@@ -360,16 +360,16 @@ spatFeatPlot2D(seqfish_mini,
 ![](images/mini_seqfish/17-spatFeatPlot2D.png)
 
 ```{r, eval=FALSE}
-rank_spatialgenes = binSpect(seqfish_mini, 
-                             bin_method = 'rank')
+rank_spatialgenes <- binSpect(seqfish_mini, 
+                              bin_method = "rank")
 
 spatFeatPlot2D(seqfish_mini, 
-               expression_values = 'scaled', 
+               expression_values = "scaled", 
                feats = rank_spatialgenes[1:4]$feats,
-               point_shape = 'border', 
+               point_shape = "border", 
                point_border_stroke = 0.1,
-               show_network = F, 
-               network_color = 'lightgrey', 
+               show_network = FALSE, 
+               network_color = "lightgrey", 
                point_size = 2.5,
                cow_n_col = 2)
 ```
@@ -377,15 +377,15 @@ spatFeatPlot2D(seqfish_mini,
 ![](images/mini_seqfish/18-spatFeatPlot2D.png)
 
 ```{r, eval=FALSE}
-silh_spatialgenes = silhouetteRank(gobject = seqfish_mini) # TODO: suppress print output
+silh_spatialgenes <- silhouetteRank(gobject = seqfish_mini) # TODO: suppress print output
 
 spatFeatPlot2D(seqfish_mini, 
-               expression_values = 'scaled', 
+               expression_values = "scaled", 
                feats = silh_spatialgenes[1:4]$genes,
-               point_shape = 'border', 
+               point_shape = "border", 
                point_border_stroke = 0.1,
-               show_network = F, 
-               network_color = 'lightgrey', 
+               show_network = FALSE, 
+               network_color = "lightgrey", 
                point_size = 2.5,
                cow_n_col = 2)
 ```
@@ -401,52 +401,52 @@ Identify robust spatial co-expression patterns using the spatial network or grid
 
 ```{r, eval=FALSE}
 # 1. calculate spatial correlation scores 
-ext_spatial_genes = km_spatialgenes[1:500]$feats
+ext_spatial_genes <- km_spatialfeats[1:500]$feats
 
-spat_cor_netw_DT = detectSpatialCorFeats(seqfish_mini,
-                                         method = 'network', 
-                                         spatial_network_name = 'Delaunay_network',
-                                         subset_feats = ext_spatial_genes)
+spat_cor_netw_DT <- detectSpatialCorFeats(seqfish_mini,
+                                          method = "network", 
+                                          spatial_network_name = "Delaunay_network",
+                                          subset_feats = ext_spatial_genes)
 
 # 2. cluster correlation scores
-spat_cor_netw_DT = clusterSpatialCorFeats(spat_cor_netw_DT, 
-                                          name = 'spat_netw_clus', 
-                                          k = 8)
+spat_cor_netw_DT <- clusterSpatialCorFeats(spat_cor_netw_DT, 
+                                           name = "spat_netw_clus", 
+                                           k = 8)
 
 heatmSpatialCorFeats(seqfish_mini, 
                      spatCorObject = spat_cor_netw_DT, 
-                     use_clus_name = 'spat_netw_clus')
+                     use_clus_name = "spat_netw_clus")
 ```
 
 ![](images/mini_seqfish/20-heatmSpatialCorFeats.png)
 
 ```{r, eval=FALSE}
-netw_ranks = rankSpatialCorGroups(seqfish_mini, 
-                                  spatCorObject = spat_cor_netw_DT, 
-                                  use_clus_name = 'spat_netw_clus')
+netw_ranks <- rankSpatialCorGroups(seqfish_mini, 
+                                   spatCorObject = spat_cor_netw_DT, 
+                                   use_clus_name = "spat_netw_clus")
 ```
 
 ![](images/mini_seqfish/21-rankSpatialCorGroups.png)
 
 ```{r, eval=FALSE}
-top_netw_spat_cluster = showSpatialCorFeats(spat_cor_netw_DT, 
-                                            use_clus_name = 'spat_netw_clus',
-                                            selected_clusters = 6, 
-                                            show_top_feats = 1)
+top_netw_spat_cluster <- showSpatialCorFeats(spat_cor_netw_DT, 
+                                             use_clus_name = "spat_netw_clus",
+                                             selected_clusters = 6, 
+                                             show_top_feats = 1)
 
-cluster_genes_DT = showSpatialCorFeats(spat_cor_netw_DT, 
-                                       use_clus_name = 'spat_netw_clus',
-                                       show_top_feats = 1)
+cluster_genes_DT <- showSpatialCorFeats(spat_cor_netw_DT, 
+                                        use_clus_name = "spat_netw_clus",
+                                        show_top_feats = 1)
 
-cluster_genes = cluster_genes_DT$clus 
-names(cluster_genes) = cluster_genes_DT$feat_ID
+cluster_genes <- cluster_genes_DT$clus 
+names(cluster_genes) <- cluster_genes_DT$feat_ID
 
 seqfish_mini <- createMetafeats(seqfish_mini,
                                 feat_clusters = cluster_genes,
-                                name = 'cluster_metagene')
+                                name = "cluster_metagene")
 
 spatCellPlot(seqfish_mini,
-             spat_enr_names = 'cluster_metagene',
+             spat_enr_names = "cluster_metagene",
              cell_annotation_values = netw_ranks$clusters,
              point_size = 1.5, 
              cow_n_col = 3)
@@ -459,44 +459,45 @@ spatCellPlot(seqfish_mini,
 The following HMRF function requires {smfishHmrf} .
 
 ```{r, eval=FALSE}
-# remotes::install_bitbucket(repo = 'qzhudfci/smfishhmrf-r', ref='master')
+# remotes::install_bitbucket(repo = "qzhudfci/smfishhmrf-r", ref="master")
 library(smfishHmrf)
 
-hmrf_folder = paste0(results_dir,'/','11_HMRF/')
+hmrf_folder <- paste0(results_folder, "/11_HMRF/")
 
-if(!file.exists(hmrf_folder)) dir.create(hmrf_folder, recursive = T)
+if(!file.exists(hmrf_folder)) dir.create(hmrf_folder, recursive = TRUE)
 
 # perform hmrf
-my_spatial_genes = km_spatialgenes[1:100]$feats
+my_spatial_genes <- km_spatialfeats[1:100]$feats
 
-HMRF_spatial_genes = doHMRF(gobject = seqfish_mini,
-                            expression_values = 'scaled',
+HMRF_spatial_genes <- doHMRF(gobject = seqfish_mini,
+                            expression_values = "scaled",
                             spatial_genes = my_spatial_genes,
-                            spatial_network_name = 'Delaunay_network',
+                            spatial_network_name = "Delaunay_network",
                             k = 9,
                             betas = c(28,2,2),
-                            output_folder = paste0(hmrf_folder, '/', 'Spatial_genes/SG_top100_k9_scaled'))
+                            output_folder = paste0(hmrf_folder, "/", "Spatial_genes/SG_top100_k9_scaled"))
 
 # check and select hmrf
 for(i in seq(28, 30, by = 2)) {
   viewHMRFresults2D(gobject = seqfish_mini,
                     HMRFoutput = HMRF_spatial_genes,
-                    k = 9, betas_to_view = i,
+                    k = 9, 
+                    betas_to_view = i,
                     point_size = 2)
 }
 
 seqfish_mini <- addHMRF(gobject = seqfish_mini,
                         HMRFoutput = HMRF_spatial_genes,
                         k = 9, 
-                        betas_to_add = c(28),
-                        hmrf_name = 'HMRF')
+                        betas_to_add = 28,
+                        hmrf_name = "HMRF")
 
 # visualize selected hmrf result
-giotto_colors = Giotto::getDistinctColors(9)
-names(giotto_colors) = 1:9
+giotto_colors <- getDistinctColors(9)
+names(giotto_colors) <- 1:9
 
 spatPlot(gobject = seqfish_mini, 
-         cell_color = 'HMRF_k9_b.28',
+         cell_color = "HMRF_k9_b.28",
          point_size = 3, 
          coord_fix_ratio = 1, 
          cell_color_code = giotto_colors)
@@ -509,11 +510,11 @@ spatPlot(gobject = seqfish_mini,
 ```{r, eval=FALSE}
 set.seed(seed = 2841)
 
-cell_proximities = cellProximityEnrichment(gobject = seqfish_mini,
-                                           cluster_column = 'cell_types',
-                                           spatial_network_name = 'Delaunay_network',
-                                           adjust_method = 'fdr',
-                                           number_of_simulations = 1000)
+cell_proximities <- cellProximityEnrichment(gobject = seqfish_mini,
+                                            cluster_column = "cell_types",
+                                            spatial_network_name = "Delaunay_network",
+                                            adjust_method = "fdr",
+                                            number_of_simulations = 1000)
 
 # barplot
 cellProximityBarplot(gobject = seqfish_mini, 
@@ -529,10 +530,10 @@ cellProximityBarplot(gobject = seqfish_mini,
 ## heatmap
 cellProximityHeatmap(gobject = seqfish_mini, 
                      CPscore = cell_proximities, 
-                     order_cell_types = T, 
-                     scale = T,
+                     order_cell_types = TRUE, 
+                     scale = TRUE,
                      color_breaks = c(-1.5, 0, 1.5), 
-                     color_names = c('blue', 'white', 'red'))
+                     color_names = c("blue", "white", "red"))
 ```
 
 ![](images/mini_seqfish/25-cellProximityHeatmap.png)
@@ -541,8 +542,8 @@ cellProximityHeatmap(gobject = seqfish_mini,
 # network
 cellProximityNetwork(gobject = seqfish_mini, 
                      CPscore = cell_proximities, 
-                     remove_self_edges = T, 
-                     only_show_enrichment_edges = T)
+                     remove_self_edges = TRUE, 
+                     only_show_enrichment_edges = TRUE)
 ```
 
 ![](images/mini_seqfish/26-cellProximityNetwork.png)
@@ -551,10 +552,10 @@ cellProximityNetwork(gobject = seqfish_mini,
 # network with self-edges
 cellProximityNetwork(gobject = seqfish_mini, 
                      CPscore = cell_proximities,
-                     remove_self_edges = F, 
+                     remove_self_edges = FALSE, 
                      self_loop_strength = 0.3,
-                     only_show_enrichment_edges = F,
-                     rescale_edge_weights = T,
+                     only_show_enrichment_edges = FALSE,
+                     rescale_edge_weights = TRUE,
                      node_size = 8,
                      edge_weight_range_depletion = c(1, 2),
                      edge_weight_range_enrichment = c(2,5))
@@ -566,14 +567,14 @@ cellProximityNetwork(gobject = seqfish_mini,
 
 ```{r, eval=FALSE}
 # Option 1
-spec_interaction = "cell D--cell F"
+spec_interaction <- "cell D--cell F"
 
 cellProximitySpatPlot2D(gobject = seqfish_mini,
                         interaction_name = spec_interaction,
-                        show_network = T,
-                        cluster_column = 'cell_types',
-                        cell_color = 'cell_types',
-                        cell_color_code = c('cell D' = 'lightblue', 'cell F' = 'red'),
+                        show_network = TRUE,
+                        cluster_column = "cell_types",
+                        cell_color = "cell_types",
+                        cell_color_code = c("cell D" = "lightblue", "cell F" = "red"),
                         point_size_select = 4, 
                         point_size_other = 2)
 ```
@@ -584,24 +585,24 @@ cellProximitySpatPlot2D(gobject = seqfish_mini,
 # Option 2: create additional metadata
 seqfish_mini <- addCellIntMetadata(seqfish_mini,
                                    spat_unit = "cell",
-                                   spatial_network = 'Delaunay_network',
-                                   cluster_column = 'cell_types',
+                                   spatial_network = "Delaunay_network",
+                                   cluster_column = "cell_types",
                                    cell_interaction = spec_interaction,
-                                   name = 'D_F_interactions')
+                                   name = "D_F_interactions")
 
 spatPlot(seqfish_mini, 
-         cell_color = 'D_F_interactions', 
+         cell_color = "D_F_interactions", 
          legend_symbol_size = 3,
-         select_cell_groups =  c('other_cell D', 'other_cell F', 'select_cell D', 'select_cell F'))
+         select_cell_groups =  c("other_cell D", "other_cell F", "select_cell D", "select_cell F"))
 ```
 
 ![](images/mini_seqfish/29-spatPlot2D.png)
 
-# 13. Cell neighborhood: interaction changed features
+# 13. Cell neighborhood: Interaction Changed Features
 
 ```{r, eval=FALSE}
 ## select top 25 highest expressing genes
-gene_metadata = fDataDT(seqfish_mini)
+gene_metadata <- fDataDT(seqfish_mini)
 
 plot(gene_metadata$nr_cells, gene_metadata$mean_expr)
 
@@ -609,102 +610,102 @@ plot(gene_metadata$nr_cells, gene_metadata$mean_expr_det)
 
 quantile(gene_metadata$mean_expr_det)
 
-high_expressed_genes = gene_metadata[mean_expr_det > 4]$feat_ID
+high_expressed_genes <- gene_metadata[mean_expr_det > 4]$feat_ID
 
 ## identify features (genes) that are associated with proximity to other cell types
-ICFscoresHighGenes = findICF(gobject = seqfish_mini,
-                             selected_feats = high_expressed_genes,
-                             spatial_network_name = 'Delaunay_network',
-                             cluster_column = 'cell_types',
-                             diff_test = 'permutation',
-                             adjust_method = 'fdr',
-                             nr_permutations = 500,
-                             do_parallel = T)
+ICFscoresHighGenes <- findInteractionChangedFeats(gobject = seqfish_mini,
+                                                  selected_feats = high_expressed_genes,
+                                                  spatial_network_name = "Delaunay_network",
+                                                  cluster_column = "cell_types",
+                                                  diff_test = "permutation",
+                                                  adjust_method = "fdr",
+                                                  nr_permutations = 500,
+                                                  do_parallel = TRUE)
 
 ## visualize all genes
 plotCellProximityFeats(seqfish_mini, 
                        icfObject = ICFscoresHighGenes, 
-                       method = 'dotplot')
+                       method = "dotplot")
 ```
 
 ![](images/mini_seqfish/30-plotCellProximityFeats.png)
 
 ```{r, eval=FALSE}
 ## filter genes
-ICFscoresFilt = filterICF(ICFscoresHighGenes, 
-                          min_cells = 2, 
-                          min_int_cells = 2, 
-                          min_fdr = 0.1,
-                          min_spat_diff = 0.1, 
-                          min_log2_fc = 0.1, 
-                          min_zscore = 1)
+ICFscoresFilt <- filterICF(ICFscoresHighGenes, 
+                           min_cells = 2, 
+                           min_int_cells = 2, 
+                           min_fdr = 0.1,
+                           min_spat_diff = 0.1, 
+                           min_log2_fc = 0.1, 
+                           min_zscore = 1)
 
 ## visualize subset of interaction changed genes (ICGs)
-ICF_genes = c('Cpne2', 'Scg3', 'Cmtm3', 'Cplx1', 'Lingo1')
-ICF_genes_types = c('cell E', 'cell D', 'cell D', 'cell G', 'cell E')
-names(ICF_genes) = ICF_genes_types
+ICF_genes <- c("Cpne2", "Scg3", "Cmtm3", "Cplx1", "Lingo1")
+ICF_genes_types <- c("cell E", "cell D", "cell D", "cell G", "cell E")
+names(ICF_genes) <- ICF_genes_types
 
 plotICF(gobject = seqfish_mini,
         icfObject = ICFscoresHighGenes,
-        source_type = 'cell A',
-        source_markers = c('Csf1r', 'Laptm5'),
+        source_type = "cell A",
+        source_markers = c("Csf1r", "Laptm5"),
         ICF_feats = ICF_genes)
 ```
 
 ![](images/mini_seqfish/31-plotICF.png)
 
-# 14. Cell neighborhood: ligand-receptor cell-cell communication
+# 14. Cell Neighborhood: Ligand-Receptor Cell-Cell Communication
 
 ```{r, eval=FALSE}
-LR_data = data.table::fread(system.file("Mini_datasets/seqfish/Raw/mouse_ligand_receptors.txt", 
+LR_data <- data.table::fread(system.file("Mini_datasets/seqfish/Raw/mouse_ligand_receptors.txt", 
                                         package = "GiottoData"))
 
-LR_data[, ligand_det := ifelse(mouseLigand %in% seqfish_mini@feat_ID[['rna']], T, F)]
+LR_data[, ligand_det := ifelse(mouseLigand %in% seqfish_mini@feat_ID[["rna"]], TRUE, FALSE)]
 
-LR_data[, receptor_det := ifelse(mouseReceptor %in% seqfish_mini@feat_ID[['rna']], T, F)]
+LR_data[, receptor_det := ifelse(mouseReceptor %in% seqfish_mini@feat_ID[["rna"]], TRUE, FALSE)]
 
-LR_data_det = LR_data[ligand_det == T & receptor_det == T]
+LR_data_det <- LR_data[ligand_det == TRUE & receptor_det == TRUE]
 
-select_ligands = LR_data_det$mouseLigand
+select_ligands <- LR_data_det$mouseLigand
 
-select_receptors = LR_data_det$mouseReceptor
+select_receptors <- LR_data_det$mouseReceptor
 
 ## get statistical significance of gene pair expression changes based on expression ##
-expr_only_scores = exprCellCellcom(gobject = seqfish_mini,
-                                   cluster_column = 'cell_types',
+expr_only_scores <- exprCellCellcom(gobject = seqfish_mini,
+                                   cluster_column = "cell_types",
                                    random_iter = 50,
                                    feat_set_1 = select_ligands,
                                    feat_set_2 = select_receptors)
 
 ## get statistical significance of gene pair expression changes upon cell-cell interaction
-spatial_all_scores = spatCellCellcom(seqfish_mini,
-                                     spat_unit = 'cell',
-                                     feat_type = 'rna',
-                                     spatial_network_name = 'Delaunay_network',
-                                     cluster_column = 'cell_types',
+spatial_all_scores <- spatCellCellcom(seqfish_mini,
+                                     spat_unit = "cell",
+                                     feat_type = "rna",
+                                     spatial_network_name = "Delaunay_network",
+                                     cluster_column = "cell_types",
                                      random_iter = 50,
                                      feat_set_1 = select_ligands,
                                      feat_set_2 = select_receptors,
-                                     adjust_method = 'fdr',
-                                     do_parallel = T,
+                                     adjust_method = "fdr",
+                                     do_parallel = TRUE,
                                      cores = 4,
-                                     verbose = 'none')
+                                     verbose = "none")
 
 ## * plot communication scores ####
 ## select top LR ##
-selected_spat = spatial_all_scores[p.adj <= 0.5 & abs(log2fc) > 0.1 & lig_nr >= 2 & rec_nr >= 2]
+selected_spat <- spatial_all_scores[p.adj <= 0.5 & abs(log2fc) > 0.1 & lig_nr >= 2 & rec_nr >= 2]
 
 data.table::setorder(selected_spat, -PI)
 
-top_LR_ints = unique(selected_spat[order(-abs(PI))]$LR_comb)[1:33]
+top_LR_ints <- unique(selected_spat[order(-abs(PI))]$LR_comb)[1:33]
 
-top_LR_cell_ints = unique(selected_spat[order(-abs(PI))]$LR_cell_comb)[1:33]
+top_LR_cell_ints <- unique(selected_spat[order(-abs(PI))]$LR_cell_comb)[1:33]
 
 plotCCcomHeatmap(gobject = seqfish_mini,
                  comScores = spatial_all_scores,
                  selected_LR = top_LR_ints,
                  selected_cell_LR = top_LR_cell_ints,
-                 show = 'LR_expr')
+                 show = "LR_expr")
 ```
 
 ![](images/mini_seqfish/32-plotCCcomHeatmap.png)
@@ -714,21 +715,21 @@ plotCCcomDotplot(gobject = seqfish_mini,
                  comScores = spatial_all_scores,
                  selected_LR = top_LR_ints,
                  selected_cell_LR = top_LR_cell_ints,
-                 cluster_on = 'PI')
+                 cluster_on = "PI")
 ```
 
 ![](images/mini_seqfish/33-plotCCcomDotplot.png)
 
 ```{r, eval=FALSE}
 ## * spatial vs rank ####
-comb_comm = combCCcom(spatialCC = spatial_all_scores,
-                      exprCC = expr_only_scores)
+comb_comm <- combCCcom(spatialCC = spatial_all_scores,
+                       exprCC = expr_only_scores)
 
 # top differential activity levels for ligand receptor pairs
 plotRankSpatvsExpr(gobject = seqfish_mini,
                    comb_comm,
-                   expr_rnk_column = 'exprPI_rnk',
-                   spat_rnk_column = 'spatPI_rnk',
+                   expr_rnk_column = "exprPI_rnk",
+                   spat_rnk_column = "spatPI_rnk",
                    gradient_midpoint = 10)
 ```
 
@@ -739,9 +740,9 @@ plotRankSpatvsExpr(gobject = seqfish_mini,
 ## predict maximum differential activity
 plotRecovery(gobject = seqfish_mini,
              comb_comm,
-             expr_rnk_column = 'exprPI_rnk',
-             spat_rnk_column = 'spatPI_rnk',
-             ground_truth = 'spatial')
+             expr_rnk_column = "exprPI_rnk",
+             spat_rnk_column = "spatPI_rnk",
+             ground_truth = "spatial")
 ```
 
 ![](images/mini_seqfish/35-plotRecovery.png)

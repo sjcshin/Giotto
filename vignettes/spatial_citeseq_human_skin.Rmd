@@ -20,7 +20,7 @@ if(!"Giotto" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   Giotto::installGiottoEnvironment()
@@ -32,53 +32,54 @@ if(!genv_exists){
 ```{r, eval=FALSE}
 library(Giotto)
 
-results_dir = "path/to/results/"
+results_folder <- "/path/to/results/"
 
-instrs <- createGiottoInstructions(save_plot = TRUE,
-                                   save_dir = results_dir,
-                                   show_plot = TRUE)
+instructions <- createGiottoInstructions(save_plot = TRUE,
+                                         save_dir = results_folder,
+                                         show_plot = FALSE,
+                                         return_plot = FALSE)
 ```
 
 Create spatial coords table
 
 ```{r, eval=FALSE}
-data_dir = "path/to/data/"
+data_path <- "/path/to/data/"
 
-x = data.table::fread(paste0(data_dir, "GSE213264_RAW/GSM6578065_humanskin_RNA.tsv.gz"))
+x <- data.table::fread(paste0(data_path, "GSE213264_RAW/GSM6578065_humanskin_RNA.tsv.gz"))
 
-spatial_coords = data.frame(cell_ID = x$X)
-spatial_coords = cbind(spatial_coords,
+spatial_coords <- data.frame(cell_ID = x$X)
+spatial_coords <- cbind(spatial_coords,
                       stringr::str_split_fixed(spatial_coords$cell_ID, 
                                                 pattern = "x",
                                                 n = 2))
 colnames(spatial_coords)[2:3] = c("sdimx", "sdimy")
-spatial_coords$sdimx = as.integer(spatial_coords$sdimx)
-spatial_coords$sdimy = as.integer(spatial_coords$sdimy)
-spatial_coords$sdimy = spatial_coords$sdimy*(-1)
+spatial_coords$sdimx <- as.integer(spatial_coords$sdimx)
+spatial_coords$sdimy <- as.integer(spatial_coords$sdimy)
+spatial_coords$sdimy <- spatial_coords$sdimy*(-1)
 ```
 
 Read rna and protein expression matrix
 
 ```{r, eval=FALSE}
-rna_matrix = data.table::fread(paste0(data_dir, "GSE213264_RAW/GSM6578065_humanskin_RNA.tsv.gz"))
+rna_matrix <- data.table::fread(paste0(data_path, "GSE213264_RAW/GSM6578065_humanskin_RNA.tsv.gz"))
 
-rna_matrix = rna_matrix[rna_matrix$X %in% spatial_coords$cell_ID,]
+rna_matrix <- rna_matrix[rna_matrix$X %in% spatial_coords$cell_ID,]
 
-rna_matrix = rna_matrix[match(spatial_coords$cell_ID, rna_matrix$X),]
+rna_matrix <- rna_matrix[match(spatial_coords$cell_ID, rna_matrix$X),]
 
-rna_matrix = t(rna_matrix[,-1])
+rna_matrix <- t(rna_matrix[,-1])
 
-colnames(rna_matrix) = spatial_coords$cell_ID
+colnames(rna_matrix) <- spatial_coords$cell_ID
 
-protein_matrix = data.table::fread(paste0(data_dir, "GSE213264_RAW/GSM6578074_humanskin_protein.tsv.gz"))
+protein_matrix <- data.table::fread(paste0(data_path, "GSE213264_RAW/GSM6578074_humanskin_protein.tsv.gz"))
 
-protein_matrix = protein_matrix[protein_matrix$X %in% spatial_coords$cell_ID,]
+protein_matrix <- protein_matrix[protein_matrix$X %in% spatial_coords$cell_ID,]
 
-protein_matrix = protein_matrix[match(spatial_coords$cell_ID, protein_matrix$X),]
+protein_matrix <- protein_matrix[match(spatial_coords$cell_ID, protein_matrix$X),]
 
-protein_matrix = t(protein_matrix[,-1])
+protein_matrix <- t(protein_matrix[,-1])
 
-colnames(protein_matrix) = spatial_coords$cell_ID
+colnames(protein_matrix) <- spatial_coords$cell_ID
 ```
 
 Create Giotto object using RNA and Protein expression, as well as spatial positions
@@ -88,7 +89,7 @@ my_giotto_object <- createGiottoObject(expression = list(rna = list(raw = rna_ma
                                                          protein = list(raw = protein_matrix)),
                                        expression_feat = list("rna", "protein"),
                                        spatial_locs = spatial_coords,
-                                       instructions = instrs)
+                                       instructions = instructions)
 ```
 
 Add tissue image
@@ -97,7 +98,7 @@ Add tissue image
 my_giotto_image <- createGiottoImage(gobject = my_giotto_object,
                                      do_manual_adj = TRUE,
                                      scale_factor = 0.5,
-                                     mg_object = paste0(data_dir, "skin.jpg"),
+                                     mg_object = paste0(data_path, "skin.jpg"),
                                      negative_y = TRUE)
 
 my_giotto_object <- addGiottoImage(gobject = my_giotto_object,
@@ -156,7 +157,7 @@ my_giotto_object <- normalizeGiotto(gobject = my_giotto_object,
                                     spat_unit = "cell",
                                     feat_type = "protein",
                                     scalefactor = 6000,
-                                    verbose = T)
+                                    verbose = TRUE)
 ```
 
 ## 4.3 Statistics
@@ -196,8 +197,8 @@ my_giotto_object <- runPCA(gobject = my_giotto_object,
                            spat_unit = "cell",
                            feat_type = "protein",
                            expression_values = "normalized",
-                           scale_unit = T,
-                           center = F,
+                           scale_unit = TRUE,
+                           center = FALSE,
                            method = "factominer")
 ```
 
@@ -281,7 +282,7 @@ plotPCA(gobject = my_giotto_object,
         spat_unit = "cell",
         feat_type = "rna",
         dim_reduction_name = "rna.pca",
-        cell_color = 'leiden_clus',
+        cell_color = "leiden_clus",
         title = "RNA PCA")
 ```
 
@@ -293,7 +294,7 @@ plotPCA(gobject = my_giotto_object,
         spat_unit = "cell",
         feat_type = "protein",
         dim_reduction_name = "protein.pca",
-        cell_color = 'leiden_clus',
+        cell_color = "leiden_clus",
         title = "Protein PCA")
 ```
 
@@ -306,7 +307,7 @@ plotPCA(gobject = my_giotto_object,
 plotUMAP(gobject = my_giotto_object,
          spat_unit = "cell",
          feat_type = "rna",
-         cell_color = 'leiden_clus',
+         cell_color = "leiden_clus",
          point_size = 2,
          title = "RNA Uniform Manifold Approximation & Projection (UMAP)",
          axis_title = 12,
@@ -320,7 +321,7 @@ plotUMAP(gobject = my_giotto_object,
 plotUMAP(gobject = my_giotto_object,
          spat_unit = "cell",
          feat_type = "protein",
-         cell_color = 'leiden_clus',
+         cell_color = "leiden_clus",
          dim_reduction_name = "protein.umap",
          point_size = 2,
          title = "Protein Uniform Manifold Approximation & Projection (UMAP)",
@@ -418,7 +419,7 @@ my_giotto_object <- doLeidenCluster(gobject = my_giotto_object,
 plotUMAP(gobject = my_giotto_object,
          spat_unit = "cell",
          feat_type = "rna",
-         cell_color = 'integrated_leiden_clus',
+         cell_color = "integrated_leiden_clus",
          dim_reduction_name = "integrated.umap",
          point_size = 2.5,
          title = "Integrated UMAP using Integrated Leiden clusters",
@@ -446,20 +447,20 @@ spatPlot2D(my_giotto_object,
 
 ```{r, eval=FALSE}
 my_giotto_object <- createSpatialNetwork(gobject = my_giotto_object,
-                                         method = 'kNN', 
+                                         method = "kNN", 
                                          k = 6,
                                          maximum_distance_knn = 5,
-                                         name = 'spatial_network')
+                                         name = "spatial_network")
 
-ranktest = binSpect(my_giotto_object, 
-                    bin_method = 'rank',
-                    calc_hub = T, 
-                    hub_min_int = 5,
-                    spatial_network_name = 'spatial_network')
+rank_spatialfeats <- binSpect(my_giotto_object, 
+                     bin_method = "rank",
+                     calc_hub = TRUE, 
+                     hub_min_int = 5,
+                     spatial_network_name = "spatial_network")
 
 spatFeatPlot2D(my_giotto_object, 
-               expression_values = 'scaled',
-               feats = ranktest$feats[1:6], 
+               expression_values = "scaled",
+               feats = rank_spatialfeats$feats[1:6], 
                cow_n_col = 2, 
                point_size = 1.5)
 ```
@@ -470,29 +471,29 @@ spatFeatPlot2D(my_giotto_object,
 
 ```{r, eval=FALSE}
 # 3.1 cluster the top 500 spatial genes into 20 clusters
-ext_spatial_genes = ranktest[1:500,]$feats
+ext_spatial_genes <- rank_spatialfeats[1:500,]$feats
 
 # here we use existing detectSpatialCorGenes function to calculate pairwise distances between genes (but set network_smoothing=0 to use default clustering)
-spat_cor_netw_DT = detectSpatialCorFeats(my_giotto_object,
-                                         method = 'network',
-                                         spatial_network_name = 'spatial_network',
-                                         subset_feats = ext_spatial_genes)
+spat_cor_netw_DT <- detectSpatialCorFeats(my_giotto_object,
+                                          method = "network",
+                                          spatial_network_name = "spatial_network",
+                                          subset_feats = ext_spatial_genes)
 ```
 
 ```{r, eval=FALSE}
 # 3.3 identify potential spatial co-expression
-spat_cor_netw_DT = clusterSpatialCorFeats(spat_cor_netw_DT, 
-                                          name = 'spat_netw_clus', 
-                                          k = 3)
+spat_cor_netw_DT <- clusterSpatialCorFeats(spat_cor_netw_DT, 
+                                           name = "spat_netw_clus", 
+                                           k = 3)
 
 # visualize clusters
 heatmSpatialCorFeats(my_giotto_object,
                      spatCorObject = spat_cor_netw_DT,
-                     use_clus_name = 'spat_netw_clus',
+                     use_clus_name = "spat_netw_clus",
                      heatmap_legend_param = list(title = NULL),
                      save_param = list(base_height = 6, 
                                        base_width = 8, 
-                                       units = 'cm'))
+                                       units = "cm"))
 ```
 
 ![](images/spatial_citeseq_human_skin/10-heatmSpatialCorFeats.png)
@@ -501,15 +502,15 @@ heatmSpatialCorFeats(my_giotto_object,
 
 ```{r, eval=FALSE}
 # 3.4 create metagenes / co-expression modules
-cluster_genes = getBalancedSpatCoexpressionFeats(spat_cor_netw_DT, 
-                                                 maximum = 30)
+cluster_genes <- getBalancedSpatCoexpressionFeats(spat_cor_netw_DT, 
+                                                  maximum = 30)
 
 my_giotto_object <- createMetafeats(my_giotto_object, 
                                     feat_clusters = cluster_genes, 
-                                    name = 'cluster_metagene')
+                                    name = "cluster_metagene")
 
 spatCellPlot(my_giotto_object,
-             spat_enr_names = 'cluster_metagene',
+             spat_enr_names = "cluster_metagene",
              cell_annotation_values = as.character(c(1:7)),
              point_size = 1, 
              cow_n_col = 3)
@@ -524,28 +525,28 @@ my_spatial_genes = names(cluster_genes)
 
 my_giotto_object <- runPCA(gobject = my_giotto_object,
                            feats_to_use = my_spatial_genes,
-                           name = 'custom_pca')
+                           name = "custom_pca")
 
 my_giotto_object <- runUMAP(my_giotto_object,
-                            dim_reduction_name = 'custom_pca',
+                            dim_reduction_name = "custom_pca",
                             dimensions_to_use = 1:20,
-                            name = 'custom_umap')
+                            name = "custom_umap")
 
 my_giotto_object <- createNearestNetwork(gobject = my_giotto_object,
-                                         dim_reduction_name = 'custom_pca',
+                                         dim_reduction_name = "custom_pca",
                                          dimensions_to_use = 1:20, 
                                          k = 3,
-                                         name = 'custom_NN')
+                                         name = "custom_NN")
 
 my_giotto_object <- doLeidenCluster(gobject = my_giotto_object,
-                                    network_name = 'custom_NN',
+                                    network_name = "custom_NN",
                                     resolution = 0.1, 
                                     n_iterations = 1000,
-                                    name = 'custom_leiden')
+                                    name = "custom_leiden")
 
 spatPlot2D(my_giotto_object,
            show_image = FALSE,
-           cell_color = 'custom_leiden', 
+           cell_color = "custom_leiden", 
            cell_color_code = c("#eb4034",
                                "#5877e8",
                                "#ebd834",

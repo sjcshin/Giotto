@@ -32,7 +32,7 @@ if(!"GiottoData" %in% installed.packages()) {
 library(GiottoData)
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = checkGiottoEnvironment()
+genv_exists <- checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   installGiottoEnvironment()
@@ -46,26 +46,27 @@ Since the focus of this vignette is saving methods, the **giottoObject** will no
 
 
 ```{r, eval=FALSE}
-data_directory = paste0(getwd(),'/')
+data_path <- "/path/to/data/"
 
 # Download dataset 
-getSpatialDataset(dataset = 'osmfish_SS_cortex', 
-                  directory = data_directory, method = 'wget')
+getSpatialDataset(dataset = "osmfish_SS_cortex", 
+                  directory = data_path, 
+                  method = "wget")
 
 # Specify path to files
-osm_exprs = paste0(data_directory, "osmFISH_prep_expression.txt")
-osm_locs = paste0(data_directory, "osmFISH_prep_cell_coordinates.txt")
-meta_path = paste0(data_directory, "osmFISH_prep_cell_metadata.txt")
+osm_exprs <- paste0(data_path, "osmFISH_prep_expression.txt")
+osm_locs <- paste0(data_path, "osmFISH_prep_cell_coordinates.txt")
+meta_path <- paste0(data_path, "osmFISH_prep_cell_metadata.txt")
 
 ## CREATE GIOTTO OBJECT with expression data and location data
-my_gobject = createGiottoObject(expression = osm_exprs,
+my_gobject <- createGiottoObject(expression = osm_exprs,
                                 spatial_locs = osm_locs)
 
-metadata = data.table::fread(file = meta_path)
-my_gobject = addCellMetadata(my_gobject, 
+metadata <- data.table::fread(file = meta_path)
+my_gobject <- addCellMetadata(my_gobject, 
                              new_metadata = metadata,
-                             by_column = T, 
-                             column_cell_ID = 'CellID')
+                             by_column = TRUE, 
+                             column_cell_ID = "CellID")
 ```
 
 
@@ -75,7 +76,7 @@ Note that by default, plotting functions will return a plot object that may be s
 
 
 ```{r, eval=FALSE}
-save_path = paste0(getwd(),'/first_plot.pdf')
+save_path <- paste0(getwd(), "/first_plot.pdf")
 library(ggplot2)
 
 # This function serves only to ensure the following lines run consecutively.
@@ -88,8 +89,8 @@ save_pdf_plot = function(){
 save_pdf_plot()
 
 ### Plot clusters, edit plot object, then save using the ggplot add-on, cowplot:
-mypl = spatPlot(gobject = my_gobject, 
-                cell_color = 'ClusterName')
+mypl <- spatPlot(gobject = my_gobject, 
+                 cell_color = "ClusterName")
 ```
 
 
@@ -98,15 +99,15 @@ mypl = spatPlot(gobject = my_gobject,
 
 ```{r, eval=FALSE}
 # Add a black background
-mypl = mypl + theme(panel.background = element_rect(fill ='black'),
-                    panel.grid = element_blank())
+mypl <- mypl + theme(panel.background = element_rect(fill ="black"),
+                     panel.grid = element_blank())
 
 # Add a legend
-mypl = mypl + guides(fill = guide_legend(override.aes = list(size=5)))
+mypl <- mypl + guides(fill = guide_legend(override.aes = list(size=5)))
 
 # Save in the current working directory
 cowplot::save_plot(plot = mypl,
-                   filename = 'clusters_black.png', 
+                   filename = "clusters_black.png", 
                    path = getwd(),
                    device = png(),
                    dpi = 300, 
@@ -126,7 +127,7 @@ arguments and more details.
 
 ```{r, eval=FALSE}
 spatPlot(my_gobject, 
-         cell_color = 'ClusterName', 
+         cell_color = "ClusterName", 
          save_plot = TRUE)
 ```
 
@@ -146,17 +147,17 @@ Run the command **showSaveParameters()** to see all available parameters.
 
 ```{r, eval=FALSE}
 # Specify new subdirectory name
-results_directory =  'my_subfolder/'
+results_folder <- "/path/to/results/"
 
 # Plot clusters, create, and save to a new subdirectory with specifications above.
 spatPlot(my_gobject, 
-         cell_color = 'ClusterName', 
+         cell_color = "ClusterName", 
          save_plot = TRUE,
          return_plot = FALSE,
-         save_param = list(save_folder = results_directory, # Create subdirectory
-                           save_name = 'my_name', 
-                           save_format = 'png', 
-                           units = 'in',
+         save_param = list(save_folder = results_folder, # Create subdirectory
+                           save_name = "my_name", 
+                           save_format = "png", 
+                           units = "in",
                            base_height = 9,
                            base_width = 9))
 ```
@@ -164,26 +165,22 @@ spatPlot(my_gobject,
 
 ![](images/saving_plots/unnamed-chunk-5-1.png)
 
-
-
 # 7. Just View the Plot
 
 See [Giotto Object](./getting_started_gobject.html) for more details.
 
 Set both *save_plot* and *return_plot* to FALSE.
 
-
 ```{r, eval=FALSE}
 # Plot without saving
 spatPlot(my_gobject, 
-         cell_color = 'ClusterName', 
-         save_plot = FALSE, return_plot = FALSE, show_plot = T)
+         cell_color = "ClusterName", 
+         save_plot = FALSE, 
+         return_plot = FALSE, 
+         show_plot = TRUE)
 ```
 
-
 ![](images/saving_plots/unnamed-chunk-6-1.png)
-
-
 
 # 8. Just save the plot (FASTEST for large datasets!)
 
@@ -194,11 +191,11 @@ Set show_plot and return_plot to FALSE, set save_plot to TRUE.
 
 ```{r, eval=FALSE}
 spatPlot(my_gobject, 
-         cell_color = 'ClusterName', 
+         cell_color = "ClusterName", 
          save_plot = TRUE, 
          return_plot = FALSE, 
          show_plot = FALSE,
-         save_param = list(save_name = 'only_save'))
+         save_param = list(save_name = "only_save"))
 ```
 
 
