@@ -1,6 +1,11 @@
 ---
 title: "Interoperability: SpatialExperiment"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 author: Iqra Amin, Irzam Sarfraz
 vignette: >
   %\VignetteIndexEntry{Interoperability: SpatialExperiment}
@@ -14,7 +19,7 @@ Giotto allows seamless analysis of spatial transcriptomics data provided through
 
 In the first part of the tutorial, we load an example Giotto object, convert it to SpatialExperiment object and use a multitude of packages from Bioconductor to analyze it. In the second part, we use an example SpatialExperiment object, convert it to Giotto and drive the analysis with the toolkit.
 
-# 1. Giotto object to SpatialExperiment
+# Giotto object to SpatialExperiment
 
 In this part of the tutorial, we show the conversion of a an example Giotto object to SpatialExperiment object and use several packages to process it. Initially, we load the required packages:
 
@@ -24,7 +29,7 @@ library(GiottoData)
 library(SpatialExperiment)
 ```
 
-## 1.2 Load a Giotto Object
+## Load a Giotto Object
 
 First, we load a example dataset from the GiottoData package. For this tutorial, we import a mini mouse brain dataset generated using the visium protocol.
 
@@ -32,7 +37,7 @@ First, we load a example dataset from the GiottoData package. For this tutorial,
 g <- loadGiottoMini(dataset = "visium")
 ```
 
-## 1.3 Convert to a SpatialExperiment obj
+## Convert to a SpatialExperiment obj
 
 We now convert this imported giotto object into a SpatialExperiment object using the “giottoToSpatialExperiment” function.
 
@@ -47,7 +52,7 @@ spe <- gspe[[1]]
 ```
 
 
-## 1.4 Downstream Analysis using SpatialExperiment object
+## Downstream Analysis using SpatialExperiment object
 
 Now, we do some processing on the object including quality control, normalization, feature selection and dimensionality reduction.
 
@@ -57,7 +62,7 @@ library(pheatmap)
 ```
 
 
-### 1.4.1 Quality Control Metrics
+### Quality Control Metrics
 
 Using the *scater* package from Bioconductor, we perform some initial quality control analysis. We particularly look for mitochondrial genes and compute some quality control metrics including total counts and features per cell. We then visualize these metrics and select thresholds to remove low quality cells.
 
@@ -109,7 +114,7 @@ spe <- spe[, !colData(spe)$discard]
 spe
 ```
 
-### 1.4.2 Normalization
+### Normalization
 
 Now we calculate log-transformed normalized counts(logcounts) using library size factors using the scran package from Bioconductor.
 
@@ -134,7 +139,7 @@ assayNames(spe)
 ```
 
 
-### 1.4.3 Feature selection
+### Feature selection
 
 To identify HVGs (highly variable genes), we use a mean-variance method “modelGeneVar” from the scran package.
 
@@ -155,7 +160,7 @@ curve(fit$trend(x), col = "dodgerblue", add = TRUE, lwd = 2)
 ![](images/interoperability_spatialexperiment/3-fit.png)
 
 
-### 1.4.4 Dimensionality Reduction (PCA)
+### Dimensionality Reduction (PCA)
 
 Now we apply dimensionality reduction methods to visualize the data and to generate inputs for further downstream analyses. For this purpose, we use the runPCA method to compute the top principal components and then finally plot the top two components.
 
@@ -237,7 +242,7 @@ plotExpression(spe,
 ![](images/interoperability_spatialexperiment/8-expression.png)
 
 
-# 2. SpatialExperiment to Giotto object
+# SpatialExperiment to Giotto object
 
 In this section, we load a sample dataset in the form of a SpatialExperiment object, convert it to Giotto and drive the downstream analysis with the Giotto toolkit.
 
@@ -246,7 +251,7 @@ library(SpatialExperiment)
 library(STexampleData)
 ```
 
-## 2.1 Load a sample SpatialExperiment obj
+## Load a sample SpatialExperiment obj
 
 Loading sample SpatialExperiment Object as spe
 
@@ -255,7 +260,7 @@ spe <- Visium_humanDLPFC()
 spe
 ```
 
-## 2.2 Convert to a giotto obj
+## Convert to a giotto obj
 
 Converting SpatialExperiment Object to giottoobj. The new giottoobject is n_g.
 
@@ -266,11 +271,11 @@ n_g <- spatialExperimentToGiotto(spe,
 ```
 
 
-## 2.3 Downstream analysis with the giotto toolkit
+## Downstream analysis with the giotto toolkit
 
 We filter the giottoobj and then run normalization on it.
 
-### 2.3.1 High Efficiency Data Processing
+### High Efficiency Data Processing
 
 ```{r, eval=FALSE}
 n_g <- processGiotto(
@@ -288,7 +293,7 @@ n_g <- processGiotto(
 ```
 
 
-### 2.3.2 Dimension Reduction and PCA
+### Dimension Reduction and PCA
 
 We first find the highly variable features (HVF) and then use these to compute the reduced dimensions using PCA.
 
@@ -334,7 +339,7 @@ Giotto::plotUMAP(gobject = n_g,
 
 ![](images/interoperability_spatialexperiment/11-UMAP.png)
 
-### 2.3.3 Clustering
+### Clustering
 
 Cells may be clustered into distinct groups based on feature expression. To cluster, the Giotto Object must contain data that has undergone PCA dimension reduction, either tSNE or UMAP dimension reduction, and have a neighbor network.
 
@@ -364,7 +369,7 @@ Giotto::plotUMAP(gobject = n_g,
 
 ![](images/interoperability_spatialexperiment/12-UMAP.png)
 
-### 2.3.4 Spatial co-expression
+### Spatial co-expression
 
 Using previously created spatial network to calculate spatially variable genes using binSpect method.
 
@@ -444,7 +449,7 @@ spatCellPlot(n_g,
 
 ![](images/interoperability_spatialexperiment/14-spatCellPlot2D.png)
 
-## 3. Session Info
+## Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

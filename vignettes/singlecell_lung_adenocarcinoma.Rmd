@@ -1,6 +1,11 @@
 ---
 title: "Single Cell Human Lung Adenocarcinoma"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Single Cell Human Lung Adenocarcinoma}
   %\VignetteEngine{knitr::rmarkdown}
@@ -50,7 +55,7 @@ instructions <- createGiottoInstructions(save_dir = results_folder,
 ```
   
 
-# 1. Create the Giotto object 
+# Create the Giotto object 
   
 Load data
 
@@ -106,7 +111,7 @@ giotto_SC <- addCellMetadata(giotto_SC,
                              new_metadata = data.frame(percent_ribo = percent.ribo))
 ```
 
-# 2. Process Giotto Object
+# Process Giotto Object
 
 ``` {r, eval=FALSE}
 ## filter
@@ -126,7 +131,7 @@ giotto_SC <- addStatistics(gobject = giotto_SC,
                            expression_values = "raw")
 ```
 
-# 3. Dimension Reduction
+# Dimension Reduction
 
 ``` {r, eval=FALSE}
 ## PCA ##
@@ -143,7 +148,7 @@ screePlot(giotto_SC,
 
 ![](images/singlecell_lung_adenocarcinoma/3_scree_plot.png)
 
-# 4. Cluster
+# Cluster
 
 ``` {r, eval=FALSE}
 ## cluster and run UMAP ##
@@ -172,7 +177,7 @@ plotUMAP(gobject = giotto_SC,
 
 ![](images/singlecell_lung_adenocarcinoma/4_Cluster.png)
 
-# 5. Differential Expression
+# Differential Expression
 
 ``` {r, eval=FALSE}
 markers_scran <- findMarkers_one_vs_all(gobject = giotto_SC, 
@@ -194,7 +199,7 @@ plotMetaDataHeatmap(giotto_SC,
 
 ![](images/singlecell_lung_adenocarcinoma/5_metaheatmap.png)
 
-# 6. FeaturePlot
+# FeaturePlot
 
 ``` {r, eval=FALSE}
 # Plot known marker genes across different cell types. e.g. EPCAM for epithelial cells
@@ -206,7 +211,7 @@ dimFeatPlot2D(giotto_SC,
 
 ![](images/singlecell_lung_adenocarcinoma/6_featureplot.png)
 
-# 7. Cell type Annotation
+# Cell type Annotation
 
 ```{r}
 marker_genes <- list(
@@ -370,7 +375,7 @@ dimPlot2D(gobject = giotto_SC,
 
 ![](images/singlecell_lung_adenocarcinoma/7_Annotation.png)
 
-# 8. Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

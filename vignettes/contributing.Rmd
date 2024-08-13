@@ -1,8 +1,11 @@
 ---
 title: "How to Contribute?"
 output: 
-  html_vignette:
+  html_document:
     number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{How to Contribute?}
   %\VignetteEngine{knitr::rmarkdown}

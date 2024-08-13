@@ -1,6 +1,11 @@
 ---
 title: "Visium CytAssist Human Lung Cancer"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Visium CytAssist Human Lung Cancer}
   %\VignetteEngine{knitr::rmarkdown}
@@ -33,7 +38,7 @@ if(!genv_exists){
 }
 ```
 
-# 1. Create a Giotto object
+# Create a Giotto object
 
 The minimum requirements are
 
@@ -84,7 +89,7 @@ How to work with Giotto instructions that are part of your Giotto object:
 showGiottoInstructions(visium_lungcancer)
 ```
 
-# 2. Processing steps
+# Processing steps
 
 -   filter genes and cells based on detection frequencies
 -   normalize expression matrix (log transformation, scaling factor and/or z-scores)
@@ -117,7 +122,7 @@ spatPlot2D(gobject = visium_lungcancer, show_image = T, point_alpha = 0.7,
 
 ![](images/visium_cytassist_lungcancer/2-spatPlot2D.png){width="50.0%"}
 
-# 3. Dimension Reduction
+# Dimension Reduction
 
 -   identify highly variable features (HVF)
 
@@ -159,7 +164,7 @@ plotTSNE(gobject = visium_lungcancer)
 
 ![](images/visium_cytassist_lungcancer/7-tSNE.png){width="50.0%"}
 
-# 4. Clustering
+# Clustering
 
 -   create a shared (default) nearest network in PCA space (or directly on matrix)
 -   cluster on nearest network with Leiden or Louvain (k-means and hclust are alternatives)
@@ -197,7 +202,7 @@ spatDimPlot(gobject = visium_lungcancer, cell_color = 'nr_feats', color_as_facto
 
 ![](images/visium_cytassist_lungcancer/11-spatDimPlot2D.png){width="50.0%"}
 
-# 5. Differential expression
+# Differential expression
 
 ```{r, eval=FALSE}
 # Cell type marker detection
@@ -273,7 +278,7 @@ dimFeatPlot2D(visium_lungcancer,
               cow_n_col = 3, point_size = 1)
 ```
 
-# 6. Cell Type Enrichment
+# Cell Type Enrichment
 
 Visium spatial transcriptomics does not provide single-cell resolution, making cell type annotation a harder problem. Giotto provides several ways to calculate enrichment of specific cell-type signature gene lists:
 
@@ -378,7 +383,7 @@ spatDimCellPlot(gobject = visium_lungcancer,
 
 ![](images/visium_cytassist_lungcancer/7_d_spatDimCellPlot.png){width="80.0%"}
 
-# 7. Spatial Grids
+# Spatial Grids
 
 ```{r, eval=FALSE}
 visium_lungcancer <- createSpatialGrid(gobject = visium_lungcancer,
@@ -392,7 +397,7 @@ grid_color = 'red', spatial_grid_name = 'spatial_grid')
 
 ![](images/visium_cytassist_lungcancer/18-spatPlot2D.png){width="50.0%"}
 
-# 8. Spatial Network
+# Spatial Network
 
 ```{r, eval=FALSE}
 ## Delaunay network: stats + creation
@@ -410,7 +415,7 @@ network_color = 'blue', spatial_network_name = 'Delaunay_network')
 
 ![](images/visium_cytassist_lungcancer/20-spatPlot2D.png){width="50.0%"}
 
-# 9. Spatial Genes
+# Spatial Genes
 
 ```{r, eval=FALSE}
 # kmeans binarization
@@ -505,7 +510,7 @@ spatCellPlot(visium_lungcancer,
 
 ![](images/visium_cytassist_lungcancer/25-spatCellPlot2D.png){width="80.0%"}
 
-# 10. HMRF Domains
+# HMRF Domains
 
 ```{r, eval=FALSE}
 # HMRF requires a fully connected network!

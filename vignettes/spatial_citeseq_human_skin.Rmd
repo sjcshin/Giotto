@@ -1,17 +1,22 @@
 ---
 title: "Multi-omics Spatial CITE-Seq Human skin"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Multi-omics Spatial CITE-Seq Human skin}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# 1. Dataset explanation
+# Dataset explanation
 
 To run this example, we will use the Skin dataset from the article [High-plex protein and whole transcriptome co-mapping at cellular resolution with spatial CITE-seq](https://www.nature.com/articles/s41587-023-01676-0). You can download the data from [here](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE213264). The high-resolution microscope images are available at https://doi.org/10.6084/m9.figshare.20723680
 
-# 2. Start Giotto
+# Start Giotto
 
 ```{r, eval=FALSE}
 # Ensure Giotto Suite is installed
@@ -27,7 +32,7 @@ if(!genv_exists){
 }
 ```
 
-# 3. Create Giotto object
+# Create Giotto object
 
 ```{r, eval=FALSE}
 library(Giotto)
@@ -115,9 +120,9 @@ spatPlot2D(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/0-spatPlot2D.png)
 
-# 4. Processing
+# Processing
 
-## 4.1 Filtering
+## Filtering
 
 ```{r, eval=FALSE}
 # RNA
@@ -139,7 +144,7 @@ my_giotto_object <- filterGiotto(gobject = my_giotto_object,
                                  min_det_feats_per_cell = 1)
 ```
 
-## 4.2 Normalization
+## Normalization
 
 ```{r, eval=FALSE}
 # RNA
@@ -160,7 +165,7 @@ my_giotto_object <- normalizeGiotto(gobject = my_giotto_object,
                                     verbose = TRUE)
 ```
 
-## 4.3 Statistics
+## Statistics
 
 ```{r, eval=FALSE}
 # RNA
@@ -177,9 +182,9 @@ my_giotto_object <- addStatistics(gobject = my_giotto_object,
                                   expression_values = "normalized")
 ```
 
-# 5. Dimension Reduction
+# Dimension Reduction
 
-## 5.1 Principal component analysis (PCA)
+## Principal component analysis (PCA)
 
 ```{r, eval=FALSE}
 # RNA
@@ -202,9 +207,9 @@ my_giotto_object <- runPCA(gobject = my_giotto_object,
                            method = "factominer")
 ```
 
-# 6. Clustering
+# Clustering
 
-## 6.1 Uniform manifold approximation projection (UMAP)
+## Uniform manifold approximation projection (UMAP)
 
 ```{r, eval=FALSE}
 # RNA
@@ -226,7 +231,7 @@ my_giotto_object <- runUMAP(gobject = my_giotto_object,
                             dimensions_to_use = 1:10)
 ```
 
-## 6.2 Create nearest network
+## Create nearest network
 
 ```{r, eval=FALSE}
 # RNA
@@ -251,7 +256,7 @@ my_giotto_object <- createNearestNetwork(gobject = my_giotto_object,
                                          k = 20)
 ```
 
-## 6.3 Find Leiden clusters
+## Find Leiden clusters
 
 ```{r, eval=FALSE}
 # RNA
@@ -274,7 +279,7 @@ my_giotto_object <- doLeidenCluster(gobject = my_giotto_object,
                                     resolution = 1)
 ```
 
-## 6.4 Plot PCA
+## Plot PCA
 
 ```{r, eval=FALSE}
 # RNA
@@ -300,7 +305,7 @@ plotPCA(gobject = my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/2-PCA.png)
 
-## 6.5 Plot UMAP
+## Plot UMAP
 
 ```{r, eval=FALSE}
 # RNA
@@ -331,7 +336,7 @@ plotUMAP(gobject = my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/4-UMAP.png)
 
-## 6.6 Plot spatial locations by cluster
+## Plot spatial locations by cluster
 
 ```{r, eval=FALSE}
 # RNA
@@ -357,9 +362,9 @@ spatPlot2D(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/6-spatPlot2D.png)
 
-# 7. Multi-omics integration
+# Multi-omics integration
 
-## 7.1 Create nearest network
+## Create nearest network
 
 ```{r, eval=FALSE}
 my_giotto_object <- createNearestNetwork(gobject = my_giotto_object,
@@ -382,7 +387,7 @@ my_giotto_object <- createNearestNetwork(gobject = my_giotto_object,
                                          k = 20)
 ```
 
-## 7.2 Calculate WNN
+## Calculate WNN
 
 ```{r, eval=FALSE}
 my_giotto_object <- runWNN(my_giotto_object,
@@ -393,7 +398,7 @@ my_giotto_object <- runWNN(my_giotto_object,
                            k = 20)
 ```
 
-## 7.3 Create integrated UMAP
+## Create integrated UMAP
 
 ```{r, eval=FALSE}
 my_giotto_object <- runIntegratedUMAP(my_giotto_object,
@@ -401,7 +406,7 @@ my_giotto_object <- runIntegratedUMAP(my_giotto_object,
                                       modality2 = "protein")
 ```
 
-## 7.4 Calculate Leiden clusters
+## Calculate Leiden clusters
 
 ```{r, eval=FALSE}
 my_giotto_object <- doLeidenCluster(gobject = my_giotto_object,
@@ -413,7 +418,7 @@ my_giotto_object <- doLeidenCluster(gobject = my_giotto_object,
                                     resolution = 0.7)
 ```
 
-## 7.5 Plot integrated UMAP
+## Plot integrated UMAP
 
 ```{r, eval=FALSE}
 plotUMAP(gobject = my_giotto_object,
@@ -429,7 +434,7 @@ plotUMAP(gobject = my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/7-UMAP.png)
 
-## 7.6 Plot integrated spatial locations by cluster
+## Plot integrated spatial locations by cluster
 
 ```{r, eval=FALSE}
 spatPlot2D(my_giotto_object,
@@ -443,7 +448,7 @@ spatPlot2D(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/8-spatPlot2D.png)
 
-# 8. Calculate spatially variable genes
+# Calculate spatially variable genes
 
 ```{r, eval=FALSE}
 my_giotto_object <- createSpatialNetwork(gobject = my_giotto_object,
@@ -467,7 +472,7 @@ spatFeatPlot2D(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/9-spatFeatPlot2D.png)
 
-## 8.1 Spatially correlated genes
+## Spatially correlated genes
 
 ```{r, eval=FALSE}
 # 3.1 cluster the top 500 spatial genes into 20 clusters
@@ -498,7 +503,7 @@ heatmSpatialCorFeats(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/10-heatmSpatialCorFeats.png)
 
-# 9. Metagenes/co-expression modules 
+# Metagenes/co-expression modules 
 
 ```{r, eval=FALSE}
 # 3.4 create metagenes / co-expression modules
@@ -518,7 +523,7 @@ spatCellPlot(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/11-spatCellPlot2D.png)
 
-# 10. Spatially informed clustering
+# Spatially informed clustering
 
 ```{r, eval=FALSE}
 my_spatial_genes = names(cluster_genes)
@@ -566,7 +571,7 @@ spatPlot2D(my_giotto_object,
 
 ![](images/spatial_citeseq_human_skin/12-spatPlot2D.png)
 
-# 11. Session Info
+# Session Info
 
 ```{r, eval = FALSE}
 sessionInfo()

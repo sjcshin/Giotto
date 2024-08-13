@@ -1,8 +1,11 @@
 ---
 title: "Installation"
 output: 
-  html_vignette:
+  html_document:
     number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Installation}
   %\VignetteEngine{knitr::rmarkdown}

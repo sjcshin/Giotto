@@ -1,6 +1,11 @@
 ---
 title: "Terra bio"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Terra bio}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,11 +16,11 @@ vignette: >
 
 You can run all your pipelines using Giotto on the Cloud through Terra.bio platform.
 
-# 1. Setting up your Terra account
+# Setting up your Terra account
 
 Go to [Terra](https://app.terra.bio/) on your Chrome browser and [Sign Up]{.title-ref} using the same email address that you will use for the billing account on Google Cloud Platform.
 
-# 2. Creating a Billing Account
+# Creating a Billing Account
 
 - Create an account on the Google Cloud Platform.
 - Set Terra as a billing user on your account.
@@ -23,7 +28,7 @@ Go to [Terra](https://app.terra.bio/) on your Chrome browser and [Sign Up]{.titl
 
 For additional information about billing account go to this [link](https://support.terra.bio/hc/en-us/articles/360048632271-Understanding-Terra-costs-and-billing).
 
-# 3. Create A Workspace
+# Create A Workspace
 
 - Create a workspace within your billing account.
 
@@ -33,7 +38,7 @@ For additional information about billing account go to this [link](https://suppo
 
 - Launch a Virtual Machine with a Cloud environment.
 
-# 4. Create a Cloud Environment
+# Create a Cloud Environment
 
 In Terra, you can run Cloud Environments using Jupyter notebooks or the RStudio App. We recommend to your either the Juypyter notebook + Python + Bioconductor or RStudio + Bioconductor options.
 
@@ -49,7 +54,7 @@ Now you can install the Giotto package by running the R commmand:
 remotes::install_github("drieslab/Giotto")
 ```
 
-# 5. Create a ready-to-use Cloud Environment with Giotto
+# Create a ready-to-use Cloud Environment with Giotto
 
 You can pre-install the Giotto package while launching the Jupyter notebook or the RStudio App.
 
@@ -63,7 +68,7 @@ You can pre-install the Giotto package while launching the Jupyter notebook or t
 
 - Click on Create Environment
 
-# 6. Share your workspace with collaborators
+# Share your workspace with collaborators
 
 You can share your workspace with collaborators, including data, notebooks, and workflows stored in your workspace.
 

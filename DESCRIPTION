@@ -23,7 +23,7 @@ Description: Toolbox to process, analyze and visualize spatial single-cell expre
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://drieslab.github.io/Giotto/, https://github.com/drieslab/Giotto
+URL: https://drieslab.github.io/Giotto/, https://github.com/drieslab/Giotto, https://drieslab.github.io/Giotto_website/
 BugReports: https://github.com/drieslab/Giotto/issues
 RoxygenNote: 7.3.2
 Depends:

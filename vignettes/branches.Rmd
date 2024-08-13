@@ -1,6 +1,11 @@
 ---
 title: "Branches"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Branches}
   %\VignetteEngine{knitr::rmarkdown}

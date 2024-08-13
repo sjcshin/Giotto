@@ -1,6 +1,11 @@
 ---
 title: "Using dbMatrix with Giotto"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Using dbMatrix with Giotto}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,7 +22,7 @@ knitr::opts_chunk$set(
 # Introduction
 This vignette demonstrates how to use a [`dbMatrix`](https://github.com/drieslab/dbMatrix) within a Giotto Object. The `dbMatrix` is a database-backed matrix that can be used to store large matrices in a database. This allows for efficient storage and retrieval of large matrices and enables efficiently working with larger-than-memory cell count matrices.
 
-# 1. Set up Giotto
+# Set up Giotto
 
 ```{r, eval=FALSE}
 # Ensure Giotto Suite is installed.
@@ -41,7 +46,7 @@ if(!genv_exists){
 }
 ```
 
-# 2. Create Giotto object with `dbMatrix`                                   
+# Create Giotto object with `dbMatrix`                                   
 
 ```{r, eval=FALSE}
 # Get test dataset from Giotto Data package
@@ -69,7 +74,8 @@ expObj_db = createExprObj(expression_data = dbsm,
 gobject_db = createGiottoObject(expression = expObj_db)
 ```
 
-# 3. Preprocess Giotto object with `dbMatrix`
+# Preprocess Giotto object with `dbMatrix`
+
 ```{r, eval=FALSE}
 # Perform filtering 
 gobject_db_filtered = filterGiotto(gobject_db, spat_unit = "cell",

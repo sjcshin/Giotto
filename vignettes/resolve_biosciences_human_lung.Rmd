@@ -1,6 +1,11 @@
 ---
 title: "Resolve Bioscience Human lung Subcellular"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Resolve Bioscience Human lung Subcellular}
   %\VignetteEngine{knitr::rmarkdown}
@@ -76,7 +81,7 @@ colnames(tx_coord)[1:4] <- c("x", "y", "z", "gene_id")
 tx_coord <- tx_coord[, .(x, y, gene_id)]
 ```
 
-# 1. Create Subcellular Giotto Object
+# Create Subcellular Giotto Object
 
 ```{r, eval=FALSE} 
 testobj <- createGiottoObjectSubcellular(
@@ -87,7 +92,7 @@ testobj <- createGiottoObjectSubcellular(
 )
 ```
 
-# 2. Create Spatial Locations
+# Create Spatial Locations
 
 ```{r, eval=FALSE} 
 # centroids are now used to provide the spatial locations (centroid of each cell)
@@ -97,7 +102,7 @@ testobj <- addSpatialCentroidLocations(testobj,
 )
 ```
 
-# 3. Add Image Information
+# Add Image Information
 
 ```{r, eval=FALSE}
 # create Giotto images
@@ -130,7 +135,7 @@ testobj <- addGiottoImage(testobj,
 showGiottoImageNames(testobj)
 ```
 
-# 4. Visualize Original Images
+# Visualize Original Images
 
 ```{r, eval=FALSE}
 # visualize overlay of calculated cell centroid with original image and segmentation mask file
@@ -153,7 +158,7 @@ spatPlot2D(gobject = testobj,
 
 ![](images/resolve_biosciences/1-spatPlot2D.png)
 
-# 5. Calculate Cell Shape Overlap
+# Calculate Cell Shape Overlap
 
 ```{r, eval=FALSE} 
 tictoc::tic()
@@ -173,7 +178,7 @@ testobj <- overlapToMatrix(testobj,
 )
 ```
 
-# 6. Filter Data
+# Filter Data
 
 ```{r, eval=FALSE} 
 # features can be filtered individually
@@ -195,7 +200,7 @@ spatPlot2D(gobject = subc_test,
 
 ![](images/resolve_biosciences/69-spatPlot2D.png)
 
-# 7. Process Giotto Object
+# Process Giotto Object
 
 ```{r, eval=FALSE} 
 # rna data, default.
@@ -216,7 +221,7 @@ subc_test <- normalizeGiotto(gobject = subc_test,
 showGiottoExpression(subc_test)
 ```
 
-# 8. Dimension Reduction
+# Dimension Reduction
 
 ```{r, eval=FALSE} 
 # Find highly valuable Features
@@ -272,7 +277,7 @@ plotUMAP(gobject = subc_test)
 
 ![](images/resolve_biosciences/8-UMAP.png)
 
-# 9. Cluster
+# Cluster
 
 ```{r, eval=FALSE} 
 subc_test <- createNearestNetwork(gobject = subc_test,
@@ -339,7 +344,7 @@ showClusterDendrogram(subc_test,
 
 ![](images/resolve_biosciences/12-showClusterDendrogram.png)
 
-# 10. Create a Spatial Network
+# Create a Spatial Network
 
 ```{r, eval=FALSE} 
 subc_test <- createSpatialNetwork(gobject = subc_test,
@@ -358,7 +363,7 @@ spatPlot2D(gobject = subc_test,
 
 ![](images/resolve_biosciences/13-spatPlot2D.png)
 
-# 11. Visualize SubCellular Data
+# Visualize SubCellular Data
 
 ```{r, eval=FALSE} 
 # Visualize clustered cells
@@ -420,7 +425,7 @@ spatInSituPlotPoints(subc_test,
 
 ![](images/resolve_biosciences/18-spatInSituPlotPoints.png)
 
-## 11.1 Subset by Location
+## Subset by Location
 
 ```{r, eval=FALSE} 
 # can be used to focus on specific spatial structures
@@ -510,7 +515,7 @@ spatInSituPlotPoints(subloc,
 
 ![](images/resolve_biosciences/66-spatInSituPlotPoints.png)
 
-# 12. Find Interaction Changed Features
+# Find Interaction Changed Features
 
 ```{r, eval=FALSE} 
 # find interaction changed Features

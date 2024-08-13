@@ -1,6 +1,11 @@
 ---
 title: "Integrate Bento Analysis"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Integrate Bento Analysis}
   %\VignetteEngine{knitr::rmarkdown}

@@ -1,6 +1,11 @@
 ---
 title: "Seq-Scope Mouse liver"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Seq-Scope Mouse liver}
   %\VignetteEngine{knitr::rmarkdown}
@@ -85,7 +90,7 @@ instructions <- createGiottoInstructions(save_dir = results_folder,
 ```
 
 
-# 1. Create Giotto Subcellular Object
+# Create Giotto Subcellular Object
 
 In order to do single cell and subcellular analysis with Giotto, we suggest using the GiottoSubcellular Object. Giotto Subcellular objects take cell polygons and a Giotto Point file (a data.table contains Gene Name, Expression, x, y, etc). Therefore, first we need to do some transformation of the count matrix.
 
@@ -106,7 +111,7 @@ Example Giotto Point file for **Seqscope**
 
 
 
-## 1.1 Process Giotto Point file per tile
+## Process Giotto Point file per tile
 
 
 ```{r, eval=FALSE}
@@ -143,7 +148,7 @@ colnames(gpoints) <- c("hdmi", "x", "y", "gene", "counts")
 ```
 
 
-## 1.2 Prepare the polygon mask file
+## Prepare the polygon mask file
 
 Giotto can read in a variety of different mask files provided by common segmentation tools. But first we need to check if we need to filp the x and y axis.
 
@@ -218,7 +223,7 @@ plot(final_polygons)
 ```
 
 
-## 1.3 Create Giotto Object
+## Create Giotto Object
 
 Add a random jitter to the HDMI location to make a pseudo-in situ transcript file.
 
@@ -272,7 +277,7 @@ spatInSituPlotPoints(seqscope,
 
 ![](images/seqscope_mouse_liver/top200.png)
 
-# 2. Process Giotto and Quality Control
+# Process Giotto and Quality Control
 
 ```{r, eval=FALSE}
 # filter
@@ -316,7 +321,7 @@ hist(cell_metadata$nr_feats, 100)
 
 ![](images/seqscope_mouse_liver/feature_distribution.png)
 
-# 3. Dimension Reduction
+# Dimension Reduction
 
 
 ```{r, eval=FALSE}
@@ -333,7 +338,7 @@ seqscope <- runUMAP(seqscope, dimensions_to_use = 1:100)
 ```
 
 
-# 4. Cluster
+# Cluster
 
 
 ```{r, eval=FALSE}
@@ -367,7 +372,7 @@ spatInSituPlotPoints(seqscope,
 
 ![](images/seqscope_mouse_liver/leiden_spat.png)
 
-# 5. Find spatial genes
+# Find spatial genes
 
 ```{r, eval=FALSE}
 seqscope <- createSpatialNetwork(gobject = seqscope, 
@@ -392,7 +397,7 @@ spatFeatPlot2D(seqscope,
 
 ![](images/seqscope_mouse_liver/spatgenes.png)
 
-# 6. Session info
+# Session info
 
 ```{r, eval=FALSE}
 sessionInfo()

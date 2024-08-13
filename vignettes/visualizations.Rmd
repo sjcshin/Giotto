@@ -1,6 +1,11 @@
 ---
 title: "Visualizations"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Visualizations}
   %\VignetteEngine{knitr::rmarkdown}
@@ -8,14 +13,14 @@ vignette: >
 ---
 
 
-# 1. Dataset explanation
+# Dataset explanation
 
 This tutorial walks through the visualization capabilities of Giotto. The clustering and dimension reduction methods focused on within the [dimension reduction](./dimension_reduction.html) tutorial will be revisited and utilized to create heatmaps, violin plots, and visualizations that are unique to Giotto: spatial maps and networks.
 
 This tutorial uses a merFISH dataset of mouse hypothalamic preoptic regions from [Moffitt et al.](https://doi.org/10.1126/science.aau5324). A complete walkthrough of that dataset can be found [here](./merFISH_hypoth_220915.html). To download the data used to create the Giotto Object below, please ensure that
 [wget](https://www.gnu.org/software/wget/?) is installed locally.
 
-# 2. Start Giotto
+# Start Giotto
 
 
 ```{r, eval=FALSE}
@@ -38,7 +43,7 @@ if(!genv_exists){
 ```
 
 
-# 3. Create a Giotto object
+# Create a Giotto object
 
 
 ```{r, eval=FALSE}
@@ -114,7 +119,7 @@ testobj <- processGiotto(testobj,
 ```
 
 
-# 4. Visualize the Dataset
+# Visualize the Dataset
 
 This dataset includes eight sequential slices. As such it can be visualized both in 2D and 3D.
 
@@ -140,7 +145,7 @@ spatPlot3D(gobject = testobj, point_size = 1, axis_scale = 'real')
 
 
 
-# 5. Create and Visualize Clusters
+# Create and Visualize Clusters
 
 First, run a PCA on the data. For the purposes of this tutorial, no highly variable genes will be identified or used in the reduction for simplicity. The data will simply undergo a dimension reduction through PCA. Then, run a UMAP on the data for pre-clustering visualization. The UMAP may also be plotted in 2D and 3D.
 
@@ -226,7 +231,7 @@ spatPlot2D(gobject = testobj, point_size = 1.5,
 
 
 
-# 6. Compare Clusters
+# Compare Clusters
 
 We can compare clusters using a heatmap:
 
@@ -252,7 +257,7 @@ showClusterDendrogram(testobj, h = 0.5, rotate = T, cluster_column = 'leiden_0.2
 
 
 
-# 7 Visualize Cell Markers
+# Visualize Cell Markers
 
 Marker features may be identified by calling **findMarkers_one_vs_all**. This function detects differentially expressed features by comparing a single cluster to all others. Currently, three methods are supported: "*scran*", "*gini*", and "*mast*". Here, the "*gini*" method is employed; details on the gini method may be found [here](../docs/reference/findGiniMarkers.html).
 
@@ -296,7 +301,7 @@ plotMetaDataHeatmap(testobj, expression_values = 'scaled',
 
 
 
-# 8. Visualize Cell Types in Tissue
+# Visualize Cell Types in Tissue
 
 To do this, the Leiden clusters must be annotated. Leveraging the provided cell metadata and Giotto Spatial Plots, Leiden clusters may be manually assigned a cell type. Alternative approaches (i.e. in the absence of cell metadata with cell type identification ) could involve the analysis of each cluster for enrichment in cell-specific marker genes.
 
@@ -413,7 +418,7 @@ spatPlot3D(testobj,
 
 
 
-# 9. Visualize Cell Networks
+# Visualize Cell Networks
 
 It is preferred to use Delaunay geometry to create spatial networks. In other cases, k-nearest neighbor may be used to create a spatial network. Specifying the *method* parameter within [createSpatialNetwork](../docs/reference/createSpatialNetwork.html) will accomplish this. By default, this function runs the Delaunay method. Here, both methods, as well as potential modifications to the k-nearest networks, will be shown.
 
@@ -524,7 +529,7 @@ spatPlot(gobject = subtestobj, show_network = T,
 
 
 
-# 10. Session Info
+# Session Info
 
 
 ```{r, eval=FALSE}

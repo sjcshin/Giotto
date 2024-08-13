@@ -1,6 +1,11 @@
 ---
 title: "Visium Mouse Kidney"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Visium Mouse Kidney}
   %\VignetteEngine{knitr::rmarkdown}
@@ -39,7 +44,7 @@ if (!genv_exists) {
 }
 ```
 
-# 1. Giotto global instructions and preparations
+# Giotto global instructions and preparations
 
 ```{r, eval=FALSE}
 library(Giotto)
@@ -66,7 +71,7 @@ instrs <- createGiottoInstructions(
 data_path <- "/path/to/Kidney_data/"
 ```
 
-# 2. Create Giotto object & process data
+# Create Giotto object & process data
 
 ```{r, eval=FALSE}
 ## directly from visium folder
@@ -127,7 +132,7 @@ spatPlot2D(
 
 ![](images/visium_mouse_kidney/2-spatPlot2D.png)
 
-# 3. Dimension reduction
+# Dimension reduction
 
 ```{r, eval=FALSE}
 ## highly variable features (genes)
@@ -165,7 +170,7 @@ plotTSNE(gobject = visium_kidney)
 
 ![](images/visium_mouse_kidney/7-tSNE.png)
 
-# 4. Clustering
+# Clustering
 
 ```{r, eval=FALSE}
 ## sNN network (default)
@@ -177,7 +182,7 @@ plotUMAP(gobject = visium_kidney, cell_color = "leiden_clus", show_NN_network = 
 
 ![](images/visium_mouse_kidney/8-UMAP.png)
 
-# 5. Co-visualize
+# Co-visualize
 
 ```{r, eval=FALSE}
 # expression and spatial
@@ -198,7 +203,7 @@ spatDimPlot(
 
 ![](images/visium_mouse_kidney/10-spatDimPlot2D.png)
 
-# 6. Cell type marker gene detection
+# Cell type marker gene detection
 
 ## gini
 
@@ -296,7 +301,7 @@ dimFeatPlot2D(visium_kidney,
 
 ![](images/visium_mouse_kidney/16-dimFeatPlot2D.png)
 
-# 7. cell-type annotation
+# Cell-type annotation
 
 Visium spatial transcriptomics does not provide single-cell resolution, making cell type annotation a harder problem. Giotto provides 3 ways to calculate enrichment of specific cell-type signature gene list:
 
@@ -304,7 +309,7 @@ Visium spatial transcriptomics does not provide single-cell resolution, making c
 -   rank
 -   hypergeometric test
 
-# 8. Spatial grid
+# Spatial grid
 
 ```{r, eval=FALSE}
 visium_kidney <- createSpatialGrid(
@@ -321,7 +326,7 @@ spatPlot(visium_kidney,
 
 ![](images/visium_mouse_kidney/17-spatPlot2D.png)
 
-# 9. spatial network
+# Spatial network
 
 ```{r, eval=FALSE}
 ## delaunay network: stats + creation
@@ -341,7 +346,7 @@ spatPlot(
 
 ![](images/visium_mouse_kidney/19-spatPlot2D.png)
 
-# 10. Spatial genes
+# Spatial genes
 
 ## Spatial genes
 
@@ -459,7 +464,7 @@ spatCellPlot(visium_kidney,
 
 ![](images/visium_mouse_kidney/23-spatCellPlot2D.png)
 
-# 11. HMRF domains
+# HMRF domains
 
 ```{r, eval=FALSE}
 # HMRF requires a fully connected network!

@@ -1,6 +1,11 @@
 ---
 title: "Giotto Ecosystem"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Giotto Ecosystem}
   %\VignetteEngine{knitr::rmarkdown}
@@ -8,7 +13,7 @@ vignette: >
 ---
 
 
-# 1. Explanation
+# Explanation
 
 We plan to curate an ecosystem of different, related packages to modularize Giotto Suite as we extend its functionalities. Here, we detail some different helper module(s) within the Giotto Ecosystem.
 
@@ -18,7 +23,7 @@ knitr::include_graphics("images/ecosystem/modules.png")
 ```
 
 
-# 2. GiottoClass
+# GiottoClass
 
 This package contains the Giotto object and subobject class definitions and frameworks. Functionalities relating to data ingestion, basic object creation, data access within the Giotto object, and generics defined for the Giotto classes are all found here.
 
@@ -32,7 +37,7 @@ To install GiottoClass run:
 pak::pkg_install("drieslab/GiottoClass")
 ```
 
-# 3. GiottoUtils
+# GiottoUtils
 
 GiottoUtils exports functionalities that are called internally by many of the other packages in the Giotto ecosystem. These range from things such as commonly used imports to pretty prints. Users should not need to directly interact with this package.
 
@@ -44,7 +49,7 @@ To install GiottoUtils run:
 pak::pkg_install("drieslab/GiottoUtils")
 ```
 
-# 4. GiottoVisuals
+# GiottoVisuals
 
 GiottoVisuals contains the main plotting functions of Giotto Suite
 
@@ -56,7 +61,7 @@ To install GiottoVisuals run:
 pak::pkg_install("drieslab/GiottoVisuals")
 ```
 
-# 5. GiottoData
+# GiottoData
 
 This package depends on Giotto Suite and leverages various functions within it for saving and loading Giotto objects. It contains dataset helper functions `loadGiottoMini()` and `getSpatialDataset()`. **Note that** `getSpatialDataset()` **was moved from Giotto Suite to GiottoData!**
 
@@ -73,7 +78,7 @@ pak::pkg_install("drieslab/GiottoData")
 
 The scripts used to create both the mini giotto objects and mini objects are available in the repository so that we may extend and/or improve them and that you may utilize them for your own purposes!
 
-## 5.1 Start Giotto
+## Start Giotto
 
 
 ```{r, eval=FALSE}
@@ -100,7 +105,7 @@ if(!genv_exists){
 ```
 
 
-## 5.2 Create a Giotto object
+## Create a Giotto object
 
 
 ```{r, eval=FALSE}
@@ -108,7 +113,7 @@ visium_mini <- loadGiottoMini(dataset = "visium")
 ```
 
 
-# 6. Session Info
+# Session Info
 
 
 ```{r, eval=FALSE}

@@ -1,6 +1,11 @@
 ---
 title: "Interactive selection"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Interactive selection}
   %\VignetteEngine{knitr::rmarkdown}
@@ -36,7 +41,7 @@ if(!genv_exists){
 ```
 
 
-# 1. Create a Giotto spatPlot object
+# Create a Giotto spatPlot object
 
 When creating the spatPlot2D object, you can only plot the spatial cells/spots or show the tissue image in the background.
 
@@ -59,7 +64,7 @@ my_spatPlot <- spatPlot2D(gobject = visium_brain,
 ```
 
 
-# 2. Run the interactive selection tool
+# Run the interactive selection tool
 
 plotInteractivePolygons( ) will run a ShinyApp gadget within your RStudio session. Use your cursor to draw the area of interest and add a name. You can draw as many regions as you wish.
 
@@ -116,7 +121,7 @@ plotInteractivePolygons(my_spatPlot,
 
 ![](images/interactive_selection/5-interactive_brain_zoom.png)
 
-# 3. Save the coordinates
+# Save the coordinates
 
 Click on the button *Done* once you have finished selecting the areas of interest.
 
@@ -185,7 +190,7 @@ visium_brain <- addPolygonCells(visium_brain,
 
 ![](images/interactive_selection/8-new_metadata_customized.png)
 
-# 4. Get the cells located within each polygon
+# Get the cells located within each polygon
 
 
 You can extract the coordinates and IDs from cells located within one or multiple regions of interest.
@@ -211,7 +216,7 @@ getCellsFromPolygon(visium_brain,
 
 ![](images/interactive_selection/10-get_cells.png)
 
-# 5. Compare gene expression 
+# Compare gene expression 
 
 Let"s compare the expression levels of some genes of interest between the selected regions.
 
@@ -245,7 +250,7 @@ comparePolygonExpression(visium_brain,
 
 ![](images/interactive_selection/12-compare_topgenes.png)
 
-# 6. Compare cell type abundance 
+# Compare cell type abundance 
 
 If you have run an analysis for finding clusters or have annotated cell types within the cell metadata slot, you can use the column name to compare the abundance of cell types between the selected regions.
 
@@ -261,7 +266,7 @@ compareCellAbundance(visium_brain, cell_type_column = "cell_type")
 
 ![](images/interactive_selection/13-compare_cell_abundance.png)
 
-# 7. Create a spatPlot per region 
+# Create a spatPlot per region 
 
 You can use the spatPlot( ) arguments to isolate and plot each region. Also, you can color each cell by cluster, cell type or expression level.
 
@@ -290,7 +295,7 @@ spatFeatPlot2D(visium_brain,
 
 ![](images/interactive_selection/15-compare_spatfeatplot.png)
 
-# 8. Plot again the polygons 
+# Plot again the polygons 
 
 You can plot again all or some drawn polygons. The minimal input is the Giotto object containing polygon coordinates within the spatial_info slot, as well as the spatial plot.
 
@@ -316,7 +321,7 @@ plotPolygons(visium_brain,
 
 ![](images/interactive_selection/17-plotPolygon2.png)
 
-# 9. Session info
+# Session info
 
 ```{r, eval=FALSE}
 sessionInfo()

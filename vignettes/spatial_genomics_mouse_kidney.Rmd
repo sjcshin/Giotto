@@ -1,6 +1,11 @@
 ---
 title: "Spatial Genomics Mouse Kidney"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Spatial Genomics Mouse Kidney}
   %\VignetteEngine{knitr::rmarkdown}
@@ -8,11 +13,11 @@ vignette: >
 ---
 
 
-# 1. Dataset explanation
+# Dataset explanation
 
 This tutorial covers Giotto object creation and simple exploratory analysis with the gene expression data generated on Spatial Genomics' GenePS instrument of kidney tissue resected from a 2-month-old female mouse. The data was generated using sequential fluorescence in situ hybridization (seqFISH) to visualize 220 genes directly in the sample.
 
-# 2. Start Giotto
+# Start Giotto
 
 
 ```{r, eval=FALSE}
@@ -35,7 +40,7 @@ if (!genv_exists) {
 ```
 
 
-# 3. Project Data Paths
+# Project Data Paths
 
 
 ```{r, eval=FALSE}
@@ -51,7 +56,7 @@ tx <- paste0(data_path, "SG_MouseKidneyDataRelease_TranscriptCoordinates_section
 ```
 
 
-# 4. Create a Giotto object
+# Create a Giotto object
 
 
 ```{r, eval=FALSE}
@@ -85,7 +90,7 @@ sg <- addGiottoLargeImage(sg, largeImages = list(image = gimg))
 
 ![](images/spatial_genomics_mouse_kidney/Points.png)
 
-# 5. Aggregate, Normalize, and Filter Giotto Data
+# Aggregate, Normalize, and Filter Giotto Data
 
 
 ```{r, eval=FALSE}
@@ -112,9 +117,9 @@ sg <- addStatistics(sg)
 ```
 
 
-# 6. Dimension Reduction
+# Dimension Reduction
 
-## 6.1 Highly Variable Features
+## Highly Variable Features
 
 
 ```{r, eval=FALSE}
@@ -136,7 +141,7 @@ sg <- runPCA(
 
 ![](images/spatial_genomics_mouse_kidney/HVF.png)
 
-## 6.2 PCA
+## PCA
 
 
 ```{r, eval=FALSE}
@@ -158,7 +163,7 @@ plotPCA(sg,
 
 ![](images/spatial_genomics_mouse_kidney/PCA.png)
 
-## 6.3 tSNE and UMAP
+## tSNE and UMAP
 
 
 ```{r, eval=FALSE}
@@ -191,9 +196,9 @@ plotUMAP(sg,
 
 ![](images/spatial_genomics_mouse_kidney/UMAP.png)
 
-# 7. Clustering
+# Clustering
 
-## 7.1 UMAP Leiden Clustering
+## UMAP Leiden Clustering
 
 
 ```{r, eval=FALSE}
@@ -223,7 +228,7 @@ plotUMAP(
 
 ![](images/spatial_genomics_mouse_kidney/LeidenUMAP.png)
 
-## 7.2 Spatial Leiden Clustering
+## Spatial Leiden Clustering
 
 
 ```{r, eval=FALSE}
@@ -247,7 +252,7 @@ my_spatPlot <- spatPlot2D(
 
 ![](images/spatial_genomics_mouse_kidney/LeidenSpatPlot6.png)
 
-# 8. Cell Type Marker Gene Detection
+# Cell Type Marker Gene Detection
 
 
 ```{r, eval=FALSE}
@@ -299,9 +304,9 @@ plotMetaDataHeatmap(sg,
 
 ![](images/spatial_genomics_mouse_kidney/ClusterHeatMap.png)
 
-# 9. Spatial Gene Expression Patterns
+# Spatial Gene Expression Patterns
 
-## 9.1 Establish Delaunay Network
+## Establish Delaunay Network
 
 
 ```{r, eval=FALSE}
@@ -325,7 +330,7 @@ sg <- createSpatialNetwork(
 
 ![](images/spatial_genomics_mouse_kidney/DelaunayGraphs.png)
 
-## 9.2 Binspect by K-Means
+## Binspect by K-Means
 
 
 ```{r, eval=FALSE}
@@ -345,7 +350,7 @@ spatFeatPlot2D(sg,
 
 ![](images/spatial_genomics_mouse_kidney/KMeansBinSpect.png)
 
-## 9.3 Binspect by Rank
+## Binspect by Rank
 
 
 ```{r, eval=FALSE}
@@ -366,7 +371,7 @@ spatFeatPlot2D(sg,
 
 ![](images/spatial_genomics_mouse_kidney/RankBinSpect.png)
 
-# 10. Spatial Co-Expression Patterns
+# Spatial Co-Expression Patterns
 
 
 ```{r, eval=FALSE}
@@ -465,7 +470,7 @@ spatCellPlot(sg,
 
 ![](images/spatial_genomics_mouse_kidney/SpatialCorClusters2.png)
 
-# 11. Session Info
+# Session Info
 
 
 ```{r, eval=FALSE}

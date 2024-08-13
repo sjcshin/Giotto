@@ -1,8 +1,12 @@
 ---
 title: "Interoperability: Seurat"
 author: "Iqra Amin"
-date: "2024-03-06"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Interoperability: Seurat}
   %\VignetteEngine{knitr::rmarkdown}

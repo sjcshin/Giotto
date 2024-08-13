@@ -1,6 +1,10 @@
 ---
 title: "Presentations"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Presentations}
   %\VignetteEngine{knitr::rmarkdown}

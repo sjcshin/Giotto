@@ -1,13 +1,18 @@
 ---
 title: "Visium Prostate Integration"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Visium Prostate Integration}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# 1 Dataset explanation
+# Dataset explanation
 
 [10X genomics](https://www.10xgenomics.com/spatial-transcriptomics/) recently launched a new platform to obtain spatial expression data using a Visium Spatial Gene Expression slide.
 
@@ -24,7 +29,7 @@ High resolution png from original tissue:
 ![](images/general_figs/Visium_FFPE_Human_Prostate_Cancer_image.png){width="50.0%"}
 
 
-# 2 Start Giotto
+# Start Giotto
 
 ```{r, eval=FALSE}
 # Ensure Giotto Suite is installed
@@ -64,7 +69,7 @@ instrs = createGiottoInstructions(save_dir = results_directory,
 ```
 
 
-# 3 Create Giotto objects and join
+# Create Giotto objects and join
 
 ```{r, eval=FALSE}
 # This dataset must be downlaoded manually; please do so and change the path below as appropriate
@@ -157,7 +162,7 @@ spatPlot2D(gobject = testcombo, cell_color = 'in_tissue',
 
 ![](images/visium_prostate_integration/1c_plot.png)
 
-# 4 Process Giotto Objects
+# Process Giotto Objects
 
 ```{r, eval=FALSE}
 # subset on in-tissue spots
@@ -206,7 +211,7 @@ spatPlot2D(gobject = testcombo, group_by = 'list_ID', cell_color = 'nr_feats', c
 
 ![](images/visium_prostate_integration/2c_plot.png)
 
-# 5 Dimention Reduction
+# Dimension Reduction
 
 ```{r, eval=FALSE}
 ## PCA ##
@@ -225,9 +230,9 @@ screePlot(testcombo, ncp = 30, save_param = list(save_name = "3a_screeplot"))
 
 ![](images/visium_prostate_integration/3a_screeplot.png)
 
-# 6 Clustering
+# Clustering
 
-## 6.1 Without Integration
+## Without Integration
 
 Integration is usually needed for dataset of different conditions to minimize batch effects. Without integration means without using any integration methods.
 
@@ -268,7 +273,7 @@ spatDimPlot2D(gobject = testcombo,
 
 ![](images/visium_prostate_integration/4.1c_plot.png)
 
-## 6.2 With Harmony integration
+## With Harmony integration
 
 Harmony is a integration algorithm developed by [Korsunsky, I. et al.](https://www.nature.com/articles/s41592-019-0619-0). It was designed for integration of single cell data but also work well on spatial datasets.
 
@@ -350,7 +355,7 @@ spatPlot2D(gobject = testcombo,
 
 ![](images/visium_prostate_integration/4_w_integration_plot.png)
 
-# 7 Cell type annotation
+# Cell type annotation
 
 Visium spatial transcriptomics does not provide single-cell resolution, making cell type annotation a harder problem. Giotto provides several ways to calculate enrichment of specific cell-type signature gene list:
 
@@ -385,7 +390,7 @@ giotto_SC <- addCellMetadata(giotto_SC,
 giotto_SC<- normalizeGiotto(giotto_SC)
 ```
 
-## 7.1 PAGE enrichment
+## PAGE enrichment
 
 ```{r, eval=FALSE}
 # Create PAGE matrix
@@ -428,7 +433,7 @@ spatCellPlot(gobject = testcombo,
 
 ![](images/visium_prostate_integration/5a_PAGE_plot.png)
 
-## 7.2 Hypergeometric test
+## Hypergeometric test
 
 ```{r, eval=FALSE}
 testcombo = runHyperGeometricEnrich(gobject = testcombo,
@@ -444,7 +449,7 @@ spatCellPlot(gobject = testcombo,
 
 ![](images/visium_prostate_integration/5b_HyperGeometric_plot.png)
 
-## 7.3 Rank Enrichment
+## Rank Enrichment
 
 ```{r, eval=FALSE}
 # Create rank matrix, not that rank matrix is different from PAGE
@@ -470,7 +475,7 @@ spatCellPlot2D(gobject = testcombo,
 
 ![](images/visium_prostate_integration/5c_Rank_plot.png)
 
-## 7.4 DWLS Deconvolution
+## DWLS Deconvolution
 
 ```{r, eval=FALSE}
 # Create DWLS matrix, not that DWLS matrix is different from PAGE and rank
@@ -491,7 +496,7 @@ spatCellPlot2D(gobject = testcombo,
 
 ![](images/visium_prostate_integration/5d_DWLS_plot.png)
 
-# 8 Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

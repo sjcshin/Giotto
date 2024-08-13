@@ -1,17 +1,22 @@
 ---
 title: "Interoperability: AnnData"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Interoperability: AnnData}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# 1. Converting to and from AnnData (squidpy-flavor)
+# Converting to and from AnnData (squidpy-flavor)
 
 This tutorial details how to use the conversion functions `anndataToGiotto()` and `giottoToAnnData()`. A mini Giotto object will be used for minimal computational requirements. Please note that these functions are inherently in active development, since changes to either squidpy or anndata are possible.
 
-# 2. Start Giotto
+# Start Giotto
 
 
 ```{r, eval=FALSE}
@@ -38,7 +43,7 @@ if(!genv_exists){
 ```
 
 
-# 3. Create a Giotto object
+# Create a Giotto object
 
 
 ```{r, eval=FALSE}
@@ -61,7 +66,7 @@ mini_gobject <- replaceGiottoInstructions(gobject = mini_gobject,
 ```
 
 
-# 4. Convert Giotto to AnnData
+# Convert Giotto to AnnData
 
 Since Giotto is structured hierarchically, converting Giotto to AnnData will result in multiple `.h5ad` files. Each file will correspond to a Giotto `spat_unit` `feat_type` pair. Furthermore, each expression slot will be treated as a `layer` in the resulting AnnData slot.
 
@@ -105,7 +110,7 @@ anndata_conversions <- giottoToAnnData(gobject = mini_gobject,
 ```
 
 
-# 5. AnnData to Giotto
+# AnnData to Giotto
 
 To convert an AnnData Object back into a Giotto object, it must first be saved as a `.h5ad` file. The name of said file may then be provided to `anndataToGiotto()` for conversion.
 
@@ -126,7 +131,7 @@ aggregate_rna_gobject <- anndataToGiotto(anndata_path = "./giotto_anndata_conver
 ```
 
 
-# 6. Session Info
+# Session Info
 
 
 ```{r, eval=FALSE}

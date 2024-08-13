@@ -1,6 +1,11 @@
 ---
 title: "osmFISH Mouse SS Cortex"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{osmFISH Mouse SS Cortex}
   %\VignetteEngine{knitr::rmarkdown}
@@ -63,7 +68,7 @@ getSpatialDataset(dataset = "osmfish_SS_cortex",
                   method = "wget")
 ```
 
-# 1. Giotto global instructions and preparations
+# Giotto global instructions and preparations
 
 ```{r, eval=FALSE}
 ## instructions allow us to automatically save all plots into a chosen results folder
@@ -78,7 +83,7 @@ loc_path <- file.path(results_folder, "osmFISH_prep_cell_coordinates.txt")
 meta_path <- file.path(results_folder, "osmFISH_prep_cell_metadata.txt")
 ```
 
-# 2. Create Giotto object & process data
+# Create Giotto object & process data
 
 ```{r, eval=FALSE}
 ## create
@@ -187,7 +192,7 @@ spatPlot2D(gobject = osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/2_d_total_expr_limits.png)
 
-# 3. Dimension reduction
+# Dimension reduction
 
 ```{r, eval=FALSE}
 ## highly variable genes (HVG)
@@ -251,7 +256,7 @@ plotTSNE(gobject = osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/3_e_tSNE_reduction.png)
 
-# 4. Cluster
+# Cluster
 
 ```{r, eval=FALSE}
 ## hierarchical clustering
@@ -359,7 +364,7 @@ showClusterDendrogram(osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/4_f_dendro.png)
 
-# 5. Co-visualize
+# Co-visualize
 
 ```{r, eval=FALSE}
 # expression and spatial
@@ -413,7 +418,7 @@ spatDimPlot2D(gobject = osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/5_d_total_expr.png)
 
-# 6. Differential expression
+# Differential expression
 
 ```{r, eval=FALSE}
 ## split dendrogram nodes ##
@@ -480,11 +485,11 @@ plotMetaDataHeatmap(osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/6_f_metaheatmap_all_genes_names.png)
 
-# 7. Cell type annotation
+# Cell type annotation
 
 Use [annotateGiotto()](http://giottosuite.com/reference/annotateGiotto.html) to annotate the clusters. For this dataset, we have ClusterName in the metadata.
 
-# 8. Spatial grid
+# Spatial grid
 
 ```{r, eval=FALSE}
 osm_test <- createSpatialGrid(gobject = osm_test,
@@ -503,7 +508,7 @@ spatPlot2D(osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/8_grid_det_cell_types.png)
 
-# 9. Spatial network
+# Spatial network
 
 ```{r, eval=FALSE}
 osm_test <- createSpatialNetwork(gobject = osm_test)
@@ -519,7 +524,7 @@ spatPlot2D(gobject = osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/9_spatial_network_k10.png)
 
-# 10. Spatial genes
+# Spatial genes
 
 ```{r, eval=FALSE}
 # km binarization
@@ -542,7 +547,7 @@ spatDimFeatPlot2D(osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/10_a_spatial_genes_km.png)
 
-# 12. Cell-cell preferential proximity
+# Cell-cell preferential proximity
 
 ```{r, eval=FALSE}
 ## calculate frequently seen proximities
@@ -602,7 +607,7 @@ cellProximitySpatPlot(gobject = osm_test,
 
 ![](images/osmfish_mouse_ss_cortex/12_d_cell_cell_enrichment_selected.png)
 
-# 13. Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

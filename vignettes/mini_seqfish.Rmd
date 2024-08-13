@@ -1,6 +1,11 @@
 ---
 title: "mini seqFISH"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{mini seqFISH}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,7 +33,7 @@ if(!genv_exists){
 }
 ```
 
-# 1. Load the Giotto object
+# Load the Giotto object
 
 ```{r, eval=FALSE}
 library(Giotto)
@@ -43,7 +48,7 @@ seqfish_mini <- loadGiottoMini("seqfish",
                                python_path = NULL)
 ```
 
-## 1.1 Set Giotto instructions (optional)
+## Set Giotto instructions (optional)
 
 How to work with Giotto instructions that are part of your Giotto
 object:
@@ -67,7 +72,7 @@ seqfish_mini <- changeGiottoInstructions(seqfish_mini,
                                          new_values = c(results_folder,TRUE, TRUE))
 ```
 
-# 2. Processing steps
+# Processing steps
 
 - Filter genes and cells based on detection frequencies.
 - Normalize expression matrix (log transformation, scaling factor and/or z-scores)
@@ -92,7 +97,7 @@ seqfish_mini <- adjustGiottoMatrix(gobject = seqfish_mini,
                                    covariate_columns = c("nr_feats", "total_expr"))
 ```
 
-# 3. Dimension reduction
+# Dimension reduction
 
 - Identify highly variable features (HVF)
 
@@ -141,7 +146,7 @@ plotTSNE(gobject = seqfish_mini)
 
 ![](images/mini_seqfish/4-tSNE.png)
 
-# 4. Clustering
+# Clustering
 
 - Create a shared (default) nearest network in PCA space (or directly on matrix)
 - Cluster on nearest network with Leiden or Louvain (k-means and hclust are alternatives)
@@ -195,7 +200,7 @@ showClusterDendrogram(seqfish_mini,
 
 ![](images/mini_seqfish/8-showClusterDendrogram.png)
 
-# 5. Differential expression
+# Differential expression
 
 ```{r, eval=FALSE}
 markers_gini <- findMarkers_one_vs_all(gobject = seqfish_mini,
@@ -227,7 +232,7 @@ plotMetaDataHeatmap(seqfish_mini,
 
 ![](images/mini_seqfish/10-plotMetaDataHeatmap.png)
 
-# 6. Cell type annotation
+# Cell type annotation
 
 ```{r, eval=FALSE}
 clusters_cell_types <- c("cell A", "cell B", "cell C", "cell D",
@@ -266,7 +271,7 @@ plotHeatmap(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/12-plotHeatmap.png)
 
-# 7. Spatial grid
+# Spatial grid
 
 - Create a grid based on defined step sizes in the x,y(,z) axes.
 
@@ -286,7 +291,7 @@ spatPlot(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/13-spatPlot2D.png)
 
-# 8. Spatial network
+# Spatial network
 
 - Visualize information about the default Delaunay network
 - Create a spatial Delaunay network (default)
@@ -333,7 +338,7 @@ spatPlot(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/16-spatPlot2D.png)
 
-# 9. Spatial genes
+# Spatial genes
 
 Identify spatial genes with 3 different methods:
 
@@ -392,7 +397,7 @@ spatFeatPlot2D(seqfish_mini,
 
 ![](images/mini_seqfish/19-spatFeatPlot2D.png)
 
-# 10. Spatial co-expression patterns
+# Spatial co-expression patterns
 
 Identify robust spatial co-expression patterns using the spatial network or grid and a subset of individual spatial genes.
 
@@ -454,7 +459,7 @@ spatCellPlot(seqfish_mini,
 
 ![](images/mini_seqfish/22-spatCellPlot2D.png)
 
-# 11. Spatial HMRF domains
+# Spatial HMRF domains
 
 The following HMRF function requires {smfishHmrf} .
 
@@ -505,7 +510,7 @@ spatPlot(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/23-spatPlot2D.png)
 
-# 12. Cell neighborhood: cell-type/cell-type interactions
+# Cell neighborhood: cell-type/cell-type interactions
 
 ```{r, eval=FALSE}
 set.seed(seed = 2841)
@@ -563,7 +568,7 @@ cellProximityNetwork(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/27-cellProximityNetwork.png)
 
-## 12.1 Visualization of specific cell types
+## Visualization of specific cell types
 
 ```{r, eval=FALSE}
 # Option 1
@@ -598,7 +603,7 @@ spatPlot(seqfish_mini,
 
 ![](images/mini_seqfish/29-spatPlot2D.png)
 
-# 13. Cell neighborhood: Interaction Changed Features
+# Cell neighborhood: Interaction Changed Features
 
 ```{r, eval=FALSE}
 ## select top 25 highest expressing genes
@@ -654,7 +659,7 @@ plotICF(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/31-plotICF.png)
 
-# 14. Cell Neighborhood: Ligand-Receptor Cell-Cell Communication
+# Cell Neighborhood: Ligand-Receptor Cell-Cell Communication
 
 ```{r, eval=FALSE}
 LR_data <- data.table::fread(system.file("Mini_datasets/seqfish/Raw/mouse_ligand_receptors.txt", 
@@ -747,7 +752,7 @@ plotRecovery(gobject = seqfish_mini,
 
 ![](images/mini_seqfish/35-plotRecovery.png)
 
-# 15. Session info
+# Session info
 
 ```{r, eval=FALSE}
 sessionInfo()

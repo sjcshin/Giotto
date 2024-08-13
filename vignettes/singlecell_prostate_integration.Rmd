@@ -1,6 +1,11 @@
 ---
 title: "Integration of single cell datasets"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Integration of single cell datasets}
   %\VignetteEngine{knitr::rmarkdown}
@@ -52,7 +57,7 @@ instructions <- createGiottoInstructions(save_dir = results_folder,
 ```
 
 
-# 1. Create Giotto object from 10X dataset and join
+# Create Giotto object from 10X dataset and join
 
 
 ``` {r, eval=FALSE}
@@ -74,7 +79,7 @@ giotto_SC_join <- joinGiottoObjects(gobject_list = list(giotto_P1, giotto_P2),
 ```
 
 
-# 2. Process Joined object
+# Process Joined object
 
 ``` {r, eval=FALSE}
 # filter
@@ -95,7 +100,7 @@ giotto_SC_join <- addStatistics(gobject = giotto_SC_join,
 ```
 
 
-# 3. Dimension reduction and clustering
+# Dimension reduction and clustering
 
 ``` {r, eval=FALSE}
 ## PCA ##
@@ -227,7 +232,7 @@ dimPlot2D(gobject = giotto_SC_join,
 
 ![](images/singlecell_prostate_integration/4_list_with_integration.png){width="50.0%"}
 
-# 4. Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

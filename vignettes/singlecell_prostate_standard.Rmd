@@ -1,6 +1,11 @@
 ---
 title: "10X Single Cell RNA Sequencing"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{10X Single Cell RNA Sequencing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -47,7 +52,7 @@ instructions <- createGiottoInstructions(save_dir = results_folder,
 ```
 
 
-# 1: Create Giotto object from 10X dataset
+# Create Giotto object from 10X dataset
 
 Note that you will need an input directory for barcodes.tsv(.gz) features.tsv(.gz) matrix.mtx(.gz)
 
@@ -60,7 +65,7 @@ giotto_SC <- createGiottoObject(expression = expression,
                                 instructions = instructions) 
 ```
 
-# 2. Process Giotto Object
+# Process Giotto Object
 
 ``` {r, eval=FALSE}
 giotto_SC <- filterGiotto(gobject = giotto_SC,
@@ -97,7 +102,7 @@ giotto_SC <- addStatistics(gobject = giotto_SC,
                            expression_values = "raw")
 ```
 
-# 3. Dimension Reduction
+# Dimension Reduction
 
 ``` {r, eval=FALSE}
 ## PCA ##
@@ -114,7 +119,7 @@ screePlot(giotto_SC,
 
 ![](images/singlecell_prostate_standard/3_scree_plot.png)
 
-# 4. Cluster
+# Cluster
 
 ``` {r, eval=FALSE}
 ## cluster and run UMAP ##
@@ -145,7 +150,7 @@ plotUMAP(gobject = giotto_SC,
 
 ![](images/singlecell_prostate_standard/4_Cluster.png)
 
-# 5. Differential Expression
+# Differential Expression
 
 ``` {r, eval=FALSE}
 markers_scran <- findMarkers_one_vs_all(gobject = giotto_SC, 
@@ -181,7 +186,7 @@ violinPlot(giotto_SC,
 
 ![](images/singlecell_prostate_standard/5_b_violinplot_scran.png)
 
-# 6. FeaturePlot
+# FeaturePlot
 
 ``` {r, eval=FALSE}
 # Plot known marker genes across different cell types. EPCAM for epithelial cells, 
@@ -194,7 +199,7 @@ dimFeatPlot2D(giotto_SC,
 
 ![](images/singlecell_prostate_standard/6_featureplot.png)
 
-# 7. Cell type Annotation
+# Cell type Annotation
 
 ``` {r, eval=FALSE}
 prostate_labels <- c("Endothelial cells",#1
@@ -228,7 +233,7 @@ dimPlot2D(gobject = giotto_SC,
 
 ![](images/singlecell_prostate_standard/7_Annotation.png)
 
-# 8. Subset and Recluster
+# Subset and Recluster
 
 ``` {r, eval=FALSE}
 Subset_giotto_T <- subsetGiotto(giotto_SC,
@@ -318,7 +323,7 @@ dimPlot2D(gobject = Subset_giotto_T,
 
 ![](images/singlecell_prostate_standard/8d_Annotation.png)
 
-# 9. Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

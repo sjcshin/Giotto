@@ -1,6 +1,11 @@
 ---
 title: "Codex Mouse Spleen"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Codex Mouse Spleen}
   %\VignetteEngine{knitr::rmarkdown}
@@ -38,7 +43,7 @@ if(!genv_exists){
 
 
 
-# 1. Giotto global instructions and preparations
+# Giotto global instructions and preparations
 
 
 ```{r, eval=FALSE}
@@ -81,7 +86,7 @@ meta_path <- paste0(results_folder, "codex_BALBc_3_annotation.txt")
 ```
 
 
-# 2. Create Giotto object & process data
+# Create Giotto object & process data
 
 
 ```{r, eval=FALSE}
@@ -174,7 +179,7 @@ spatPlot(gobject = codex_tesTRUE,
 
 ![](images/codex_mouse_spleen/2_b_spatPlot.png)
 
-# 3. Dimension reduction
+# Dimension reduction
 
 ```{r, eval=FALSE}
 # use all Abs
@@ -217,7 +222,7 @@ plotUMAP(gobject = codex_tesTRUE,
 
 ![](images/codex_mouse_spleen/3_c_UMAP.png)
 
-# 4. Cluster
+# Cluster
 
 ```{r, eval=FALSE}
 ## sNN network (default)
@@ -260,7 +265,7 @@ spatPlot(gobject = codex_tesTRUE,
 
 ![](images/codex_mouse_spleen/4_b_spatplot.png)
 
-# 5. Co-visualize
+# Co-visualize
 
 ```{r, eval=FALSE}
 spatDimPlot2D(gobject = codex_tesTRUE,
@@ -276,7 +281,7 @@ spatDimPlot2D(gobject = codex_tesTRUE,
 
 ![](images/codex_mouse_spleen/5_a_spatdimplot.png)
 
-# 6. Differential expression
+# Differential expression
 
 ```{r, eval=FALSE}
 cluster_column <- "leiden"
@@ -346,7 +351,7 @@ violinPlot(codex_tesTRUE,
 
 ![](images/codex_mouse_spleen/6_d_violinplot.png)
 
-# 7. Cell type annotation
+# Cell type annotation
 
 ```{r, eval=FALSE}
 clusters_cell_types <- c("naive B cells", "B cells", "B cells", "naive B cells",
@@ -408,7 +413,7 @@ spatPlot(gobject = codex_tesTRUE,
 
 ![](images/codex_mouse_spleen/7_c_spatplot.png)
 
-# 8. Visualize cell types and gene expression in selected zones
+# Visualize cell types and gene expression in selected zones
 
 ```{r, eval=FALSE}
 cell_metadatadata <- pDataDT(codex_test)
@@ -505,7 +510,7 @@ spatDimFeatPlot2D(codex_test_zone2,
 
 ![](images/codex_mouse_spleen/8_f_spatdimgeneplot.png)
 
-# 9. Session info
+# Session info
 
 ```{r, eval=FALSE}
 sessionInfo()

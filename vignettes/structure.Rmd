@@ -1,6 +1,11 @@
 ---
 title: "An introduction to the Giotto Suite classes"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{An introduction to the Giotto Suite classes}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,7 +15,7 @@ vignette: >
 
 *Giotto* is a technique-agnostic framework and toolbox for spatial-omic analysis. Its structure and classes are designed to be flexible, intuitive, and readable. The framework supports working with both aggregate (cell x count) and un-aggregated spatial data where the polygon annotations are separate from the spatial expression data.
 
-# 1. Giotto Object Structure
+# Giotto Object Structure
 
 Usage of the *Giotto* package revolves around the `giotto` object. This is an S4 class that holds spatial expression data and facilitates its manipulation and visualization with the *Giotto* package"s functions. Additional metadata and other outputs generated from certain functions, which may be used in downstream analyses, are also be stored within the `giotto` object. Its self-contained nature provides a convenient representation of the entire spatial experiment and is why most *Giotto* functions take a given `giotto` object as input and return a `giotto` object as output.
 
@@ -20,13 +25,13 @@ Data is organized within the `giotto` object in defined `slots` as described in 
 ![](images/structure/Giotto_suite_object-02.svg)
 ![](images/structure/Giotto_suite_object-03.svg)
 
-# 2. Nested Organization of the Giotto Object
+# Nested Organization of the Giotto Object
 
 Biology happens across multiple scales of size and types of modalities. While it is possible to simply generate a new object for each combination of the two, the fact that data from most spatial methods are both high resolution and spatially contiguous, requires a more flexible approach that permits the coexistence of multiple spatial units within the same object. This allows the user to define the spatial unit(s) of biology that are most relevant to the analysis and re-aggregate the feature information to those units.
 
 With this organization it is convenient to compare expression across different spatial units. Additionally, by determining spatial overlaps between these spatial units, it becomes possible to represent the hierarchical organization of biological subunits and make queries using it.
 
-## 2.1 Spatial unit and feature type
+## Spatial unit and feature type
 
 To accommodate this complexity, information is subnested within many of the `giotto` object"s slots first by `spat_unit` (spatial unit) and then by `feat_type` (feature type). This structurally separates each set of information within *Giotto*"s framework so that there is minimal ambiguity.
 
@@ -113,7 +118,7 @@ cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
   |---------------------------|------------------------|----------------------------------|-------------------------|
 
 
-## 2.2 Show and list functions
+## Show and list functions
 
 Show and list functions are also provided for determining what information exists within each of these slots and its nesting.
 
@@ -144,7 +149,7 @@ list_expression_names(vizmini,
 ```
 
 
-## 2.3 Provenance
+## Provenance
 
 Going further, sometimes different sources of information can be used when aggregating to a particular spatial unit. This is most easily shown with the subcellular datasets from the Vizgen MERSCOPE platform which provide both feature polygon information for multiple confocal planes within a tissue. The aggregated information produced then could be drawn from different z-planes or combinations thereof. Giotto tracks this provenance information for each set of aggregated data.
 
@@ -157,7 +162,7 @@ prov(expr_mat)
 ```
 
 
-# 3. Giotto subobjects
+# Giotto subobjects
 
 *Giotto* 3.0 update introduced S4 subobjects that are used within the `giotto` object and its processing. These subobjects provide more formalized definitions for what information and formatting is needed in each of the `giotto` object slots in order for it to be functional. These objects are standalone and extensible and commonly used spatial manipulation and plotting methods are being implemented for them.
 
@@ -165,9 +170,9 @@ In addition, these subobjects carry several pieces of metadata in additional slo
 
 `getter` functions now have an `output` param that **defaults** to extracting the information from the `giotto` object as the S4 subobject. When extracting information that will be modified and then returned to the `giotto` object, it is preferred that the information is extracted as the S4 both so that tagged information is not lost, and because it is convenient to work with the S4"s main data slot through the `[` and `[<-` generics (see Section 3.5).
 
-## 3.1 Creating an S4 subobject
+## Creating an S4 subobject
 
-### 3.1.1 Constructors
+### Constructors
 
 For directly creating a subobject, constructor functions can be used.
 
@@ -204,7 +209,7 @@ print(st)
 ```
 
 
-### 3.1.2 Readers
+### Readers
 
 Alternatively, read functions can be used to take named nested lists of raw data input and convert them to lists of subobjects which are directly usable by the setter functions.
 
@@ -231,7 +236,7 @@ There are non numeric or integer columns for the spatial location input at colum
 st2
 ```
 
-## 3.2 Giotto Accessors
+## Giotto Accessors
 
 *Giotto* provides `getter` and `setter` functions for manually accessing the information contained within the `giotto` object. Note that the `setters` require that the data be provided as compatible S4 subobjects or lists thereof. External data can read into the appropriate formats using the above `reader` functions. The `getter` functions return S4 subobjects by default.
 
@@ -261,7 +266,7 @@ expval <- getExpression(vizmini)
 expval
 ```
 
-## 3.3 Get and set S4 spat_unit, feat_type, provenance
+## Get and set S4 spat_unit, feat_type, provenance
 
 `spatUnit()`, `featType()`, and `prov()` are replacement functions for tagged spatial unit, feature type, and provenance information respectively.
 
@@ -289,7 +294,7 @@ prov(expval) <- "cell"
 prov(expval)
 ```
 
-## 3.4 Setting an S4 subobject
+## Setting an S4 subobject
 
 The `spat_unit`, `feat_type`, and `name` params no longer need to be given when setting an S4 subobject with tagged information into a `giottoObject`. However, if input is given to the `set` function parameters then it is prioritized over the tagged information and the tagged information is updated.
 
@@ -305,7 +310,7 @@ list_expression(vizmini)
 ```
 
 
-## 3.5 Working with S4 subobjects
+## Working with S4 subobjects
 
 Giotto"s S4 subobjects each wrap one main data object. The empty `[]` and `[]<-` operators are defined as shorthand for directly accessing this slot that contains the data. For example, with a `spatLocsObj`:
 
@@ -337,7 +342,7 @@ st[] <- coords
 st
 ```
 
-## 4. Session Info
+## Session Info
 
 ```{r, eval=TRUE}
 sessionInfo()

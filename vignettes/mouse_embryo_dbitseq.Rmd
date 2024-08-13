@@ -1,18 +1,23 @@
 ---
 title: "Multi-omics Mouse Embryo DBiT-Seq"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Multi-omics Mouse Embryo DBiT-Seq}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# 1. Dataset explanation
+# Dataset explanation
 
 The dataset was created by [Liu, et al 2020](https://www.sciencedirect.com/science/article/pii/S0092867420313908?via%3Dihub) and downloaded from https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE137986. For running this tutorial, we will use the dataset E10 Whole (50 μm) 2.
 
 
-# 2. Start Giotto
+# Start Giotto
 
 ```{r, eval=FALSE}
 # Ensure Giotto Suite is installed
@@ -28,7 +33,7 @@ if(!genv_exists){
 }
 ```
 
-# 3. Create Giotto object
+# Create Giotto object
 
 Read expression matrix 22846 genes, 22 proteins, 901 cells
 
@@ -87,9 +92,9 @@ giottoObject <- createGiottoObject(expression = list(raw = rna_expression,
                                    instructions = instructions)
 ```
 
-# 4. Processing
+# Processing
 
-## 4.1 Filtering
+## Filtering
 
 ```{r, eval = FALSE}
 ## RNA
@@ -111,7 +116,7 @@ giottoObject <- filterGiotto(gobject = giottoObject,
                              verbose = TRUE)
 ```
 
-## 4.2 Normalization
+## Normalization
 
 ```{r, eval = FALSE}
 ## RNA
@@ -127,7 +132,7 @@ giottoObject <- normalizeGiotto(gobject = giottoObject,
                                 verbose = TRUE)
 ```
 
-## 4.3 Statistics
+## Statistics
 
 ```{r, eval = FALSE}
 ## RNA
@@ -166,9 +171,9 @@ spatPlot2D(giottoObject,
 
 ![](images/mouse_embryo_dbitseq/2-spatPlot2D.png)
 
-# 5. Dimension Reduction
+# Dimension Reduction
 
-## 5.1 Identify highly variable features (HVF)
+## Identify highly variable features (HVF)
 
 ```{r, eval = FALSE}
 giottoObject <- calculateHVF(gobject = giottoObject)
@@ -177,7 +182,7 @@ giottoObject <- calculateHVF(gobject = giottoObject)
 ![](images/mouse_embryo_dbitseq/3-HVFplot.png)
 
 
-## 5.2 PCA
+## PCA
 
 ```{r, eval = FALSE}
 # RNA
@@ -221,9 +226,9 @@ plotPCA(gobject = giottoObject,
 
 ![](images/mouse_embryo_dbitseq/7-PCA.png)
 
-# 6. Clustering
+# Clustering
 
-## 6.1 UMAP
+## UMAP
 
 ```{r, eval = FALSE}
 # RNA
@@ -253,7 +258,7 @@ plotUMAP(gobject = giottoObject,
 
 ![](images/mouse_embryo_dbitseq/9-UMAP.png)
 
-## 6.2 Create shared nearest network (sNN) and perform leiden clustering
+## Create shared nearest network (sNN) and perform leiden clustering
 
 ```{r, eval = FALSE}
 # RNA
@@ -279,7 +284,7 @@ giottoObject <- doLeidenCluster(gobject = giottoObject,
                                 n_iterations = 1000)
 ```
 
-## 6.3 Visualize UMAP cluster results
+## Visualize UMAP cluster results
 
 ```{r, eval = FALSE}
 # RNA
@@ -311,7 +316,7 @@ plotUMAP(gobject = giottoObject,
 
 ![](images/mouse_embryo_dbitseq/11-UMAP.png)
 
-## 6.4 Visualize spatial results
+## Visualize spatial results
 
 ```{r, eval = FALSE}
 # RNA
@@ -343,7 +348,7 @@ spatPlot2D(gobject = giottoObject,
 
 ![](images/mouse_embryo_dbitseq/13-spatPlot2D.png)
 
-# 7. Multi-omics integration
+# Multi-omics integration
 
 ```{r, eval = FALSE}
 # RNA
@@ -421,11 +426,11 @@ spatPlot2D(giottoObject,
 
 ![](images/mouse_embryo_dbitseq/15-spatPlot2D.png)
 
-# 8. Deconvolution
+# Deconvolution
 
 We used the scRNAseq from [Cao et al., 2019](https://www.nature.com/articles/s41586-019-0969-x) as reference. J. Cao, M. Spielmann, X. Qiu, X. Huang, D.M. Ibrahim, A.J. Hill, F. Zhang, S. Mundlos, L. Christiansen, F.J. Steemers, et al. The single-cell transcriptional landscape of mammalian organogenesis. You can download the gene_count_cleaned_sampled_100k.RDS file from [here.](https://oncoscape.v3.sttrcancer.org/atlas.gs.washington.edu.mouse.rna/downloads)
 
-## 8.1 Preparation of the scRNAseq
+## Preparation of the scRNAseq
 
 ```{r, eval = FALSE}
 # read single cell procesed object
@@ -499,7 +504,7 @@ sc_gene_names <- sc_gene_names[sc_gene_names$gene_id %in% ENSMUS_names,]
 rownames(DWLS_matrix_direct) <- sc_gene_names$gene_short_name
 ```
 
-## 8.2 Run deconvolution
+## Run deconvolution
 
 ```{r, eval=FALSE}
 # run DWLS using integrated leiden clusters
@@ -527,7 +532,7 @@ spatDeconvPlot(giottoObject,
 
 ![](images/mouse_embryo_dbitseq/integrated_deconvolution.png)
 
-# 9. Session Info
+# Session Info
 
 ```{r, eval = FALSE}
 sessionInfo()

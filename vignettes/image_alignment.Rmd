@@ -1,13 +1,18 @@
 ---
 title: "Image Alignment"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Image Alignment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# 1. Giotto and Image Data
+# Giotto and Image Data
 
 Multiple images may be attached to the Giotto object. Spatial data can be overlaid upon these images which may then be used for downstream analyses. While Giotto attempts to automate the addition and alignment of images as much as possible, manual adjustments may sometimes be necessary. This tutorial will be covering both automatic and manual adjustment.
 
@@ -15,7 +20,7 @@ The examples in this tutorial will be worked using Visium"s normal human prostat
 
 For an example of working with high definition images that may require ROI alignment and or stitching, please see the Nanostring CosMx lung data [analysis](./Nanostring_Lung12_jan26_21.html).
 
-# 2. Start Giotto
+# Start Giotto
 
 
 ```{r, eval=FALSE}
@@ -40,7 +45,7 @@ if(!genv_exists){
 ```
 
 
-# 3. Conceptual Overview
+# Conceptual Overview
 
 Giotto currently supports two types of image objects. For most purposes, images are loaded in using [terra](https://rdrr.io/cran/terra/) and are then placed into **giottoLargeImage** objects. **giottoLargeImage** objects only load in sampled subsets of the original image that are needed to represent the image, increasing efficiency for analysis of very high-resolution images.
 
@@ -126,7 +131,7 @@ GImage
 
 Further intuition for defining these parameters in this way is detailed within the **Why this inversion is necessary** dropdown text beneath Standard workflow.
 
-# 4. Visium Workflow (Automated):
+# Visium Workflow (Automated):
 
 Assembly of Giotto object as well as the reading in and alignment of the tissue staining image from the Visium spatial subdirectory is done automatically using **createGiottoVisiumObject()**.
 
@@ -195,9 +200,9 @@ spatPlot2D(FFPE_prostate,
 
 ![](images/image_alignment/high_res_IT.png)
 
-# 5. Standard Workflow
+# Standard Workflow
 
-## 5.1 Invert Y-Values
+## Invert Y-Values
 
 Before beginning, it is important to acknowledge that differences may exist in the conventions for defining coordinates within images and plots. As a result, it is often required to make the spatial location y values negative. This inversion is necessary for the spatial locations to appear in the same orientation as the image. This transformation of the spatial locations is automatically done for Visium datasets during **createGiottoVisiumObject()**. In the standard workflow, it is important to determine if this is necessary for the data at hand.
 
@@ -231,7 +236,7 @@ my_gobject <- setSpatialLocations(gobject = FFPE_prostate,
 ![](images/image_alignment/images_inverty.png)
 
 
-## 5.2 Create giottoImage
+## Create giottoImage
 
 giottoImages are created using the **createGiottoImage()** function. This function requires a **magick**-compatible image (eg. jpg, tiff, png) to be provided to the **mg_object** argument as either a filepath or a **magick** object.
 
@@ -415,7 +420,7 @@ lowResG_img_manual
 *When* **do_manual_adj = TRUE***, automatic alignment is bypassed in favor of the four manual adjustment values.* *These values (Boundary adjustment) default to 0.*
 
 
-## 5.3 Add giottoImage to giottoObject and Visualize
+## Add giottoImage to giottoObject and Visualize
 
 
 ```{r, eval=FALSE}
@@ -433,13 +438,13 @@ spatPlot2D(gobject = FFPE_prostate,
 
 ![](images/image_alignment/low_res_IT.png)
 
-# 6. Manual Adjustment
+# Manual Adjustment
 
 Manually adjusting the plotting of images comes either during **createGiottoImage()** using **do_manual_adj = TRUE** and the four adjustment values **(xmin_adj, xmax_adj, ymin_adj, ymax_adj)** or after **giottoImage** creation using **updateGiottoImage()**.
 
 This method is performed by eye and may be necessary depending on preference or if despite accounting for scaling, the image coordinates do not match up with the spatial coordinates for some reason.
 
-## 6.1 During giottoImage creation
+## During giottoImage creation
 
 ```{r, eval=FALSE}
 # createGiottoImage with manually defined adjustment values
@@ -467,7 +472,7 @@ spatPlot2D(gobject = FFPE_prostate,
 
 ![](images/image_alignment/low_res_update_manual_IT.png)
 
-## 6.2 After giottoImage creation, within the giottoObject
+## After giottoImage creation, within the giottoObject
 
 ```{r, eval=FALSE}
 # createGiottoImage with manually defined adjustment values
@@ -513,7 +518,7 @@ spatPlot2D(gobject = FFPE_prostate,
 
 ![](images/image_alignment/low_res_after_update_IT.png)
 
-# 7. Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

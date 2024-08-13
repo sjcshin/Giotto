@@ -1,6 +1,11 @@
 ---
 title: "MERFISH Mouse Hypothalamic Preoptic Region"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{MERFISH Mouse Hypothalamic Preoptic Region}
   %\VignetteEngine{knitr::rmarkdown}
@@ -62,7 +67,7 @@ getSpatialDataset(dataset = "merfish_preoptic",
 ```
 
 
-# 1. Create Giotto Instructions & Prepare Data
+# Create Giotto Instructions & Prepare Data
 
 
 ```{r, eval=FALSE}
@@ -122,7 +127,7 @@ filterCombinations(merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/2-filterCombinations.png)
 
-# 2. Data Processing
+# Data Processing
 
 Use the previously generated plots to inform filter decisions.
 
@@ -169,7 +174,7 @@ spatPlot3D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/4-spat3D.png)
 
-# 3. Dimension Reduction
+# Dimension Reduction
 
 There are only 155 genes within this dataset. Use them all (default) within the dimension reduction.
 
@@ -199,7 +204,7 @@ plotUMAP_3D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/6-UMAP_3D.png)
 
-# 4. Clustering
+# Clustering
 
 Create a nearest network, then perform Leiden clustering. The clusters may be visualized on a UMAP.
 
@@ -224,7 +229,7 @@ plotUMAP_3D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/7-UMAP_3D.png)
 
-# 5. Co-Visualize
+# Co-Visualize
 
 View the clusters in-tissue on each layer.
 
@@ -239,7 +244,7 @@ spatPlot2D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/8-spatPlot2D.png)
 
-# 6. Cell Type Marker Gene Detection
+# Cell Type Marker Gene Detection
 
 Call **findMarkers_one_vs_all** to identify marker features. Click the function to see alternate methods, or look findGiniMarkers section for details on the gini method. Once marker features have been determined, observe the differential expression across clusters within the violin plot.
 
@@ -276,7 +281,7 @@ plotMetaDataHeatmap(merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/10-plotMetaDataHeatmap.png)
 
-# 7. Cell Type Annotation
+# Cell Type Annotation
 
 Use known marker and differentially expressed genes (DEGs) to identify cell type for each cluster.
 
@@ -326,7 +331,7 @@ plotMetaDataHeatmap(merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/12-plotMetaDataHeatmap.png)
 
-# 8. Visualize
+# Visualize
 
 
 ```{r, eval=FALSE}
@@ -370,7 +375,7 @@ spatPlot2D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/15-spatPlot2D.png)
 
-## 8.1 Excitatory Cells Only
+## Excitatory Cells Only
 
 ```{r, eval=FALSE}
 spatPlot3D(merFISH_gobject,
@@ -401,7 +406,7 @@ spatPlot2D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/17-spatPlot2D.png)
 
-## 8.2 Inhibitory Cells Only
+## Inhibitory Cells Only
 
 ```{r, eval=FALSE}
 spatPlot3D(merFISH_gobject,
@@ -432,7 +437,7 @@ spatPlot2D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/19-spatPlot2D.png)
 
-## 8.3 OD and Astrocytes Only
+## OD and Astrocytes Only
 
 ```{r, eval=FALSE}
 spatPlot3D(merFISH_gobject,
@@ -463,7 +468,7 @@ spatPlot2D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/21-spatPlot2D.png)
 
-## 8.4 Other Cells Only
+## Other Cells Only
 
 ```{r, eval=FALSE}
 spatPlot3D(merFISH_gobject,
@@ -494,7 +499,7 @@ spatPlot2D(gobject = merFISH_gobject,
 
 ![](images/merfish_mouse_hypothalamic/23-spatPlot2D.png)
 
-# 9. Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

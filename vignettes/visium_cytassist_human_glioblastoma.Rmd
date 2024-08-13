@@ -1,19 +1,24 @@
 ---
 title: "Visium CytAssist Multi-omics Human Glioblastoma"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Visium CytAssist Multi-omics Human Glioblastoma}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# 1 Dataset explanation
+# Dataset explanation
 
 The [Human glioblastoma (FFPE) dataset](https://www.10xgenomics.com/resources/datasets/gene-and-protein-expression-library-of-human-glioblastoma-cytassist-ffpe-2-standard/) was obtained from 10x Genomics. The tissue was sectioned as described in Visium CytAssist Spatial Gene Expression for FFPE -- Tissue Preparation Guide Demonstrated Protocol (CG000518). 5 µm tissue sections were placed on Superfrost glass slides, then IF stained following deparaffinization, then hard coverslipped. Sections were imaged, decoverslipped, followed by Demonstrated Protocol (CG000494).
 
 More information about this dataset can be found [here](https://www.10xgenomics.com/resources/datasets/gene-and-protein-expression-library-of-human-glioblastoma-cytassist-ffpe-2-standard).
 
-# 2 Start Giotto
+# Start Giotto
 
 ```{r, eval=FALSE}
 # Ensure Giotto Suite is installed
@@ -50,7 +55,7 @@ instrs = createGiottoInstructions(save_dir = results_directory,
                                   python_path = python_path)
 ```
 
-# 3 Create Giotto object
+# Create Giotto object
 
 The minimum requirements are
 
@@ -84,7 +89,7 @@ How to work with Giotto instructions that are part of your Giotto object:
 showGiottoInstructions(visium)
 ```
 
-# 4 Processing
+# Processing
 
 -   Filter features and cells based on detection frequencies
 -   Normalize expression matrix (log transformation, scaling factor and/or z-scores)
@@ -162,7 +167,7 @@ spatPlot2D(gobject = visium,
 
 ![](images/visium_cytassist_human_glioblastoma/2-spatPlot2D.png)
 
-# 5 Dimention Reduction
+# Dimension Reduction
 
 ```{r, eval=FALSE}
 # Identify highly variable features (HVF)
@@ -212,7 +217,7 @@ plotPCA(gobject = visium,
 
 ![](images/visium_cytassist_human_glioblastoma/7-PCA.png)
 
-# 6 Clustering
+# Clustering
 
 ```{r, eval=FALSE}
 # cluster and run UMAP
@@ -299,7 +304,7 @@ spatPlot2D(gobject = visium,
 
 ![](images/visium_cytassist_human_glioblastoma/11-spatPlot2D.png)
 
-# 7 Multi-omics integration
+# Multi-omics integration
 
 The Weighted Nearest Neighbors allows to integrate two or more modalities acquired from the same sample. WNN will re-calculate the clustering to provide an integrated umap and leiden clustering. For running WNN, the Giotto object must contain the results of running PCA calculation for each modality.
 
@@ -379,7 +384,7 @@ spatPlot2D(visium,
 
 ![](images/visium_cytassist_human_glioblastoma/13-spatPlot2D.png)
 
-# 8 Session Info
+# Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()

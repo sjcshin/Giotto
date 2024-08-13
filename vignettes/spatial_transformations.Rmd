@@ -1,6 +1,11 @@
 ---
 title: "Spatial Transformations"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Spatial Transformations}
   %\VignetteEngine{knitr::rmarkdown}
@@ -8,13 +13,13 @@ vignette: >
 ---
 
 
-# 1. Spatial Object Manipulation
+# Spatial Object Manipulation
 
 Spatial-omics data is defined both by the biological information that it contains and the way that it maps to space. When assembling and analyzing a spatial dataset, it may be necessary to spatially manipulate the data so that they are all in a common coordinate reference frame where all data is in at the same scaling and rotation, and properly overlaid.
 
 *Giotto* extends a set of generics from *terra* in order to make it simple to figure out where data is in space and to move it where you need it.
 
-# 2. Start Giotto
+# Start Giotto
 
 
 ```{r, eval=FALSE}
@@ -37,7 +42,7 @@ if(!genv_exists){
 ```
 
 
-# 3. Load mini giotto object example
+# Load mini giotto object example
 
 First we will load in the a mini dataset put together from Vizgen's Mouse Brain Receptor Map data release. This mini giotto object has been pre-analyzed and comes with many analyses and data objects attached. Most of these analyses have been performed on the "aggregate" spatial unit so we will set it as the active spatial unit in order to default to it.
 
@@ -50,7 +55,7 @@ activeSpatUnit(viz) <- "aggregate"
 ```
 
 
-# 4. Extract spatial info
+# Extract spatial info
 
 Then we will extract the spatial subobjects that we will use. These will be all subobjects in Giotto that contain coordinates data or directly map their data to space.
 
@@ -73,7 +78,7 @@ gpoly <- getPolygonInfo(viz,
 ```
 
 
-# 5. Defining bounds and extent
+# Defining bounds and extent
 
 One of the most convenient descriptors of where an object is in space is its minimal and maximal in the coordinate plane, also known as the boundaries or spatial **extent** of that information. It can be thought of as bounding box around where your information exists in space. *Giotto* incorporates usage of the `SpatExtent` class and associated `ext()` generic from *terra* to describe objects spatially.
 
@@ -99,7 +104,7 @@ ext(gpoly)     # giottoPolygon
 ```
 
 
-## 5.1 Image extent
+## Image extent
 
 With `giottoLargeImage` objects, you are additionally able to assign how they map to space using `ext()`. Note that modifications performed on one `giottoLargeImage` are applied to all references to that object unless `copy()` is used first.
 
@@ -128,11 +133,11 @@ ext(image) <- e # replace
 ```
 
 
-# 6. Spatial Transformations
+# Spatial Transformations
 
 Commonly used spatial transformations are coordinate translations, flips, and rotations. *Giotto* extends generics from *terra* through the use of `spatShift()` (`shift()` in *terra*), `flip()`, and `spin()` respectively.
 
-## 6.1 coordinate translation
+## coordinate translation
 
 `spatShift()` is used for simple coordinate translations. It takes the params `dx` and `dy` for distance to translate along either axis.
 
@@ -156,7 +161,7 @@ plot(spatShift(spat_locs, dx = 5e3))
 
 (pay attention to the x coords)
 
-## 6.2 flip
+## flip
 
 `flip()` will flip the data over a defined line of either "vertical" or "horizontal" symmetry (default is "vertical" with the line of symmetry being y = 0. The `direction` param partial matches for either "vertical" or "horizontal". The `y0` and `x0` params define where the line of symmetry is.
 
@@ -189,7 +194,7 @@ plot(flip(gpoly, direction = "h", x0 = 1e4), col = rb) # flip across x = 10000
 
 
 
-## 6.3 spin
+## spin
 
 `spin()` allows rotating of vector data through degrees passed to `angle` param. The rotation happens about a coordinate defined by `x0` and `y0`. By default `x0` and `y0` are defined as the object center.
 
@@ -219,7 +224,7 @@ plot(spin(gpoints, angle = 45, x0 = 0, y0 = 0))
 
 
 
-# 7. Session Info
+# Session Info
 
 
 ```{r, eval=FALSE}

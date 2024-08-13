@@ -1,6 +1,11 @@
 ---
 title: "SeqFish+ Mouse Cortex Example"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{SeqFish+ Mouse Cortex Example}
   %\VignetteEngine{knitr::rmarkdown}
@@ -52,7 +57,7 @@ getSpatialDataset(dataset = "seqfish_SS_cortex",
                   method = "wget")
 ```
 
-# 1. Giotto Instructions and Preparation
+# Giotto Instructions and Preparation
 
 ```{r, eval=FALSE}
 #  set Giotto instructions
@@ -101,7 +106,7 @@ stitch_file$ID <- as.character(stitch_file$ID)
 my_offset_file <- my_offset_file[, .(field, x_offset_final, y_offset_final)]
 ```
 
-# 2. Create Giotto object & process data
+# Create Giotto object & process data
 
 ```{r, eval=FALSE}
 # create Giotto object
@@ -150,7 +155,7 @@ spatPlot(gobject = SS_seqfish)
 
 ![](images/seqfish_cortex/0-spatPlot2D.png)
 
-# 3. Dimension Reduction
+# Dimension Reduction
 
 ```{r, eval=FALSE}
 ## highly variable features (HVF)
@@ -197,7 +202,7 @@ plotTSNE(gobject = SS_seqfish)
 
 ![](images/seqfish_cortex/5-tSNE.png)
 
-# 4. Cluster
+# Cluster
 
 ```{r, eval=FALSE}
 ## sNN network (default)
@@ -276,7 +281,7 @@ showClusterDendrogram(SS_seqfish,
 
 ![](images/seqfish_cortex/12-showClusterDendrogram.png)
 
-# 5. Visualize Spatial and Expression Space
+# Visualize Spatial and Expression Space
 
 ```{r, eval=FALSE}
 # expression and spatial
@@ -306,7 +311,7 @@ spatDimPlot(gobject = SS_seqfish,
 
 ![](images/seqfish_cortex/14-spatDimPlot2D.png)
 
-# 6. Cell Type Marker Gene Detection
+# Cell Type Marker Gene Detection
 
 ```{r, eval=FALSE}
 ## gini
@@ -346,7 +351,7 @@ plotMetaDataHeatmap(SS_seqfish,
 
 ![](images/seqfish_cortex/16-plotMetaDataHeatmap.png)
 
-# 7. Cell Type Annotation
+# Cell Type Annotation
 
 ```{r, eval=FALSE}
 ## general cell types
@@ -442,7 +447,7 @@ plotHeatmap(gobject = SS_seqfish,
 
 ![](images/seqfish_cortex/20-plotHeatmap.png)
 
-# 8. Spatial Grid
+# Spatial Grid
 
 ```{r, eval=FALSE}
 SS_seqfish <- createSpatialGrid(gobject = SS_seqfish,
@@ -458,7 +463,7 @@ spatPlot(gobject = SS_seqfish,
 
 ![](images/seqfish_cortex/21-spatPlot2D.png)
 
-# 9. Spatial Network
+# Spatial Network
 
 ```{r, eval=FALSE}
 ## delaunay network: stats + creation
@@ -542,7 +547,7 @@ spatPlot(gobject = subSS_seqfish,
 
 ![](images/seqfish_cortex/25-spatPlot2D.png)
 
-# 10. Spatial Genes
+# Spatial Genes
 
 ## Individual spatial genes
 
@@ -635,7 +640,7 @@ spatCellPlot(SS_seqfish,
 
 ![](images/seqfish_cortex/29-spatCellPlot2D.png)
 
-# 11. HMRF Spatial Domains
+# HMRF Spatial Domains
 
 ```{r, eval=FALSE}
 hmrf_folder <- paste0(results_folder, "/11_HMRF/")
@@ -686,7 +691,7 @@ spatPlot(
 
 ![](images/seqfish_cortex/30-spatPlot2D.png)
 
-# 12. Cell Neighborhood: Cell-Type/Cell-Type Interactions
+# Cell Neighborhood: Cell-Type/Cell-Type Interactions
 
 ```{r, eval=FALSE}
 cell_proximities <- cellProximityEnrichment(gobject = SS_seqfish,
@@ -781,7 +786,7 @@ spatPlot(SS_seqfish,
 
 ![](images/seqfish_cortex/35-spatPlot2D.png)
 
-# Part 13. Cell Neighborhood: Interaction Changed Features
+# Cell Neighborhood: Interaction Changed Features
 
 ```{r, eval=FALSE}
 library(future)
@@ -839,7 +844,7 @@ plotICF(gobject = SS_seqfish,
 
 ![](images/seqfish_cortex/37-plotICF.png)
 
-# 14. Cell Neighborhood: Ligand-Receptor Cell-Cell Communication
+# Cell Neighborhood: Ligand-Receptor Cell-Cell Communication
 
 ```{r, eval=FALSE}
 ## LR expression
@@ -928,7 +933,7 @@ plotRecovery(gobject = SS_seqfish,
 
 ![](images/seqfish_cortex/40-plotRecovery.png)
 
-# 15. Session info
+# Session info
 
 ```{r, eval=FALSE}
 sessionInfo()

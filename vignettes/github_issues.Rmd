@@ -1,6 +1,11 @@
 ---
 title: "How to Submit a GitHub Issue"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{How to Submit a GitHub Issue}
   %\VignetteEngine{knitr::rmarkdown}

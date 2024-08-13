@@ -1,6 +1,11 @@
 ---
 title: "Singularity container"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Singularity container}
   %\VignetteEngine{knitr::rmarkdown}
