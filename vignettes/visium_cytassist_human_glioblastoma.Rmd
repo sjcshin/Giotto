@@ -27,7 +27,8 @@ if(!"Giotto" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
+
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   Giotto::installGiottoEnvironment()
@@ -38,21 +39,19 @@ if(!genv_exists){
 library(Giotto)
 
 # 1. set results directory
-results_directory = 'results'
+results_folder <- "/path/to/results/"
 
 # 2. set giotto python path
 # set python path to your preferred python version path
 # set python path to NULL if you want to automatically install (only the 1st time) and use the giotto miniconda environment
-python_path = NULL
-if(is.null(python_path)) {
-  installGiottoEnvironment()
-}
+python_path <- NULL
 
 # 3. create giotto instructions
-instrs = createGiottoInstructions(save_dir = results_directory,
-                                  save_plot = TRUE,
-                                  show_plot = TRUE,
-                                  python_path = python_path)
+instructions <- createGiottoInstructions(save_dir = results_folder, 
+                                         save_plot = TRUE, 
+                                         show_plot = FALSE, 
+                                         return_plot = FALSE, 
+                                         python_path = python_path)
 ```
 
 # Create Giotto object
@@ -66,14 +65,14 @@ createGiottoVisiumObject() will automatically detect both rna and protein modali
 
 ```{r, eval=FALSE}
 # Provide path to visium folder
-data_directory <- 'path/to/visium/data'
+data_path <- "/path/to/data/"
 
 # Create Giotto object
-visium = createGiottoVisiumObject(visium_dir = data_directory,
-                                  expr_data = 'raw',
-                                  png_name = 'tissue_lowres_image.png',
+visium <- createGiottoVisiumObject(visium_dir = data_path,
+                                  expr_data = "raw",
+                                  png_name = "tissue_lowres_image.png",
                                   gene_column_index = 2,
-                                  instructions = instrs)
+                                  instructions = instructions)
 ```
 
 How to work with Giotto instructions that are part of your Giotto object:
@@ -85,7 +84,6 @@ How to work with Giotto instructions that are part of your Giotto object:
 
 ```{r, eval=FALSE}
 # show instructions associated with the giotto object
-
 showGiottoInstructions(visium)
 ```
 
@@ -98,9 +96,11 @@ showGiottoInstructions(visium)
 
 ```{r, eval=FALSE}
 # Subset on spots that were covered by tissue
-metadata = pDataDT(visium)
-in_tissue_barcodes = metadata[in_tissue == 1]$cell_ID
-visium = subsetGiotto(visium, cell_ids = in_tissue_barcodes)
+metadata <- pDataDT(visium)
+in_tissue_barcodes <- metadata[in_tissue == 1]$cell_ID
+
+visium <- subsetGiotto(visium, 
+                       cell_ids = in_tissue_barcodes)
 
 ## Visualize aligned tissue
 spatPlot2D(gobject = visium,
@@ -117,7 +117,7 @@ visium <- filterGiotto(gobject = visium,
                        expression_threshold = 1,
                        feat_det_in_min_cells = 50,
                        min_det_feats_per_cell = 1000,
-                       expression_values = c('raw'),
+                       expression_values = "raw",
                        verbose = TRUE)
 
 visium <- normalizeGiotto(gobject = visium,
@@ -129,7 +129,7 @@ visium <- addStatistics(gobject = visium)
 ### Visualize number of features after processing
 spatPlot2D(gobject = visium,
            point_alpha = 0.7,
-           cell_color = 'nr_feats',
+           cell_color = "nr_feats",
            color_as_factor = FALSE)
 ```
 
@@ -138,30 +138,30 @@ spatPlot2D(gobject = visium,
 ```{r, eval=FALSE}
 ## Protein feature 
 visium <- filterGiotto(gobject = visium, 
-                       spat_unit = 'cell',
-                       feat_type = 'protein',
+                       spat_unit = "cell",
+                       feat_type = "protein",
                        expression_threshold = 1,
                        feat_det_in_min_cells = 50, 
                        min_det_feats_per_cell = 1,
-                       expression_values = 'raw', 
+                       expression_values = "raw", 
                        verbose = TRUE)
 
 visium <- normalizeGiotto(gobject = visium,
-                          spat_unit = 'cell', 
-                          feat_type = 'protein', 
+                          spat_unit = "cell", 
+                          feat_type = "protein", 
                           scalefactor = 6000, 
                           verbose = TRUE)
 
 visium <- addStatistics(gobject = visium,
-                        spat_unit = 'cell', 
-                        feat_type = 'protein')
+                        spat_unit = "cell", 
+                        feat_type = "protein")
 
 ### Visualize number of features after processing 
 spatPlot2D(gobject = visium,
-           spat_unit = 'cell', 
-           feat_type = 'protein', 
+           spat_unit = "cell", 
+           feat_type = "protein", 
            point_alpha = 0.7, 
-           cell_color = 'nr_feats', 
+           cell_color = "nr_feats", 
            color_as_factor = FALSE)
 ```
 
@@ -197,12 +197,12 @@ plotPCA(gobject = visium)
 ```{r, eval=FALSE}
 ## Protein
 visium <- runPCA(gobject = visium,
-                 spat_unit = 'cell',
-                 feat_type = 'protein')
+                 spat_unit = "cell",
+                 feat_type = "protein")
 
 screePlot(visium,
-          spat_unit = 'cell',
-          feat_type = 'protein',
+          spat_unit = "cell",
+          feat_type = "protein",
           ncp = 30)
 ```
 
@@ -211,8 +211,8 @@ screePlot(visium,
 ```{r, eval=FALSE}
 ### Visualize Protein PCA
 plotPCA(gobject = visium,
-        spat_unit = 'cell',
-        feat_type = 'protein')
+        spat_unit = "cell",
+        feat_type = "protein")
 ```
 
 ![](images/visium_cytassist_human_glioblastoma/7-PCA.png)
@@ -230,8 +230,8 @@ visium <- createNearestNetwork(gobject = visium,
 
 ## Protein feature
 visium <- createNearestNetwork(gobject = visium,
-                               spat_unit = 'cell',
-                               feat_type = 'protein',
+                               spat_unit = "cell",
+                               feat_type = "protein",
                                dimensions_to_use = 1:10,
                                k = 30)
 
@@ -244,8 +244,8 @@ visium <- doLeidenCluster(gobject = visium,
 
 ## Protein feature
 visium <- doLeidenCluster(gobject = visium,
-                          spat_unit = 'cell',
-                          feat_type = 'protein',
+                          spat_unit = "cell",
+                          feat_type = "protein",
                           resolution = 1,
                           n_iterations = 1000)
 
@@ -256,7 +256,7 @@ visium <- runUMAP(visium,
                   dimensions_to_use = 1:10)
 
 plotUMAP(gobject = visium,
-         cell_color = 'leiden_clus',
+         cell_color = "leiden_clus",
          show_NN_network = TRUE,
          point_size = 2)
 ```
@@ -266,14 +266,14 @@ plotUMAP(gobject = visium,
 ```{r, eval=FALSE}
 ## Protein feature 
 visium <- runUMAP(visium,
-                  spat_unit = 'cell', 
-                  feat_type = 'protein', 
+                  spat_unit = "cell", 
+                  feat_type = "protein", 
                   dimensions_to_use = 1:10)
 
 plotUMAP(gobject = visium,
-         spat_unit = 'cell', 
-         feat_type = 'protein', 
-         cell_color = 'leiden_clus', 
+         spat_unit = "cell", 
+         feat_type = "protein", 
+         cell_color = "leiden_clus", 
          show_NN_network = TRUE, 
          point_size = 2)
 ```
@@ -286,7 +286,7 @@ plotUMAP(gobject = visium,
 ## RNA feature
 spatPlot2D(gobject = visium,
            show_image = TRUE,
-           cell_color = 'leiden_clus',
+           cell_color = "leiden_clus",
            point_size = 2)
 ```
 
@@ -295,10 +295,10 @@ spatPlot2D(gobject = visium,
 ```{r, eval=FALSE}
 ## Protein feature
 spatPlot2D(gobject = visium,
-           spat_unit = 'cell',
-           feat_type = 'protein',
+           spat_unit = "cell",
+           feat_type = "protein",
            show_image = TRUE,
-           cell_color = 'leiden_clus',
+           cell_color = "leiden_clus",
            point_size = 2)
 ```
 
@@ -313,15 +313,15 @@ The Weighted Nearest Neighbors allows to integrate two or more modalities acquir
 
 ## RNA modality
 visium <- createNearestNetwork(gobject = visium,
-                               type = 'kNN',
+                               type = "kNN",
                                dimensions_to_use = 1:10,
                                k = 20)
 
 ## Protein modality
 visium <- createNearestNetwork(gobject = visium,
-                               spat_unit = 'cell',
-                               feat_type = 'protein',
-                               type = 'kNN',
+                               spat_unit = "cell",
+                               feat_type = "protein",
+                               type = "kNN",
                                dimensions_to_use = 1:10,
                                k = 20)
 
@@ -361,7 +361,7 @@ visium <- doLeidenCluster(gobject = visium,
 plotUMAP(gobject = visium,
          spat_unit = "cell",
          feat_type = "rna",
-         cell_color = 'integrated_leiden_clus',
+         cell_color = "integrated_leiden_clus",
          dim_reduction_name = "integrated.umap",
          point_size = 1.5,
          title = "Integrated UMAP using Integrated Leiden clusters",

@@ -12,9 +12,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<nav id="toc" data-toggle="toc"></nav>
-<body data-spy="scroll" data-target="#toc">
-
 *Giotto* version `2.0.0.998`. Please check the version you are using to get the same results.
 
 # Dataset explanation
@@ -38,7 +35,7 @@ kableExtra::kable(data.frame(V1 = c(0,1,2,3),
                              x = c(1762.116,1817.324,1748.217,1866.191),
                              y = c(159.9814,1209.3922,1201.0283,858.8855),
                              fov = c(0,0,0,0),
-                             gene = c('Htr1b','Htr1b','Htr6','Adora1')))
+                             gene = c("Htr1b","Htr1b","Htr6","Adora1")))
 ```
 
 - Output from the cell segmentation analysis:
@@ -90,7 +87,7 @@ if(!"GiottoData" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed.
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment.
   Giotto::installGiottoEnvironment()
@@ -102,12 +99,12 @@ library(Giotto)
 library(GiottoData)
 
 # 1. set working directory where project outputs will be saved to
-results_folder = '/path/to/save/directory/'
+results_folder <- "/path/to/results/"
 
 # Optional: Specify a path to a Python executable within a conda or miniconda 
 # environment. If set to NULL (default), the Python executable within the previously
 # installed Giotto environment will be used.
-my_python_path = NULL # alternatively, "/local/python/path/python" if desired.
+python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 ```
 
 
@@ -117,25 +114,25 @@ Define plot saving behavior and project data paths
 
 ```{r, eval=FALSE}
 # Directly saving plots to the working directory without rendering them in the editor saves time.
-instrs = createGiottoInstructions(save_dir = results_folder,
-                                  save_plot = TRUE,
-                                  show_plot = FALSE,
-                                  return_plot = FALSE,
-                                  python_path = my_python_path)
+instructions <- createGiottoInstructions(save_dir = results_folder, 
+                                         save_plot = TRUE, 
+                                         show_plot = FALSE, 
+                                         return_plot = FALSE, 
+                                         python_path = python_path)
 
 # Add Needed paths below:
 # provide path to pre-aggregated information
-expr_path = '/path/to/datasets_mouse_brain_map_BrainReceptorShowcase_Slice1_Replicate1_cell_by_gene_S1R1.csv'
+expr_path <- "/path/to/datasets_mouse_brain_map_BrainReceptorShowcase_Slice1_Replicate1_cell_by_gene_S1R1.csv"
 # provide path to metadata (includes spatial locations of aggregated expression)
-meta_path = '/path/to/datasets_mouse_brain_map_BrainReceptorShowcase_Slice1_Replicate1_cell_metadata_S1R1.csv'
+meta_path <- "/path/to/datasets_mouse_brain_map_BrainReceptorShowcase_Slice1_Replicate1_cell_metadata_S1R1.csv"
 # provide path to the detected transcripts (single molecule level transcript spatial information)
-tx_path = '/path/to/datasets_mouse_brain_map_BrainReceptorShowcase_Slice1_Replicate1_detected_transcripts_S1R1.csv'
+tx_path <- "/path/to/datasets_mouse_brain_map_BrainReceptorShowcase_Slice1_Replicate1_detected_transcripts_S1R1.csv"
 # define path to cell boundaries folder
-bound_path = '/path/to/cell_boundaries'
+bound_path <- "/path/to/cell_boundaries"
 # path to image scale conversion values
-img_scale_path = 'path/to/micron_to_mosaic_pixel_transform.csv'
+img_scale_path <- "path/to/micron_to_mosaic_pixel_transform.csv"
 # provide path to the dapi image of slice 1 replicate 1
-img_path = 'path/to/mosaic_DAPI_z0.tif'
+img_path <- "path/to/mosaic_DAPI_z0.tif"
 ```
 
 
@@ -152,13 +149,14 @@ Additionally for this dataset, y values should be inverted when loaded to match 
 
 ```{r, eval=FALSE}
 # read expression matrix and metadata
-expr_matrix = readExprMatrix(expr_path)
-meta_dt = data.table::fread(meta_path)
+expr_matrix <- readExprMatrix(expr_path)
+meta_dt <- data.table::fread(meta_path)
 
 # create giotto object
 vizgen <- createGiottoObject(expression = Giottot_flex(expr_matrix),
                              spatial_locs = meta_dt[,.(center_x, -center_y, V1)],
-                             instructions = instrs)
+                             instructions = instructions)
+
 # add metadata of fov and volume
 vizgen <- addCellMetadata(vizgen,
                           new_metadata = meta_dt[,.(fov, volume)])
@@ -177,16 +175,17 @@ spatPlot2D(vizgen,
 
 ```{r, eval=FALSE}
 # FOVs as a factor
-spatPlot2D(vizgen, point_size = 0.5,
-           cell_color = 'fov',
-           show_legend = F)
+spatPlot2D(vizgen, 
+           point_size = 0.5,
+           cell_color = "fov",
+           show_legend = FALSE)
 
 # FOVs sequentially
 spatPlot2D(vizgen, point_size = 0.5,
-           cell_color = 'fov',
-           color_as_factor = F,
-           cell_color_gradient = c('white', 'pink', 'red'),
-           show_legend = F)
+           cell_color = "fov",
+           color_as_factor = FALSE,
+           cell_color_gradient = c("white", "pink", "red"),
+           show_legend = FALSE)
 ```
 
 ![](images/vizgen_mouse_brain/1-FOVs.png)
@@ -210,8 +209,8 @@ Here we will attach the z0 dapi image to the Giotto object. **Note:** It is reco
 
 ```{r, eval=FALSE}
 # Load in image as a giottoLargeImage object that maps spatial coordinates 1:1 with pixel coordinates
-dapi0 = createGiottoLargeImage(raster_object = img_path,
-                               name = 'image')
+dapi0 <- createGiottoLargeImage(raster_object = img_path,
+                                name = "image")
 
 # Preview image
 plot(dapi0)
@@ -225,33 +224,33 @@ Attaching the `giottoLargeImage` to our Giotto object (provided as a list of 1) 
 
 ```{r, eval=FALSE}
 # Adds the giottoLargeImage object to giotto object while also shifting values into the negatives
-vizgen = addGiottoImage(gobject = vizgen,
-                        largeImages = list(dapi0),
-                        negative_y = TRUE)
+vizgen <- addGiottoImage(gobject = vizgen,
+                         largeImages = list(dapi0),
+                         negative_y = TRUE)
 
 # Read in image scale transform values
-img_scale_DT = data.table::fread(img_scale_path)
-x_scale = img_scale_DT$V1[[1]]
-y_scale = img_scale_DT$V2[[2]]
-x_shift = img_scale_DT$V3[[1]]
-y_shift = -img_scale_DT$V3[[2]]
+img_scale_DT <- data.table::fread(img_scale_path)
+x_scale <- img_scale_DT$V1[[1]]
+y_scale <- img_scale_DT$V2[[2]]
+x_shift <- img_scale_DT$V3[[1]]
+y_shift <- -img_scale_DT$V3[[2]]
 
 # Update image to reverse the above transformations to convert mosaic pixel to micron
-# 'first_adj' means that the xy shifts are applied before the subsequent scaling
-vizgen = updateGiottoLargeImage(gobject = vizgen,
-                                largeImage_name = 'image',
-                                x_shift = -x_shift,
-                                y_shift = -y_shift,
-                                scale_x = 1/x_scale,
-                                scale_y = 1/y_scale,
-                                order = 'first_adj')
+# "first_adj" means that the xy shifts are applied before the subsequent scaling
+vizgen <- updateGiottoLargeImage(gobject = vizgen,
+                                 largeImage_name = "image",
+                                 x_shift = -x_shift,
+                                 y_shift = -y_shift,
+                                 scale_x = 1/x_scale,
+                                 scale_y = 1/y_scale,
+                                 order = "first_adj")
 ```
 
 ## Check image alignment
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = vizgen,
-           largeImage_name = 'image',
+           largeImage_name = "image",
            point_size = 0.5,
            show_image = TRUE)
 ```
@@ -261,14 +260,14 @@ spatPlot2D(gobject = vizgen,
 ## Zooming in by subsetting the dataset
 
 ```{r, eval=FALSE}
-zoom = subsetGiottoLocs(gobject = vizgen,
-                        x_min = 2000,
-                        x_max = 2500,
-                        y_min = -2500,
-                        y_max = -2000)
+zoom <- subsetGiottoLocs(gobject = vizgen,
+                         x_min = 2000,
+                         x_max = 2500,
+                         y_min = -2500,
+                         y_max = -2000)
 
 spatPlot2D(gobject = zoom,
-           largeImage_name = 'image',
+           largeImage_name = "image",
            point_size = 1,
            show_image = TRUE)
 ```
@@ -295,11 +294,11 @@ vizgen <- addStatistics(gobject = vizgen)
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = vizgen,
-           show_image = F,
+           show_image = FALSE,
            point_alpha = 0.7,
-           cell_color = 'nr_feats',
-           color_as_factor = F,
-           point_border_col = 'grey',
+           cell_color = "nr_feats",
+           color_as_factor = FALSE,
+           point_border_col = "grey",
            point_border_stroke = 0.01,
            point_size = 0.5)
 ```
@@ -314,6 +313,7 @@ Skipping highly variable feature (HVF) detection. PCA will be calculated based o
 vizgen <- runPCA(gobject = vizgen,
                  center = TRUE,
                  scale_unit = TRUE)
+
 # visualize variance explained per component 
 screePlot(vizgen,
           ncp = 30)
@@ -329,8 +329,8 @@ plotPCA(gobject = vizgen,
 ![](images/vizgen_mouse_brain/7-PCA.png)
 
 ```{r, eval=FALSE}
-vizgen = runUMAP(vizgen,
-                 dimensions_to_use = 1:10)
+vizgen <- runUMAP(vizgen,
+                  dimensions_to_use = 1:10)
 
 plotUMAP(gobject = vizgen,
          point_size = 0.5)
@@ -347,7 +347,7 @@ vizgen <- createNearestNetwork(vizgen,
                                dimensions_to_use = 1:10,
                                k = 15)
 
-# Default name for the results is 'leiden_clus' which is then appended to the cell metadata
+# Default name for the results is "leiden_clus" which is then appended to the cell metadata
 vizgen <- doLeidenCluster(vizgen,
                           resolution = 0.2,
                           n_iterations = 100)
@@ -374,11 +374,11 @@ cell_ID  fov    volume leiden_clus
 78262:  71051447268015582817266088343399517927 1225  798.6088           9
 ```
 
-Visualize the Leiden clustering results ('leiden_clus') mapped onto the UMAP dimension reduction.
+Visualize the Leiden clustering results ("leiden_clus") mapped onto the UMAP dimension reduction.
 
 ```{r, eval=FALSE}
 plotUMAP(vizgen,
-         cell_color = 'leiden_clus',
+         cell_color = "leiden_clus",
          point_size = 0.5)
 ```
 
@@ -388,9 +388,9 @@ Visualize the leiden clustering mapped onto the spatial data.
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = vizgen,
-           cell_color = 'leiden_clus',
+           cell_color = "leiden_clus",
            point_size = 0.5,
-           background_color = 'black')
+           background_color = "black")
 ```
 
 ![](images/vizgen_mouse_brain/10-spatPlot2D.png)
@@ -401,18 +401,18 @@ Spatially interesting gene expression can be detected by first generating a spat
 
 ```{r, eval=FALSE}
 # create spatial network based on physical distance of cell centroids
-vizgen = createSpatialNetwork(gobject = vizgen,
-                              minimum_k = 2,
-                              maximum_distance_delaunay = 50)
+vizgen <- createSpatialNetwork(gobject = vizgen,
+                               minimum_k = 2,
+                               maximum_distance_delaunay = 50)
 
 # perform Binary Spatial Extraction of genes
-km_spatialgenes = binSpect(vizgen)
+km_spatialfeats <- binSpect(vizgen)
 ```
 
-Preview km_spatialgenes
+Preview km_spatialfeats
 
 ```{r, eval=FALSE}
-print(km_spatialgenes$feats[1:30])
+print(km_spatialfeats$feats[1:30])
 ```
 
 ```{r, eval=FALSE}
@@ -427,11 +427,11 @@ print(km_spatialgenes$feats[1:30])
 ```{r, eval=FALSE}
 # visualize spatial expression of select genes obtained from binSpect
 spatFeatPlot2D(vizgen,
-               expression_values = 'scaled',
-               feats = km_spatialgenes$feats[c(1,2,3,5,16,22)],
-               cell_color_gradient = c('blue', 'white', 'red'),
-               point_shape = 'border',
-               point_border_col = 'grey',
+               expression_values = "scaled",
+               feats = km_spatialfeats$feats[c(1,2,3,5,16,22)],
+               cell_color_gradient = c("blue", "white", "red"),
+               point_shape = "border",
+               point_border_col = "grey",
                point_border_stroke = 0.01,
                point_size = 0.2,
                cow_n_col = 2)
@@ -452,9 +452,10 @@ Loading information by only grabbing the needed FOVs can cut down on computation
 
 
 ```{r, eval=FALSE}
-subsetFOVs = meta_dt[center_x > 2000 & center_x < 3100 &
-                       center_y > 2500 & center_y < 3500]$fov
-subsetFOVs = unique(subsetFOVs)
+subsetFOVs <- meta_dt[center_x > 2000 & center_x < 3100 &
+                        center_y > 2500 & center_y < 3500]$fov
+
+subsetFOVs <- unique(subsetFOVs)
 ```
 
 FOVs needed
@@ -478,10 +479,10 @@ Cell boundary annotations are represented in Giotto as `giottoPolygon` objects w
 # read polygons and add them to Giotto
 # fovs param is optional
 # polygon_feat_types determines which Vizgen polygon z slices are loaded (There are 0 - 6)
-polys = readPolygonFilesVizgenHDF5(boundaries_path = bound_path,
-                                   polygon_feat_types = c(0,6),
-                                   flip_y_axis = TRUE,
-                                   fovs = subsetFOVs)
+polys <- readPolygonFilesVizgenHDF5(boundaries_path = bound_path,
+                                    polygon_feat_types = c(0,6),
+                                    flip_y_axis = TRUE,
+                                    fovs = subsetFOVs)
 
 # polys is produced as a list of 2 giottoPolygon objects (z0 and z6)
 # previewing the first one...
@@ -495,19 +496,20 @@ plot(polys[[1]])
 Giotto represents single-molecule transcript level spatial data as `giottoPoints` objects.
 
 ```{r, eval=FALSE}
-tx_dt = data.table::fread(tx_path)
+tx_dt <- data.table::fread(tx_path)
+
 # select transcripts in FOVs
-tx_dt_selected = tx_dt[fov %in% subsetFOVs]
-tx_dt_selected$global_y = -tx_dt_selected$global_y
+tx_dt_selected <- tx_dt[fov %in% subsetFOVs]
+tx_dt_selected$global_y <- -tx_dt_selected$global_y
 # (note the inverted y is the same as when spatial locations were loaded)
 
 # create Giotto points from transcripts 
-gpoints = createGiottoPoints(x = tx_dt_selected[,.(global_x, global_y, gene, global_z)])
+gpoints <- createGiottoPoints(x = tx_dt_selected[,.(global_x, global_y, gene, global_z)])
 
 # preview the giottoPoints object (Including specific feats to plot is highly recommended)
 # Not providing the feats param will plot ALL features detected
 plot(gpoints,
-     feats = c('Gfap', 'Ackr1'),
+     feats = c("Gfap", "Ackr1"),
      point_size = 0.1)
 ```
 
@@ -517,32 +519,38 @@ plot(gpoints,
 
 ```{r, eval=FALSE}
 # Create new giotto instructions to set different save directory if desired
-# instrs_sub = createGiottoInstructions(show_plot = FALSE,
+# instructions_sub = createGiottoInstructions(show_plot = FALSE,
 #                                       return_plot = FALSE,
 #                                       save_plot = TRUE,
 #                                       save_dir = "path/to/subcellular/save/folder")
 
-vizgen_subcellular = createGiottoObjectSubcellular(gpoints = list(rna = gpoints),
-                                                   gpolygons = polys,
-                                                   # instructions = instrs_sub
-)
+vizgen_subcellular <- createGiottoObjectSubcellular(gpoints = list(rna = gpoints),
+                                                    gpolygons = polys)
 
 # Find polygon centroids and generate associated spatial locations
-vizgen_subcellular = addSpatialCentroidLocations(vizgen_subcellular,
-                                                 poly_info = c('z0', 'z6'))
-
+vizgen_subcellular <- addSpatialCentroidLocations(vizgen_subcellular,
+                                                  poly_info = c("z0", "z6"))
 
 # Append images **(Details about these functions can be found in step 5)**
 # Run following two commented lines if skipping to this step
-# dapi0 = createGiottoLargeImage(raster_object = img_path, name = 'image')
+# dapi0 = createGiottoLargeImage(raster_object = img_path, name = "image")
 # img_scale_DT = data.table::fread(img_scale_path)
-vizgen_subcellular = addGiottoImage(gobject = vizgen_subcellular,
-                                    largeImages = list(dapi0), negative_y = TRUE)
-x_scale = img_scale_DT$V1[[1]] ; y_scale = img_scale_DT$V2[[2]]
-x_shift = img_scale_DT$V3[[1]] ; y_shift = -img_scale_DT$V3[[2]]
-vizgen_subcellular = updateGiottoLargeImage(gobject = vizgen_subcellular,
-                                            largeImage_name = 'image', x_shift = -x_shift, y_shift = -y_shift,
-                                            scale_x = 1/x_scale, scale_y = 1/y_scale, order = 'first_adj')
+vizgen_subcellular <- addGiottoImage(gobject = vizgen_subcellular,
+                                     largeImages = list(dapi0), 
+                                     negative_y = TRUE)
+
+x_scale <- img_scale_DT$V1[[1]]
+y_scale <- img_scale_DT$V2[[2]]
+x_shift <- img_scale_DT$V3[[1]] 
+y_shift <- -img_scale_DT$V3[[2]]
+
+vizgen_subcellular <- updateGiottoLargeImage(gobject = vizgen_subcellular,
+                                             largeImage_name = "image", 
+                                             x_shift = -x_shift, 
+                                             y_shift = -y_shift,
+                                             scale_x = 1/x_scale, 
+                                             scale_y = 1/y_scale, 
+                                             order = "first_adj")
 ```
 
 Alternatively to append subcellular data to existing giotto object.
@@ -551,27 +559,31 @@ The subcellular information can also be attached to giotto objects built with th
 
 ```{r, eval=FALSE}
 # Subset dataset to work with smaller area
-vizgen_subset = subsetGiottoLocs(vizgen,
-                                 x_min = 2000, x_max = 3000,
-                                 y_min = -3500, y_max = -2500)
+vizgen_subset <- subsetGiottoLocs(vizgen,
+                                  x_min = 2000, 
+                                  x_max = 3000,
+                                  y_min = -3500, 
+                                  y_max = -2500)
 
 # add points to Giotto object
-vizgen_subset = addGiottoPoints(gobject = vizgen_subset,
-                                gpoints = list(rna = gpoints))
+vizgen_subset <- addGiottoPoints(gobject = vizgen_subset,
+                                 gpoints = list(rna = gpoints))
+
 # There will be a warning that 14 features are not present in vizgen_subset
 # (They were previously removed during data processing in step 6)
 
 # add polygons to Giotto object
-vizgen_subset = addGiottoPolygons(gobject = vizgen_subset,
-                                  gpolygons = polys)
+vizgen_subset <- addGiottoPolygons(gobject = vizgen_subset,
+                                   gpolygons = polys)
+
 # If the polygons had not already been read readPolygonFilesVizgen() should be used instead
 # vizgen_subset = readPolygonFilesVizgen(gobject = vizgen_subset,
 # boundaries_path = bound_path,
 # polygon_feat_types = c(0,6)) # Defines which z slices (polys) are read in
 
 # Calculate centroid locations
-vizgen_subset = addSpatialCentroidLocations(vizgen_subset,
-                                            poly_info = c('z0', 'z6'))
+vizgen_subset <- addSpatialCentroidLocations(vizgen_subset,
+                                             poly_info = c("z0", "z6"))
 ```
 
 **Visualize subset**
@@ -579,8 +591,8 @@ vizgen_subset = addSpatialCentroidLocations(vizgen_subset,
 ```{r, eval=FALSE}
 spatPlot2D(gobject = vizgen_subset,
            show_image = TRUE,
-           largeImage_name = 'image',
-           cell_color = 'leiden_clus',
+           largeImage_name = "image",
+           cell_color = "leiden_clus",
            point_size = 2.5)
 ```
 
@@ -588,21 +600,23 @@ spatPlot2D(gobject = vizgen_subset,
 
 ```{r, eval=FALSE}
 # identify genes for visualization
-gene_meta = fDataDT(vizgen_subset)
+gene_meta <- fDataDT(vizgen_subset)
+
 data.table::setorder(gene_meta, perc_cells)
+
 gene_meta[perc_cells > 25 & perc_cells < 50]
 
 # visualize points with z0 polygons (confocal plane)
 spatInSituPlotPoints(vizgen_subset,
-                     feats = list('rna' = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
-                                            'Gfap', "Olig1", "Epha7")),
-                     polygon_feat_type = 'z0',
+                     feats = list("rna" = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
+                                            "Gfap", "Olig1", "Epha7")),
+                     polygon_feat_type = "z0",
                      use_overlap = FALSE,
                      point_size = 0.1,
                      polygon_line_size = 1,
                      show_polygon = TRUE,
-                     polygon_bg_color = 'white',
-                     polygon_color = 'white')
+                     polygon_bg_color = "white",
+                     polygon_color = "white")
 ```
 
 ![](images/vizgen_mouse_brain/12b-spatInSituPlotPoints.png)
@@ -610,15 +624,15 @@ spatInSituPlotPoints(vizgen_subset,
 ```{r, eval=FALSE}
 # visualize select genes with z0 polygons (confocal plane)
 spatInSituPlotPoints(vizgen_subcellular,
-                     feats = list('rna' = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
-                                            'Gfap', "Olig1", "Epha7")),
-                     polygon_feat_type = 'z0',
+                     feats = list("rna" = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
+                                            "Gfap", "Olig1", "Epha7")),
+                     polygon_feat_type = "z0",
                      use_overlap = FALSE,
                      point_size = 0.1,
                      polygon_line_size = 0.1,
                      show_polygon = TRUE,
-                     polygon_bg_color = 'white',
-                     polygon_color = 'white',
+                     polygon_bg_color = "white",
+                     polygon_color = "white",
                      coord_fix_ratio = TRUE,
                      save_param = list(base_height = 10,
                                        base_width = 10))
@@ -628,24 +642,26 @@ spatInSituPlotPoints(vizgen_subcellular,
 
 ```{r, eval=FALSE}
 # Zoom in further and visualize with image
-vizgen_subcellular_zoom = subsetGiottoLocs(vizgen_subcellular,
-                                           poly_info = c('z0','z6'),
-                                           x_min = 2400, x_max = 2600,
-                                           y_min = -3200, y_max = -3000)
+vizgen_subcellular_zoom <- subsetGiottoLocs(vizgen_subcellular,
+                                            poly_info = c("z0","z6"),
+                                            x_min = 2400, 
+                                            x_max = 2600,
+                                            y_min = -3200, 
+                                            y_max = -3000)
 
 spatInSituPlotPoints(vizgen_subcellular_zoom,
-                     feats = list('rna' = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
-                                            'Gfap', "Olig1", "Epha7")),
-                     polygon_feat_type = 'z0',
+                     feats = list("rna" = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
+                                            "Gfap", "Olig1", "Epha7")),
+                     polygon_feat_type = "z0",
                      use_overlap = FALSE,
                      point_size = 0.5,
                      polygon_line_size = 0.2,
                      show_polygon = TRUE,
-                     polygon_bg_color = 'white',
-                     polygon_color = 'white',
+                     polygon_bg_color = "white",
+                     polygon_color = "white",
                      polygon_alpha = 0.1,
                      show_image = TRUE,
-                     largeImage_name = 'image',
+                     largeImage_name = "image",
                      coord_fix_ratio = TRUE,
                      save_param = list(base_height = 10,
                                        base_width = 10))
@@ -655,18 +671,18 @@ spatInSituPlotPoints(vizgen_subcellular_zoom,
 
 ```{r, eval=FALSE}
 spatInSituPlotPoints(vizgen_subcellular_zoom,
-                     feats = list('rna' = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
-                                            'Gfap', "Olig1", "Epha7")),
-                     polygon_feat_type = 'z6', # Use polygon from z slice 6 this time
+                     feats = list("rna" = c("Oxgr1", "Htr1a", "Gjc3", "Axl",
+                                            "Gfap", "Olig1", "Epha7")),
+                     polygon_feat_type = "z6", # Use polygon from z slice 6 this time
                      use_overlap = FALSE,
                      point_size = 0.5,
                      polygon_line_size = 0.2,
                      show_polygon = TRUE,
-                     polygon_bg_color = 'white',
-                     polygon_color = 'white',
+                     polygon_bg_color = "white",
+                     polygon_color = "white",
                      polygon_alpha = 0.1,
                      show_image = TRUE,
-                     largeImage_name = 'image',
+                     largeImage_name = "image",
                      coord_fix_ratio = TRUE,
                      save_param = list(base_height = 10,
                                        base_width = 10))

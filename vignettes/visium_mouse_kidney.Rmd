@@ -38,6 +38,7 @@ if (!"Giotto" %in% installed.packages()) {
 
 # Ensure the Python environment for Giotto has been installed.
 genv_exists <- Giotto::checkGiottoEnvironment()
+
 if (!genv_exists) {
     # The following command need only be run once to install the Giotto environment.
     Giotto::installGiottoEnvironment()
@@ -50,7 +51,7 @@ if (!genv_exists) {
 library(Giotto)
 
 # 1. set working directory
-results_folder <- "/path/to/directory/"
+results_folder <- "/path/to/results/"
 
 # Optional: Specify a path to a Python executable within a conda or miniconda
 # environment. If set to NULL (default), the Python executable within the previously
@@ -60,15 +61,14 @@ python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 
 ```{r, eval=FALSE}
 ## create instructions
-instrs <- createGiottoInstructions(
-    save_dir = results_folder,
-    save_plot = TRUE,
-    show_plot = FALSE,
-    python_path = python_path
-)
+instructions <- createGiottoInstructions(save_dir = results_folder, 
+                                         save_plot = TRUE, 
+                                         show_plot = FALSE, 
+                                         return_plot = FALSE, 
+                                         python_path = python_path)
 
 ## provide path to visium folder
-data_path <- "/path/to/Kidney_data/"
+data_path <- "/path/to/data/"
 ```
 
 # Create Giotto object & process data
@@ -80,7 +80,7 @@ visium_kidney <- createGiottoVisiumObject(
     expr_data = "raw",
     png_name = "tissue_lowres_image.png",
     gene_column_index = 2,
-    instructions = instrs
+    instructions = instructions
 )
 
 ## check metadata
@@ -90,7 +90,10 @@ pDataDT(visium_kidney)
 showGiottoImageNames(visium_kidney) # "image" is the default name
 
 ## show aligned image
-spatPlot(gobject = visium_kidney, cell_color = "in_tissue", show_image = T, point_alpha = 0.7)
+spatPlot(gobject = visium_kidney, 
+         cell_color = "in_tissue", 
+         show_image = TRUE,
+         point_alpha = 0.7)
 ```
 
 ![](images/visium_mouse_kidney/0-spatPlot2D.png)
@@ -99,7 +102,9 @@ spatPlot(gobject = visium_kidney, cell_color = "in_tissue", show_image = T, poin
 ## subset on spots that were covered by tissue
 metadata <- pDataDT(visium_kidney)
 in_tissue_barcodes <- metadata[in_tissue == 1]$cell_ID
-visium_kidney <- subsetGiotto(visium_kidney, cell_ids = in_tissue_barcodes)
+
+visium_kidney <- subsetGiotto(visium_kidney, 
+                              cell_ids = in_tissue_barcodes)
 
 ## filter
 visium_kidney <- filterGiotto(
@@ -107,27 +112,32 @@ visium_kidney <- filterGiotto(
     expression_threshold = 1,
     feat_det_in_min_cells = 50,
     min_det_feats_per_cell = 1000,
-    expression_values = c("raw"),
-    verbose = T
+    expression_values = "raw",
+    verbose = TRUE
 )
 
 ## normalize
-visium_kidney <- normalizeGiotto(gobject = visium_kidney, scalefactor = 6000, verbose = T)
+visium_kidney <- normalizeGiotto(gobject = visium_kidney, 
+                                 scalefactor = 6000, 
+                                 verbose = TRUE)
 
 ## add gene & cell statistics
 visium_kidney <- addStatistics(gobject = visium_kidney)
 
 ## visualize
-spatPlot2D(gobject = visium_kidney, show_image = T, point_alpha = 0.7)
+spatPlot2D(gobject = visium_kidney, 
+           show_image = TRUE, 
+           point_alpha = 0.7)
 ```
 
 ![](images/visium_mouse_kidney/1-spatPlot2D.png)
 
 ```{r, eval=FALSE}
-spatPlot2D(
-    gobject = visium_kidney, show_image = T, point_alpha = 0.7,
-    cell_color = "nr_feats", color_as_factor = F
-)
+spatPlot2D(gobject = visium_kidney, 
+           show_image = TRUE, 
+           point_alpha = 0.7,
+           cell_color = "nr_feats", 
+           color_as_factor = FALSE)
 ```
 
 ![](images/visium_mouse_kidney/2-spatPlot2D.png)
@@ -144,7 +154,9 @@ visium_kidney <- calculateHVF(gobject = visium_kidney)
 ```{r, eval=FALSE}
 ## run PCA on expression values (default)
 visium_kidney <- runPCA(gobject = visium_kidney)
-screePlot(visium_kidney, ncp = 30)
+
+screePlot(visium_kidney, 
+          ncp = 30)
 ```
 
 ![](images/visium_mouse_kidney/4-screePlot.png)
@@ -157,14 +169,18 @@ plotPCA(gobject = visium_kidney)
 
 ```{r, eval=FALSE}
 ## run UMAP and tSNE on PCA space (default)
-visium_kidney <- runUMAP(visium_kidney, dimensions_to_use = 1:10)
+visium_kidney <- runUMAP(visium_kidney, 
+                         dimensions_to_use = 1:10)
+
 plotUMAP(gobject = visium_kidney)
 ```
 
 ![](images/visium_mouse_kidney/6-UMAP.png)
 
 ```{r, eval=FALSE}
-visium_kidney <- runtSNE(visium_kidney, dimensions_to_use = 1:10)
+visium_kidney <- runtSNE(visium_kidney, 
+                         dimensions_to_use = 1:10)
+
 plotTSNE(gobject = visium_kidney)
 ```
 
@@ -174,10 +190,19 @@ plotTSNE(gobject = visium_kidney)
 
 ```{r, eval=FALSE}
 ## sNN network (default)
-visium_kidney <- createNearestNetwork(gobject = visium_kidney, dimensions_to_use = 1:10, k = 15)
+visium_kidney <- createNearestNetwork(gobject = visium_kidney,
+                                      dimensions_to_use = 1:10, 
+                                      k = 15)
+
 ## Leiden clustering
-visium_kidney <- doLeidenCluster(gobject = visium_kidney, resolution = 0.4, n_iterations = 1000)
-plotUMAP(gobject = visium_kidney, cell_color = "leiden_clus", show_NN_network = T, point_size = 2.5)
+visium_kidney <- doLeidenCluster(gobject = visium_kidney, 
+                                 resolution = 0.4, 
+                                 n_iterations = 1000)
+
+plotUMAP(gobject = visium_kidney, 
+         cell_color = "leiden_clus", 
+         show_NN_network = TRUE, 
+         point_size = 2.5)
 ```
 
 ![](images/visium_mouse_kidney/8-UMAP.png)
@@ -186,19 +211,20 @@ plotUMAP(gobject = visium_kidney, cell_color = "leiden_clus", show_NN_network = 
 
 ```{r, eval=FALSE}
 # expression and spatial
-spatDimPlot(
-    gobject = visium_kidney, cell_color = "leiden_clus",
-    dim_point_size = 2, spat_point_size = 2.5
-)
+spatDimPlot(gobject = visium_kidney, 
+            cell_color = "leiden_clus",
+            dim_point_size = 2, 
+            spat_point_size = 2.5)
 ```
 
 ![](images/visium_mouse_kidney/9-spatDimPlot2D.png)
 
 ```{r, eval=FALSE}
-spatDimPlot(
-    gobject = visium_kidney, cell_color = "nr_feats", color_as_factor = F,
-    dim_point_size = 2, spat_point_size = 2.5
-)
+spatDimPlot(gobject = visium_kidney, 
+            cell_color = "nr_feats", 
+            color_as_factor = FALSE,
+            dim_point_size = 2, 
+            spat_point_size = 2.5)
 ```
 
 ![](images/visium_mouse_kidney/10-spatDimPlot2D.png)
@@ -208,7 +234,7 @@ spatDimPlot(
 ## gini
 
 ```{r, eval=FALSE}
-gini_markers_subclusters <- findMarkers_one_vs_all(
+markers_gini <- findMarkers_one_vs_all(
     gobject = visium_kidney,
     method = "gini",
     expression_values = "normalized",
@@ -217,23 +243,27 @@ gini_markers_subclusters <- findMarkers_one_vs_all(
     min_expr_gini_score = 0.5,
     min_det_gini_score = 0.5
 )
-topgenes_gini <- gini_markers_subclusters[, head(.SD, 2), by = "cluster"]$feats
+
+topgenes_gini <- markers_gini[, head(.SD, 2), by = "cluster"]$feats
 
 # violinplot
 violinPlot(visium_kidney,
-    feats = unique(topgenes_gini), cluster_column = "leiden_clus",
-    strip_text = 8, strip_position = "right"
-)
+           feats = unique(topgenes_gini), 
+           cluster_column = "leiden_clus",
+           strip_text = 8, 
+           strip_position = "right")
 ```
 
 ![](images/visium_mouse_kidney/11-violinPlot.png)
 
 ```{r, eval=FALSE}
 violinPlot(visium_kidney,
-    feats = unique(topgenes_gini), cluster_column = "leiden_clus",
-    strip_text = 8, strip_position = "right",
-    save_param = c(save_name = "11-z1-violinplot_gini", base_width = 5, base_height = 10)
-)
+           feats = unique(topgenes_gini), 
+           cluster_column = "leiden_clus",
+           strip_text = 8, 
+           strip_position = "right",
+           save_param = c(save_name = "11-z1-violinplot_gini", 
+                          base_width = 5, base_height = 10))
 ```
 
 ![](images/visium_mouse_kidney/11-z1-violinplot_gini.png)
@@ -241,10 +271,10 @@ violinPlot(visium_kidney,
 ```{r, eval=FALSE}
 # cluster heatmap
 plotMetaDataHeatmap(visium_kidney,
-    selected_feats = topgenes_gini,
-    metadata_cols = c("leiden_clus"),
-    x_text_size = 10, y_text_size = 10
-)
+                    selected_feats = topgenes_gini,
+                    metadata_cols = "leiden_clus",
+                    x_text_size = 10, 
+                    y_text_size = 10)
 ```
 
 ![](images/visium_mouse_kidney/12-plotMetaDataHeatmap.png)
@@ -252,10 +282,10 @@ plotMetaDataHeatmap(visium_kidney,
 ```{r, eval=FALSE}
 # umap plots
 dimFeatPlot2D(visium_kidney,
-    expression_values = "scaled",
-    feats = gini_markers_subclusters[, head(.SD, 1), by = "cluster"]$feats,
-    cow_n_col = 3, point_size = 1
-)
+              expression_values = "scaled",
+              feats = markers_gini[, head(.SD, 1), by = "cluster"]$feats,
+              cow_n_col = 3, 
+              point_size = 1)
 ```
 
 ![](images/visium_mouse_kidney/13-dimFeatPlot2D.png)
@@ -263,19 +293,20 @@ dimFeatPlot2D(visium_kidney,
 ## scran
 
 ```{r, eval=FALSE}
-scran_markers_subclusters <- findMarkers_one_vs_all(
+markers_scran <- findMarkers_one_vs_all(
     gobject = visium_kidney,
     method = "scran",
     expression_values = "normalized",
     cluster_column = "leiden_clus"
 )
-topgenes_scran <- scran_markers_subclusters[, head(.SD, 2), by = "cluster"]$feats
+
+topgenes_scran <- markers_scran[, head(.SD, 2), by = "cluster"]$feats
 
 violinPlot(visium_kidney,
-    feats = unique(topgenes_scran),
-    cluster_column = "leiden_clus",
-    strip_text = 10, strip_position = "right"
-)
+           feats = unique(topgenes_scran),
+           cluster_column = "leiden_clus",
+           strip_text = 10, 
+           strip_position = "right")
 ```
 
 ![](images/visium_mouse_kidney/14-violinPlot.png)
@@ -283,9 +314,8 @@ violinPlot(visium_kidney,
 ```{r, eval=FALSE}
 # cluster heatmap
 plotMetaDataHeatmap(visium_kidney,
-    selected_feats = topgenes_scran,
-    metadata_cols = c("leiden_clus")
-)
+                    selected_feats = topgenes_scran,
+                    metadata_cols = "leiden_clus")
 ```
 
 ![](images/visium_mouse_kidney/15-plotMetaDataHeatmap.png)
@@ -293,10 +323,10 @@ plotMetaDataHeatmap(visium_kidney,
 ```{r, eval=FALSE}
 # umap plots
 dimFeatPlot2D(visium_kidney,
-    expression_values = "scaled",
-    feats = scran_markers_subclusters[, head(.SD, 1), by = "cluster"]$feats,
-    cow_n_col = 3, point_size = 1
-)
+              expression_values = "scaled",
+              feats = markers_scran[, head(.SD, 1), by = "cluster"]$feats,
+              cow_n_col = 3, 
+              point_size = 1)
 ```
 
 ![](images/visium_mouse_kidney/16-dimFeatPlot2D.png)
@@ -318,10 +348,12 @@ visium_kidney <- createSpatialGrid(
     sdimy_stepsize = 400,
     minimum_padding = 0
 )
+
 spatPlot(visium_kidney,
-    cell_color = "leiden_clus", show_grid = T,
-    grid_color = "red", spatial_grid_name = "spatial_grid"
-)
+         cell_color = "leiden_clus", 
+         show_grid = TRUE,
+         grid_color = "red", 
+         spatial_grid_name = "spatial_grid")
 ```
 
 ![](images/visium_mouse_kidney/17-spatPlot2D.png)
@@ -330,18 +362,22 @@ spatPlot(visium_kidney,
 
 ```{r, eval=FALSE}
 ## delaunay network: stats + creation
-plotStatDelaunayNetwork(gobject = visium_kidney, maximum_distance = 400)
+plotStatDelaunayNetwork(gobject = visium_kidney, 
+                        maximum_distance = 400)
 ```
 
 ![](images/visium_mouse_kidney/18-plotStatDelaunayNetwork.png)
 
 ```{r, eval=FALSE}
-visium_kidney <- createSpatialNetwork(gobject = visium_kidney, minimum_k = 0)
+visium_kidney <- createSpatialNetwork(gobject = visium_kidney, 
+                                      minimum_k = 0)
+
 showNetworks(visium_kidney)
-spatPlot(
-    gobject = visium_kidney, show_network = T,
-    network_color = "blue", spatial_network_name = "Delaunay_network"
-)
+
+spatPlot(gobject = visium_kidney, 
+         show_network = TRUE,
+         network_color = "blue", 
+         spatial_network_name = "Delaunay_network")
 ```
 
 ![](images/visium_mouse_kidney/19-spatPlot2D.png)
@@ -352,22 +388,27 @@ spatPlot(
 
 ```{r, eval=FALSE}
 ## kmeans binarization
-kmtest <- binSpect(visium_kidney)
+km_spatialfeats <- binSpect(visium_kidney)
+
 spatFeatPlot2D(visium_kidney,
-    expression_values = "scaled",
-    feats = kmtest$feats[1:6], cow_n_col = 2, point_size = 1.5
-)
+               expression_values = "scaled",
+               feats = km_spatialfeats$feats[1:6], 
+               cow_n_col = 2, 
+               point_size = 1.5)
 ```
 
 ![](images/visium_mouse_kidney/20-spatFeatPlot2D.png)
 
 ```{r, eval=FALSE}
 ## rank binarization
-ranktest <- binSpect(visium_kidney, bin_method = "rank")
+ranktest <- binSpect(visium_kidney, 
+                     bin_method = "rank")
+
 spatFeatPlot2D(visium_kidney,
-    expression_values = "scaled",
-    feats = ranktest$feats[1:6], cow_n_col = 2, point_size = 1.5
-)
+               expression_values = "scaled",
+               feats = ranktest$feats[1:6], 
+               cow_n_col = 2, 
+               point_size = 1.5)
 ```
 
 ![](images/visium_mouse_kidney/21-spatFeatPlot2D.png)
@@ -376,23 +417,26 @@ spatFeatPlot2D(visium_kidney,
 
 ```{r, eval=FALSE}
 ## spatially correlated genes ##
-ext_spatial_genes <- kmtest[1:500]$feats
+my_spatial_genes <- km_spatialfeats[1:500]$feats
 
 # 1. calculate gene spatial correlation and single-cell correlation
 # create spatial correlation object
-spat_cor_netw_DT <- detectSpatialCorFeats(visium_kidney,
-    method = "network",
-    spatial_network_name = "Delaunay_network",
-    subset_feats = ext_spatial_genes
+spat_cor_netw_DT <- detectSpatialCorFeats(
+  visium_kidney,
+  method = "network",
+  spatial_network_name = "Delaunay_network",
+  subset_feats = my_spatial_genes
 )
 
 # 2. identify most similar spatially correlated genes for one gene
-Napsa_top10_genes <- showSpatialCorFeats(spat_cor_netw_DT, feats = "Napsa", show_top_feats = 10)
+top10_genes <- showSpatialCorFeats(spat_cor_netw_DT, 
+                                   feats = "Napsa", 
+                                   show_top_feats = 10)
 
 spatFeatPlot2D(visium_kidney,
-    expression_values = "scaled",
-    feats = c("Napsa", "Kap", "Defb29", "Prdx1"), point_size = 3
-)
+               expression_values = "scaled",
+               feats = c("Napsa", "Kap", "Defb29", "Prdx1"), 
+               point_size = 3)
 ```
 
 ![](images/visium_mouse_kidney/22-spatFeatPlot2D.png)
@@ -400,20 +444,19 @@ spatFeatPlot2D(visium_kidney,
 ```{r, eval=FALSE}
 # 3. cluster correlated genes & visualize
 spat_cor_netw_DT <- clusterSpatialCorFeats(spat_cor_netw_DT,
-    name = "spat_netw_clus", k = 8
-)
+                                           name = "spat_netw_clus", 
+                                           k = 8)
 
 heatmSpatialCorFeats(visium_kidney,
-    spatCorObject = spat_cor_netw_DT,
-    use_clus_name = "spat_netw_clus",
-    save_param = list(
-        save_name = "22-z1-heatmap_correlated_genes",
-        save_format = "pdf",
-        base_height = 6,
-        base_width = 8, units = "cm"
-    ),
-    heatmap_legend_param = list(title = NULL)
-)
+                     spatCorObject = spat_cor_netw_DT,
+                     use_clus_name = "spat_netw_clus",
+                     save_param = list(
+                       save_name = "22-z1-heatmap_correlated_genes",
+                       save_format = "pdf",
+                       base_height = 6,
+                       base_width = 8, units = "cm"
+                     ),
+                     heatmap_legend_param = list(title = NULL))
 ```
 
 ![](images/visium_mouse_kidney/22-z1-heatmap_correlated_genes.pdf)
@@ -421,45 +464,42 @@ heatmSpatialCorFeats(visium_kidney,
 ```{r, eval=FALSE}
 # 4. rank spatial correlated clusters and show genes for selected clusters
 netw_ranks <- rankSpatialCorGroups(visium_kidney,
-    spatCorObject = spat_cor_netw_DT,
-    use_clus_name = "spat_netw_clus",
-    save_param = list(
-        save_name = "22-z2-rank_correlated_groups",
-        base_height = 3,
-        base_width = 5
-    )
-)
+                                   spatCorObject = spat_cor_netw_DT,
+                                   use_clus_name = "spat_netw_clus",
+                                   save_param = list(
+                                     save_name = "22-z2-rank_correlated_groups",
+                                     base_height = 3,
+                                     base_width = 5
+                                   ))
 ```
 
 ![](images/visium_mouse_kidney/22-z2-rank_correlated_groups.png)
 
 ```{r, eval=FALSE}
 top_netw_spat_cluster <- showSpatialCorFeats(spat_cor_netw_DT,
-    use_clus_name = "spat_netw_clus",
-    selected_clusters = 6,
-    show_top_feats = 1
-)
+                                             use_clus_name = "spat_netw_clus",
+                                             selected_clusters = 6,
+                                             show_top_feats = 1)
 
 # 5. create metagene enrichment score for clusters
 cluster_genes_DT <- showSpatialCorFeats(spat_cor_netw_DT,
-    use_clus_name = "spat_netw_clus",
-    show_top_feats = 1
-)
+                                        use_clus_name = "spat_netw_clus",
+                                        show_top_feats = 1)
+
 cluster_genes <- cluster_genes_DT$clus
 names(cluster_genes) <- cluster_genes_DT$feat_ID
 
 visium_kidney <- createMetafeats(visium_kidney,
-    feat_clusters = cluster_genes,
-    name = "cluster_metagene"
-)
+                                 feat_clusters = cluster_genes,
+                                 name = "cluster_metagene")
 
 showGiottoSpatEnrichments(visium_kidney)
 
 spatCellPlot(visium_kidney,
-    spat_enr_names = "cluster_metagene",
-    cell_annotation_values = netw_ranks$clusters,
-    point_size = 1.5, cow_n_col = 4
-)
+             spat_enr_names = "cluster_metagene",
+             cell_annotation_values = netw_ranks$clusters,
+             point_size = 1.5, 
+             cow_n_col = 4)
 ```
 
 ![](images/visium_mouse_kidney/23-spatCellPlot2D.png)
@@ -468,18 +508,16 @@ spatCellPlot(visium_kidney,
 
 ```{r, eval=FALSE}
 # HMRF requires a fully connected network!
-visium_kidney <- createSpatialNetwork(
-    gobject = visium_kidney,
-    minimum_k = 2,
-    name = "Delaunay_full"
-)
+visium_kidney <- createSpatialNetwork(gobject = visium_kidney,
+                                      minimum_k = 2,
+                                      name = "Delaunay_full")
 
 # spatial genes
-my_spatial_genes <- kmtest[1:100]$feats
+my_spatial_genes <- km_spatialfeats[1:100]$feats
 
 # do HMRF with different betas
-hmrf_folder <- paste0(results_folder, "/", "HMRF_results/")
-if (!file.exists(hmrf_folder)) dir.create(hmrf_folder, recursive = T)
+hmrf_folder <- file.path(results_folder, "HMRF_results")
+if (!file.exists(hmrf_folder)) dir.create(hmrf_folder, recursive = TRUE)
 
 # if Rscript is not found, you might have to create a symbolic link, e.g.
 # cd /usr/local/bin
@@ -491,7 +529,7 @@ HMRF_spatial_genes <- doHMRF(
     spatial_genes = my_spatial_genes,
     k = 5,
     betas = c(0, 1, 6),
-    output_folder = paste0(hmrf_folder, "/", "Spatial_genes/SG_topgenes_k5_scaled")
+    output_folder = file.path(hmrf_folder, "Spatial_genes/SG_topgenes_k5_scaled")
 )
 ```
 
@@ -504,54 +542,25 @@ HMRF_spatial_genes <- doHMRF(
 
 
 ## add HMRF of interest to giotto object
-visium_kidney <- addHMRF(
-    gobject = visium_kidney,
-    HMRFoutput = HMRF_spatial_genes,
-    k = 5, betas_to_add = c(0, 2),
-    hmrf_name = "HMRF"
-)
+visium_kidney <- addHMRF(gobject = visium_kidney,
+                         HMRFoutput = HMRF_spatial_genes,
+                         k = 5, 
+                         betas_to_add = c(0, 2),
+                         hmrf_name = "HMRF")
 
 ## visualize
-spatPlot(
-    gobject = visium_kidney,
-    cell_color = "HMRF_k5_b.0",
-    point_size = 5
-)
+spatPlot(gobject = visium_kidney,
+         cell_color = "HMRF_k5_b.0",
+         point_size = 5)
 ```
 
 ![](images/visium_mouse_kidney/24-spatPlot2D.png)
 
 ```{r, eval=FALSE}
-spatPlot(
-    gobject = visium_kidney,
-    cell_color = "HMRF_k5_b.2",
-    point_size = 5
-)
+spatPlot(gobject = visium_kidney,
+         cell_color = "HMRF_k5_b.2",
+         point_size = 5)
 ```
 
 ![](images/visium_mouse_kidney/25-spatPlot2D.png)
 
-# Export and create Giotto Viewers
-
-```{r, eval=FALSE}
-# check which annotations are available
-combineMetadata(visium_kidney)
-
-# select annotations, reductions and expression values to view in Giotto Viewer
-viewer_folder <- paste0(results_folder, "/", "mouse_visium_kidney_viewer")
-
-exportGiottoViewer(
-    gobject = visium_kidney,
-    output_directory = viewer_folder,
-    factor_annotations = c(
-        "in_tissue",
-        "leiden_clus"
-    ),
-    numeric_annotations = c("nr_feats"),
-    dim_reductions = c("tsne", "umap"),
-    dim_reduction_names = c("tsne", "umap"),
-    expression_values = "scaled",
-    expression_rounding = 2,
-    overwrite_dir = T
-)
-```

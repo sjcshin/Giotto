@@ -38,7 +38,8 @@ if(!"Giotto" %in% installed.packages()) {
 }
 
 # Ensure the Python environment for Giotto has been installed
-genv_exists = Giotto::checkGiottoEnvironment()
+genv_exists <- Giotto::checkGiottoEnvironment()
+
 if(!genv_exists){
   # The following command need only be run once to install the Giotto environment
   Giotto::installGiottoEnvironment()
@@ -49,23 +50,21 @@ if(!genv_exists){
 library(Giotto)
 
 # 1. set working directory
-results_directory = getwd()
+results_folder <- "/path/to/results/"
 
 # 2. set giotto python path
 # set python path to your preferred python version path
 # set python path to NULL if you want to automatically install (only the 1st time) and use the giotto miniconda environment
-python_path = NULL
-if(is.null(python_path)) {
-  installGiottoEnvironment()
-}
+python_path <- NULL
 ```
 
 ```{r, eval=FALSE}
 # 3. create giotto instructions
-instrs = createGiottoInstructions(save_dir = results_directory,
-                                  save_plot = TRUE,
-                                  show_plot = TRUE,
-                                  python_path = python_path)
+instructions <- createGiottoInstructions(save_dir = results_folder, 
+                                         save_plot = TRUE, 
+                                         show_plot = FALSE, 
+                                         return_plot = FALSE, 
+                                         python_path = python_path)
 ```
 
 
@@ -73,26 +72,26 @@ instrs = createGiottoInstructions(save_dir = results_directory,
 
 ```{r, eval=FALSE}
 # This dataset must be downlaoded manually; please do so and change the path below as appropriate
-data_directory <- getwd()
+data_path <- "/path/to/data/"
 
 ## obese upper
-N_pros = createGiottoVisiumObject(
-    visium_dir = paste0(data_directory,'/Visium_FFPE_Human_Normal_Prostate'),
-    expr_data = 'raw',
-    png_name = 'tissue_lowres_image.png',
+N_pros <- createGiottoVisiumObject(
+    visium_dir = file.path(data_directory, "Visium_FFPE_Human_Normal_Prostate"),
+    expr_data = "raw",
+    png_name = "tissue_lowres_image.png",
     gene_column_index = 2,
-    instructions = instrs
+    instructions = instructions
 )
 ```
 
 ```{r, eval=FALSE}
 ## obese lower
-C_pros = createGiottoVisiumObject(
-    visium_dir = paste0(data_directory,'/Visium_FFPE_Human_Prostate_Cancer/'),
-    expr_data = 'raw',
-    png_name = 'tissue_lowres_image.png',
+C_pros <- createGiottoVisiumObject(
+    visium_dir = file.path(data_directory, "Visium_FFPE_Human_Prostate_Cancer/"),
+    expr_data = "raw",
+    png_name = "tissue_lowres_image.png",
     gene_column_index = 2,
-    instructions = instrs
+    instructions = instructions
 )
 ```
 
@@ -101,9 +100,10 @@ C_pros = createGiottoVisiumObject(
 # joining with x_shift has the advantage that you can join both 2D and 3D data
 # x_padding determines how much distance is between each dataset
 # if x_shift = NULL, then the total shift will be guessed from the giotto image
-testcombo = joinGiottoObjects(gobject_list = list(N_pros, C_pros),
-    gobject_names = c('NP', 'CP'),
-    join_method = 'shift', x_padding = 1000)
+testcombo <- joinGiottoObjects(gobject_list = list(N_pros, C_pros),
+                               gobject_names = c("NP", "CP"),
+                               join_method = "shift", 
+                               x_padding = 1000)
 ```
 
 ```{r, eval=FALSE}
@@ -135,29 +135,37 @@ showGiottoExpression(testcombo)
 
 ```{r, eval=FALSE}
 # this plots all the images by list_ID
-spatPlot2D(gobject = testcombo, cell_color = 'in_tissue',
-    show_image = T, image_name = c("NP-image", "CP-image"),
-    group_by = 'list_ID', point_alpha = 0.5,
-    save_param = list(save_name = "1a_plot"))
+spatPlot2D(gobject = testcombo, 
+           cell_color = "in_tissue",
+           show_image = TRUE, 
+           image_name = c("NP-image", "CP-image"),
+           group_by = "list_ID", 
+           point_alpha = 0.5,
+           save_param = list(save_name = "1a_plot"))
 ```
 
 ![](images/visium_prostate_integration/1a_plot.png)
 
 ```{r, eval=FALSE}
 # this plots one selected image
-spatPlot2D(gobject = testcombo, cell_color = 'in_tissue',
-    show_image = T, image_name = c("NP-image"), point_alpha = 0.3,
-    save_param = list(save_name = "1b_plot"))
+spatPlot2D(gobject = testcombo, 
+           cell_color = "in_tissue",
+           show_image = TRUE, 
+           image_name = c("NP-image"), 
+           point_alpha = 0.3,
+           save_param = list(save_name = "1b_plot"))
 ```
 
 ![](images/visium_prostate_integration/1b_plot.png)
 
 ```{r, eval=FALSE}
 # this plots two selected images
-spatPlot2D(gobject = testcombo, cell_color = 'in_tissue',
-    show_image = T, image_name = c( "NP-image", "CP-image"),
-    point_alpha = 0.3,
-    save_param = list(save_name = "1c_plot"))
+spatPlot2D(gobject = testcombo, 
+           cell_color = "in_tissue",
+           show_image = TRUE, 
+           image_name = c( "NP-image", "CP-image"),
+           point_alpha = 0.3,
+           save_param = list(save_name = "1c_plot"))
 ```
 
 ![](images/visium_prostate_integration/1c_plot.png)
@@ -166,47 +174,63 @@ spatPlot2D(gobject = testcombo, cell_color = 'in_tissue',
 
 ```{r, eval=FALSE}
 # subset on in-tissue spots
-metadata = pDataDT(testcombo)
-in_tissue_barcodes = metadata[in_tissue == 1]$cell_ID
-testcombo = subsetGiotto(testcombo, cell_ids = in_tissue_barcodes)
+metadata <- pDataDT(testcombo)
+in_tissue_barcodes <- metadata[in_tissue == 1]$cell_ID
+
+testcombo <- subsetGiotto(testcombo, 
+                          cell_ids = in_tissue_barcodes)
 ```
 
 ```{r, eval=FALSE}
 ## filter
 testcombo <- filterGiotto(gobject = testcombo,
-    expression_threshold = 1,
-    feat_det_in_min_cells = 50,
-    min_det_feats_per_cell = 500,
-    expression_values = c('raw'),
-    verbose = T)
+                          expression_threshold = 1,
+                          feat_det_in_min_cells = 50,
+                          min_det_feats_per_cell = 500,
+                          expression_values = "raw",
+                          verbose = TRUE)
 ```
 
 ```{r, eval=FALSE}
 ## normalize
-testcombo <- normalizeGiotto(gobject = testcombo, scalefactor = 6000)
+testcombo <- normalizeGiotto(gobject = testcombo, 
+                             scalefactor = 6000)
 ```
 
 ```{r, eval=FALSE}
 ## add gene & cell statistics
-testcombo <- addStatistics(gobject = testcombo, expression_values = 'raw')
+testcombo <- addStatistics(gobject = testcombo, 
+                           expression_values = "raw")
 
-fmeta = fDataDT(testcombo)
-testfeats = fmeta[perc_cells > 20 & perc_cells < 50][100:110]$feat_ID
+gene_metadata <- fDataDT(testcombo)
 
-violinPlot(testcombo, feats = testfeats, cluster_column = 'list_ID', save_param = list(save_name = "2a_plot"))
+testfeats <- fmeta[perc_cells > 20 & perc_cells < 50][100:110]$feat_ID
+
+violinPlot(testcombo, 
+           feats = testfeats, 
+           cluster_column = "list_ID", 
+           save_param = list(save_name = "2a_plot"))
 ```
 
 ![](images/visium_prostate_integration/2a_plot.png)
 
 ```{r, eval=FALSE}
-plotMetaDataHeatmap(testcombo, selected_feats = testfeats, metadata_cols = 'list_ID', save_param = list(save_name = "2b_plot"))
+plotMetaDataHeatmap(testcombo, 
+                    selected_feats = testfeats, 
+                    metadata_cols = "list_ID", 
+                    save_param = list(save_name = "2b_plot"))
 ```
 
 ![](images/visium_prostate_integration/2b_plot.png)
 
 ```{r, eval=FALSE}
 ## visualize
-spatPlot2D(gobject = testcombo, group_by = 'list_ID', cell_color = 'nr_feats', color_as_factor = F, point_size = 0.75, save_param = list(save_name = "2c_plot"))
+spatPlot2D(gobject = testcombo, 
+           group_by = "list_ID", 
+           cell_color = "nr_feats", 
+           color_as_factor = FALSE, 
+           point_size = 0.75, 
+           save_param = list(save_name = "2c_plot"))
 ```
 
 ![](images/visium_prostate_integration/2c_plot.png)
@@ -221,11 +245,15 @@ testcombo <- calculateHVF(gobject = testcombo)
 ![](images/visium_prostate_integration/0-HVFplot.png)
 
 ```{r, eval=FALSE}
-testcombo <- runPCA(gobject = testcombo, center = TRUE, scale_unit = TRUE)
+testcombo <- runPCA(gobject = testcombo, 
+                    center = TRUE, 
+                    scale_unit = TRUE)
 ```
 
 ```{r, eval=FALSE}
-screePlot(testcombo, ncp = 30, save_param = list(save_name = "3a_screeplot"))
+screePlot(testcombo, 
+          ncp = 30, 
+          save_param = list(save_name = "3a_screeplot"))
 ```
 
 ![](images/visium_prostate_integration/3a_screeplot.png)
@@ -240,35 +268,42 @@ Integration is usually needed for dataset of different conditions to minimize ba
 ## cluster and run UMAP ##
 # sNN network (default)
 testcombo <- createNearestNetwork(gobject = testcombo,
-    dim_reduction_to_use = 'pca', dim_reduction_name = 'pca',
-    dimensions_to_use = 1:10, k = 15)
+                                  dim_reduction_to_use = "pca", 
+                                  dim_reduction_name = "pca",
+                                  dimensions_to_use = 1:10, 
+                                  k = 15)
 
 # Leiden clustering
-testcombo <- doLeidenCluster(gobject = testcombo, resolution = 0.2, n_iterations = 1000)
+testcombo <- doLeidenCluster(gobject = testcombo, 
+                             resolution = 0.2, 
+                             n_iterations = 1000)
 
 # UMAP
-testcombo = runUMAP(testcombo)
+testcombo <- runUMAP(testcombo)
 
 plotUMAP(gobject = testcombo,
-    cell_color = 'leiden_clus', show_NN_network = T, point_size = 1.5,
-    save_param = list(save_name = "4.1a_plot"))
+         cell_color = "leiden_clus", 
+         show_NN_network = TRUE, 
+         point_size = 1.5,
+         save_param = list(save_name = "4.1a_plot"))
 ```
 
 ![](images/visium_prostate_integration/4.1a_plot.png)
 
 ```{r, eval=FALSE}
-spatPlot2D(gobject = testcombo, group_by = 'list_ID',
-    cell_color = 'leiden_clus',
-    point_size = 1.5,
-    save_param = list(save_name = "4.1b_plot"))
+spatPlot2D(gobject = testcombo, 
+           group_by = "list_ID",
+           cell_color = "leiden_clus",
+           point_size = 1.5,
+           save_param = list(save_name = "4.1b_plot"))
 ```
 
 ![](images/visium_prostate_integration/4.1b_plot.png)
 
 ```{r, eval=FALSE}
 spatDimPlot2D(gobject = testcombo,
-    cell_color = 'leiden_clus',
-    save_param = list(save_name = "4.1c_plot"))
+              cell_color = "leiden_clus",
+              save_param = list(save_name = "4.1c_plot"))
 ```
 
 ![](images/visium_prostate_integration/4.1c_plot.png)
@@ -288,52 +323,64 @@ library(harmony)
 
 ```{r, eval=FALSE}
 ## run harmony integration
-testcombo = runGiottoHarmony(testcombo, vars_use = 'list_ID', do_pca = F)
+testcombo <- runGiottoHarmony(testcombo, 
+                              vars_use = "list_ID", 
+                              do_pca = FALSE)
 ```
 
 ```{r, eval=FALSE}
 ## sNN network (default)
 testcombo <- createNearestNetwork(gobject = testcombo,
-    dim_reduction_to_use = 'harmony', dim_reduction_name = 'harmony', name = 'NN.harmony',
-    dimensions_to_use = 1:10, k = 15)
+                                  dim_reduction_to_use = "harmony", 
+                                  dim_reduction_name = "harmony", 
+                                  name = "NN.harmony",
+                                  dimensions_to_use = 1:10, 
+                                  k = 15)
 
 ## Leiden clustering
 testcombo <- doLeidenCluster(gobject = testcombo,
-    network_name = 'NN.harmony', resolution = 0.2, n_iterations = 1000, name = 'leiden_harmony')
+                             network_name = "NN.harmony", 
+                             resolution = 0.2, 
+                             n_iterations = 1000, 
+                             name = "leiden_harmony")
 
 # UMAP dimension reduction
-testcombo = runUMAP(testcombo, dim_reduction_name = 'harmony', dim_reduction_to_use = 'harmony', name = 'umap_harmony')
-
+testcombo <- runUMAP(testcombo, 
+                     dim_reduction_name = "harmony", 
+                     dim_reduction_to_use = "harmony", 
+                     name = "umap_harmony")
 
 plotUMAP(gobject = testcombo,
-    dim_reduction_name = 'umap_harmony',
-    cell_color = 'leiden_harmony', 
-    show_NN_network = F, 
-    point_size = 1.5,
-    save_param = list(save_name = "4.2a_plot"))
+         dim_reduction_name = "umap_harmony",
+         cell_color = "leiden_harmony", 
+         show_NN_network = FALSE, 
+         point_size = 1.5,
+         save_param = list(save_name = "4.2a_plot"))
 ```
 
 ![](images/visium_prostate_integration/4.2a_plot.png)
 
 ```{r, eval=FALSE}
 # If you want to show NN network information, you will need to specify these arguments in the plotUMAP function
-# show_NN_network = T, nn_network_to_use = 'sNN' , network_name = 'NN.harmony'
+# show_NN_network = TRUE, nn_network_to_use = "sNN" , network_name = "NN.harmony"
 ```
 
 ```{r, eval=FALSE}
-spatPlot2D(gobject = testcombo, group_by = 'list_ID',
-    cell_color = 'leiden_harmony',
-    point_size = 1.5,
-    save_param = list(save_name = "4.2b_plot"))
+spatPlot2D(gobject = testcombo, 
+           group_by = "list_ID",
+           cell_color = "leiden_harmony",
+           point_size = 1.5,
+           save_param = list(save_name = "4.2b_plot"))
 ```
 
 ![](images/visium_prostate_integration/4.2b_plot.png)
 
 ```{r, eval=FALSE}
 spatDimPlot2D(gobject = testcombo,
-    dim_reduction_to_use = 'umap', dim_reduction_name = 'umap_harmony',
-    cell_color = 'leiden_harmony',
-    save_param = list(save_name = "4.2c_plot"))
+              dim_reduction_to_use = "umap", 
+              dim_reduction_name = "umap_harmony",
+              cell_color = "leiden_harmony",
+              save_param = list(save_name = "4.2c_plot"))
 ```
 
 ![](images/visium_prostate_integration/4.2c_plot.png)
@@ -341,16 +388,16 @@ spatDimPlot2D(gobject = testcombo,
 ```{r, eval=FALSE}
 # compare to previous results
 spatPlot2D(gobject = testcombo,
-    cell_color = 'leiden_clus', 
-    save_param = list(save_name = "4_w_o_integration_plot"))
+           cell_color = "leiden_clus", 
+           save_param = list(save_name = "4_w_o_integration_plot"))
 ```
 
 ![](images/visium_prostate_integration/4_w_o_integration_plot.png)
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = testcombo,
-    cell_color = 'leiden_harmony',
-    save_param = list(save_name = "4_w_integration_plot"))
+           cell_color = "leiden_harmony",
+           save_param = list(save_name = "4_w_integration_plot"))
 ```
 
 ![](images/visium_prostate_integration/4_w_integration_plot.png)
@@ -368,26 +415,25 @@ This is also the easiest way to integrate Visium datasets with single cell data.
 
 ```{r, eval=FALSE}
 # download data to results directory ####
-# if wget is installed, set method = 'wget'
-# if you run into authentication issues with wget, then add " extra = '--no-check-certificate' "
-getSpatialDataset(dataset = 'scRNA_prostate', directory = data_directory)
+# if wget is installed, set method = "wget"
+# if you run into authentication issues with wget, then add " extra = "--no-check-certificate" "
+getSpatialDataset(dataset = "scRNA_prostate", 
+                  directory = data_directory)
 ```
 
 ```{r, eval=FALSE}
-sc_expression = paste0(data_directory, "/prostate_sc_expression_matrix.csv.gz")
-sc_metadata = paste0(data_directory, "/prostate_sc_metadata.csv")
+sc_expression <- file.path(data_directory, "prostate_sc_expression_matrix.csv.gz")
+sc_metadata <- file.path(data_directory, "prostate_sc_metadata.csv")
 
-giotto_SC <- createGiottoObject(
-  expression = sc_expression,
-  instructions = instrs
-)
+giotto_SC <- createGiottoObject(expression = sc_expression,
+                                instructions = instructions)
 ```
 
 ```{r, eval=FALSE}
 giotto_SC <- addCellMetadata(giotto_SC, 
                              new_metadata = data.table::fread(sc_metadata))
 
-giotto_SC<- normalizeGiotto(giotto_SC)
+giotto_SC <- normalizeGiotto(giotto_SC)
 ```
 
 ## PAGE enrichment
@@ -396,38 +442,41 @@ giotto_SC<- normalizeGiotto(giotto_SC)
 # Create PAGE matrix
 # PAGE matrix should be a binary matrix with each row represent a gene marker and each column represent a cell type
 # markers_scran is generated from single cell analysis ()
-markers_scran = findMarkers_one_vs_all(gobject=giotto_SC, 
-                                       method="scran",
-                                       expression_values="normalized", 
-                                       cluster_column='prostate_labels',
-                                       min_feats=3)
+markers_scran <- findMarkers_one_vs_all(gobject = giotto_SC, 
+                                       method = "scran",
+                                       expression_values = "normalized", 
+                                       cluster_column = "prostate_labels",
+                                       min_feats = 3)
 ```
 
 ```{r, eval=FALSE}
-top_markers <- markers_scran[, head(.SD, 10), by="cluster"]
-celltypes<-levels(factor(markers_scran$cluster))
-sign_list<-list()
+topgenes_scran <- markers_scran[, head(.SD, 10), by = "cluster"]
+
+celltypes <- levels(factor(markers_scran$cluster))
+sign_list <- list()
 
 for (i in 1:length(celltypes)){
-  sign_list[[i]]<-top_markers[which(top_markers$cluster == celltypes[i]),]$feats
+  sign_list[[i]] <- topgenes_scran[which(topgenes_scran$cluster == celltypes[i]),]$feats
 }
 
-PAGE_matrix = makeSignMatrixPAGE(sign_names = celltypes,
-                                 sign_list = sign_list)
+PAGE_matrix <- makeSignMatrixPAGE(sign_names = celltypes,
+                                  sign_list = sign_list)
 ```
 
 ```{r, eval=FALSE}
-testcombo = runPAGEEnrich(gobject = testcombo,
-                          sign_matrix = PAGE_matrix,
-                          min_overlap_genes = 2)
+testcombo <- runPAGEEnrich(gobject = testcombo,
+                           sign_matrix = PAGE_matrix,
+                           min_overlap_genes = 2)
 
-cell_types_subset = colnames(PAGE_matrix)
+cell_types <- colnames(PAGE_matrix)
 
 # Plot PAGE enrichment result
 spatCellPlot(gobject = testcombo,
-             spat_enr_names = 'PAGE',
-             cell_annotation_values = cell_types_subset[1:4],
-             cow_n_col = 2,coord_fix_ratio = NULL, point_size = 1.25,
+             spat_enr_names = "PAGE",
+             cell_annotation_values = cell_types[1:4],
+             cow_n_col = 2,
+             coord_fix_ratio = NULL, 
+             point_size = 1.25,
              save_param = list(save_name = "5a_PAGE_plot"))
 ```
 
@@ -436,14 +485,18 @@ spatCellPlot(gobject = testcombo,
 ## Hypergeometric test
 
 ```{r, eval=FALSE}
-testcombo = runHyperGeometricEnrich(gobject = testcombo,
-                                    expression_values = "normalized",
-                                    sign_matrix = PAGE_matrix)
-cell_types_subset = colnames(PAGE_matrix)
+testcombo <- runHyperGeometricEnrich(gobject = testcombo,
+                                     expression_values = "normalized",
+                                     sign_matrix = PAGE_matrix)
+
+cell_types = colnames(PAGE_matrix)
+
 spatCellPlot(gobject = testcombo, 
-             spat_enr_names = 'hypergeometric',
-             cell_annotation_values = cell_types_subset[1:4],
-             cow_n_col = 2,coord_fix_ratio = NULL, point_size = 1.75,
+             spat_enr_names = "hypergeometric",
+             cell_annotation_values = cell_types[1:4],
+             cow_n_col = 2,
+             coord_fix_ratio = NULL, 
+             point_size = 1.75,
              save_param = list(save_name = "5b_HyperGeometric_plot"))
 ```
 
@@ -454,22 +507,28 @@ spatCellPlot(gobject = testcombo,
 ```{r, eval=FALSE}
 # Create rank matrix, not that rank matrix is different from PAGE
 # A count matrix and a vector for all cell labels will be needed
-sc_expression_norm = getExpression(giotto_SC,
-                                  values = "normalized",
-                                  output = "matrix")
+sc_expression_norm <- getExpression(giotto_SC,
+                                    values = "normalized",
+                                    output = "matrix")
 
-prostate_feats = pDataDT(giotto_SC)$prostate_label
+prostate_feats <- pDataDT(giotto_SC)$prostate_label
 
-rank_matrix = makeSignMatrixRank(sc_matrix = sc_expression_norm,
-                                 sc_cluster_ids = prostate_feats)
-colnames(rank_matrix)<-levels(factor(prostate_feats))
-testcombo = runRankEnrich(gobject = testcombo, sign_matrix = rank_matrix,expression_values = "normalized")
+rank_matrix <- makeSignMatrixRank(sc_matrix = sc_expression_norm,
+                                  sc_cluster_ids = prostate_feats)
+
+colnames(rank_matrix) <- levels(factor(prostate_feats))
+
+testcombo <- runRankEnrich(gobject = testcombo, 
+                           sign_matrix = rank_matrix,
+                           expression_values = "normalized")
 
 # Plot Rank enrichment result
 spatCellPlot2D(gobject = testcombo,
-               spat_enr_names = 'rank',
-               cell_annotation_values = cell_types_subset[1:4],
-               cow_n_col = 2,coord_fix_ratio = NULL, point_size = 1,
+               spat_enr_names = "rank",
+               cell_annotation_values = cell_types[1:4],
+               cow_n_col = 2,
+               coord_fix_ratio = NULL, 
+               point_size = 1,
                save_param = list(save_name = "5c_Rank_plot"))
 ```
 
@@ -480,17 +539,20 @@ spatCellPlot2D(gobject = testcombo,
 ```{r, eval=FALSE}
 # Create DWLS matrix, not that DWLS matrix is different from PAGE and rank
 # A count matrix a vector for a list of gene signatures and a vector for all cell labels will be needed
-DWLS_matrix<-makeSignMatrixDWLSfromMatrix(matrix = sc_expression_norm,
-                                          cell_type = prostate_feats,
-                                          sign_gene = top_markers$feats)
-testcombo = runDWLSDeconv(gobject = testcombo, sign_matrix = DWLS_matrix)
+DWLS_matrix <- makeSignMatrixDWLSfromMatrix(matrix = sc_expression_norm,
+                                            cell_type = prostate_feats,
+                                            sign_gene = topgenes_scran$feats)
 
+testcombo <- runDWLSDeconv(gobject = testcombo, 
+                           sign_matrix = DWLS_matrix)
 
 # Plot DWLS deconvolution result
 spatCellPlot2D(gobject = testcombo,
-               spat_enr_names = 'DWLS',
+               spat_enr_names = "DWLS",
                cell_annotation_values = levels(factor(prostate_feats))[1:4],
-               cow_n_col = 2,coord_fix_ratio = NULL, point_size = 1,
+               cow_n_col = 2,
+               coord_fix_ratio = NULL, 
+               point_size = 1,
                save_param = list(save_name = "5d_DWLS_plot"))
 ```
 
@@ -500,7 +562,9 @@ spatCellPlot2D(gobject = testcombo,
 
 ```{r, eval=FALSE}
 sessionInfo()
+```
 
+```{r, eval=FALSE}
 R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
 Running under: macOS Sonoma 14.1.2
