@@ -38,14 +38,14 @@ To accommodate this complexity, information is subnested within many of the `gio
 A summary of what information the object contains can be viewed by directly returning it.
 
 
-```{r, eval=TRUE, message=FALSE}
+```{r, eval=FALSE}
 library(Giotto)
 library(data.table)
 
 vizmini <- GiottoData::loadGiottoMini("vizgen")
 ```
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 vizmini
 ```
 
@@ -125,15 +125,15 @@ Show and list functions are also provided for determining what information exist
 - `show` functions print a preview of all the data within the slot, but do not return information
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 showGiottoSpatLocs(vizmini)
 ```
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 list_expression(vizmini)
 ```
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 # Find specific spat_unit objects #
 list_expression(vizmini, 
                 spat_unit = "z0")
@@ -142,7 +142,7 @@ list_expression(vizmini,
 - `list names` (internal) functions return a `vector` of object names
     at the specified nesting
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 list_expression_names(vizmini, 
                       spat_unit = "z1", 
                       feat_type = "rna")
@@ -154,7 +154,7 @@ list_expression_names(vizmini,
 Going further, sometimes different sources of information can be used when aggregating to a particular spatial unit. This is most easily shown with the subcellular datasets from the Vizgen MERSCOPE platform which provide both feature polygon information for multiple confocal planes within a tissue. The aggregated information produced then could be drawn from different z-planes or combinations thereof. Giotto tracks this provenance information for each set of aggregated data.
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 expr_mat <- getExpression(vizmini, 
                           spat_unit = "aggregate")
 
@@ -188,7 +188,7 @@ constructors
 `createGiottoLargeImage()`
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 coords <- data.table(
   sdimx = c(1,2,3),
   sdimy = c(1,2,3),
@@ -204,7 +204,7 @@ st <- createSpatLocsObj(name = "test",
 There are non numeric or integer columns for the spatial location input at column position(s): 3 The first non-numeric column will be considered as a cell ID to test for consistency with the expression matrix. Other non numeric columns will be removed
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 print(st)
 ```
 
@@ -222,7 +222,7 @@ readers
 `readNearestNetData()`
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 st2 <- readSpatLocsData(list(cell2 = list(test1 = coords,
                                          test2 = coords)))
 ```
@@ -232,7 +232,7 @@ There are non numeric or integer columns for the spatial location input at colum
 There are non numeric or integer columns for the spatial location input at column position(s): 3. The first non-numeric column will be considered as a cell ID to test for consistency with the expression matrix. Other non numeric columns will be removed
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 st2
 ```
 
@@ -260,7 +260,7 @@ setters
 
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 expval <- getExpression(vizmini)
 
 expval
@@ -271,7 +271,7 @@ expval
 `spatUnit()`, `featType()`, and `prov()` are replacement functions for tagged spatial unit, feature type, and provenance information respectively.
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 # spat_unit
 spatUnit(expval) <- "new_spat"
 
@@ -279,7 +279,7 @@ spatUnit(expval)
 ```
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 # feat_type
 featType(expval) <- "new_feat"
 
@@ -287,7 +287,7 @@ featType(expval)
 ```
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 # provenance
 prov(expval) <- "cell"
 
@@ -299,13 +299,13 @@ prov(expval)
 The `spat_unit`, `feat_type`, and `name` params no longer need to be given when setting an S4 subobject with tagged information into a `giottoObject`. However, if input is given to the `set` function parameters then it is prioritized over the tagged information and the tagged information is updated.
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 # set exprObj to tagged nesting location
 vizmini <- setExpression(vizmini, 
                          expval)
 ```
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 list_expression(vizmini)
 ```
 
@@ -319,24 +319,24 @@ Giotto"s S4 subobjects each wrap one main data object. The empty `[]` and `[]<-`
 In this way, the S4 subobjects can be used in contexts that the wrapped objects could be.
 
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 st <- getSpatialLocations(vizmini)
 
 class(st)
 ```
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 # With empty brackets
 class(st[])
 ```
 
 **Setting information**
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 st
 ```
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 st[] <- coords
 
 st
@@ -344,6 +344,6 @@ st
 
 ## Session Info
 
-```{r, eval=TRUE}
+```{r,eval=FALSE}
 sessionInfo()
 ```
