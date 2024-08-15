@@ -49,7 +49,6 @@ if(!genv_exists){
 
 ```{r, eval=FALSE}
 library(Giotto)
-library(GiottoData)
 
 # Specify path from which data may be retrieved/stored
 data_path <- "/path/to/data/"
@@ -63,9 +62,9 @@ results_folder <- "/path/to/results/"
 python_path <- NULL # alternatively, "/local/python/path/python" if desired.
 
 # Get the dataset
-getSpatialDataset(dataset = "merfish_preoptic", 
-                  directory = data_path, 
-                  method = "wget")
+GiottoData::getSpatialDataset(dataset = "merfish_preoptic", 
+                              directory = data_path, 
+                              method = "wget")
 ```
 
 ```{r, eval=FALSE}
@@ -129,7 +128,9 @@ spatPlot(gobject = testobj,
          point_size = 1.5)
 ```
 
-![](images/visualizations/unnamed-chunk-3-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/0-spatPlot2D.png")
+```
 
 In 3D:
 
@@ -139,7 +140,9 @@ spatPlot3D(gobject = testobj,
            axis_scale = "real")
 ```
 
-![](images/visualizations/newplot.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/newplot.png")
+```
 
 # Create and Visualize Clusters
 
@@ -165,8 +168,9 @@ plotUMAP_2D(gobject = testobj,
             point_size = 1.5) 
 ```
 
-![](images/visualizations/unnamed-chunk-5-1.png)
-
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/2-UMAP_2D.png")
+```
 
 ```{r, eval=FALSE}
 # Plot UMAP 3D
@@ -174,7 +178,9 @@ plotUMAP_3D(gobject = testobj,
             point_size = 1.5) 
 ```
 
-![](images/visualizations/newplot1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/newplot1.png")
+```
 
 Now, the data may be clustered. Create a nearest network, and then create Leiden clusters. The clusters may be visualized in 2D or 3D, as well as upon the UMAP and within the tissue.
 
@@ -200,7 +206,9 @@ plotUMAP_3D(gobject = testobj,
             save_param = list(save_name = "leiden_0.25.200_UMAP_3D"))
 ```
 
-![](images/visualizations/newplot2.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/newplot2.png")
+```
 
 Visualize Leiden clusters within the tissue by creating a Spatial Plot, grouping by layer_ID.
 
@@ -213,7 +221,9 @@ spatPlot2D(gobject = testobj,
            group_by_subset = c(260, 160, 60, -40, -140, -240))
 ```
 
-![](images/visualizations/unnamed-chunk-8-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/4-spatPlot2D.png")
+```
 
 Visualize expression levels within the tissue by creating a Spatial Plot, grouping by layer_ID, and specifying *cell_color* as the number of features detected per cell.
 
@@ -228,7 +238,9 @@ spatPlot2D(gobject = testobj,
            group_by_subset = c(260, 160, 60, -40, -140, -240))
 ```
 
-![](images/visualizations/unnamed-chunk-9-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/5-spatPlot2D.png")
+```
 
 # Compare Clusters
 
@@ -240,7 +252,9 @@ showClusterHeatmap(gobject = testobj,
                    save_plot = TRUE)
 ```
 
-![](images/visualizations/unnamed-chunk-10-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/6-showClusterHeatmap.png")
+```
 
 We can plot a dendogram to explore cluster similarity:
 
@@ -251,19 +265,21 @@ showClusterDendrogram(testobj,
                       cluster_column = "leiden_0.25.200")
 ```
  
-![](images/visualizations/unnamed-chunk-11-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/7-showClusterDendrogram.png")
+```
 
 # Visualize Cell markers_gini
 
 Marker features may be identified by calling **findmarkers_gini_one_vs_all**. This function detects differentially expressed features by comparing a single cluster to all others. Currently, three methods are supported: "*scran*", "*gini*", and "*mast*". Here, the "*gini*" method is employed; details on the gini method may be found [here](../docs/reference/findGinimarkers_gini.html).
 
 ```{r, eval=FALSE}
-markers_gini <- findmarkers_gini_one_vs_all(gobject = testobj,
-                                            method = "gini",
-                                            expression_values = "normalized",
-                                            cluster_column = "leiden_0.25.200",
-                                            min_feats = 1, 
-                                            rank_score = 2)
+markers_gini <- findMarkers_one_vs_all(gobject = testobj,
+                                       method = "gini",
+                                       expression_values = "normalized",
+                                       cluster_column = "leiden_0.25.200",
+                                       min_feats = 1, 
+                                       rank_score = 2)
 ```
 
 ```{r, eval=FALSE}
@@ -279,7 +295,9 @@ violinPlot(testobj,
            strip_position = "right")
 ```
 
-![](images/visualizations/unnamed-chunk-13-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/8-violinPlot.png")
+```
 
 Create a heatmap of top gini genes by cluster:
 
@@ -290,7 +308,9 @@ plotMetaDataHeatmap(testobj,
                     selected_feats = topgenes_gini)
 ```
 
-![](images/visualizations/unnamed-chunk-14-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/9-plotMetaDataHeatmap.png")
+```
 
 # Visualize Cell Types in Tissue
 
@@ -306,7 +326,9 @@ plotUMAP_3D(testobj,
             save_param = list(save_name = "Original_Cell_Types_UMAP_3D"))
 ```
 
-![](images/visualizations/newplot3.png)
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("images/visualizations/newplot3.png")
+```
 
 Manually assign cell types to clusters via inspection of UMAP plots. Specifically, the UMAP plots saved as *"leiden_0.25.200_UMAP3D"* and *"Original_Cell_Types_UMAP3D"* are being compared for assignment.
 
@@ -316,9 +338,12 @@ cluster_range <- unique(testobj@cell_metadata$cell$rna$leiden_0.25.200)
 
 # Note that cell types were condensed (i.e. "Endothelial 1", "Endothelial 2", ... were
 # combined into one cell type "Endothelial")
-clusters_cell_types <- c("Inhibitory", "Excitatory", "Inhibitory", "Astrocyte", "OD Mature", 
-                   "Endothelial", "Microglia", "OD Mature", "OD Immature", "Astrocyte",
-                   "Ependymal", "Pericytes", "Ambiguous", "Microglia", "Inhibitory", "Inhibitory")
+clusters_cell_types <- c("Inhibitory", "Excitatory", "Inhibitory", 
+                         "Astrocyte", "OD Mature", 
+                         "Endothelial", "Microglia", "OD Mature", 
+                         "OD Immature", "Astrocyte",
+                         "Ependymal", "Pericytes", "Ambiguous", "Microglia", 
+                         "Inhibitory", "Inhibitory")
 
 names(clusters_cell_types) <- as.character(sort(cluster_range))
 
@@ -345,7 +370,9 @@ plotUMAP_3D(testobj,
             save_param = list(save_name = "clusters_cell_types_typing_UMAP_3D"))
 ```
 
-![](images/visualizations/newplot4.png)
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("images/visualizations/newplot4.png")
+```
 
 Now that each Leiden cluster has an associated cell type, cell types may be viewed in tissue in 2D and in 3D within a Spatial Plot by specifying the *cell_color* parameter as the name of the annotation, "cell_types".
 
@@ -359,7 +386,9 @@ spatPlot2D(gobject = testobj,
            group_by_subset = c(seq(260, -290, -100)))
 ```
 
-![](images/visualizations/unnamed-chunk-17-1.png)
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("images/visualizations/10-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot3D(testobj,
@@ -372,7 +401,9 @@ spatPlot3D(testobj,
            cell_color_code = giotto_colors)
 ```
 
-![](images/visualizations/newplot5.png)
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("images/visualizations/newplot5.png")
+```
 
 The plots may be subset by cell type in 2D and 3D.
 
@@ -388,7 +419,9 @@ spatPlot2D(gobject = testobj,
            group_by_subset = c(seq(260, -290, -100)))
 ```
 
-![](images/visualizations/unnamed-chunk-19-1.png)
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("images/visualizations/12-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot3D(testobj,
@@ -403,7 +436,9 @@ spatPlot3D(testobj,
            show_other_cells = FALSE)
 ```
 
-![](images/visualizations/newplot6.png)
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("images/visualizations/newplot6.png")
+```
 
 # Visualize Cell Networks
 
@@ -421,7 +456,9 @@ plotStatDelaunayNetwork(gobject= testobj,
                         save_plot = FALSE)
 ```
 
-![](images/visualizations/unnamed-chunk-21-1.png)
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("images/visualizations/delaunay_network.png")
+```
 
 ```{r, eval=FALSE}
 # Create Spatial Network using Delaunay geometry
@@ -450,8 +487,8 @@ testobj <- createSpatialNetwork(gobject = testobj,
 
 # Now, visualize the different spatial networks in one layer of the dataset
 # Here layer 260 is selected, and only high expressing cells are included
-cell_metadata = getCellMetadata(testobj,
-                                output = "data.table")
+cell_metadata <- getCellMetadata(testobj,
+                                 output = "data.table")
 
 highexp_ids <- cell_metadata[layer_ID == 260][total_expr >= 100]$cell_ID
 
@@ -477,7 +514,9 @@ spatPlot(gobject = subtestobj,
          save_param = list(save_name = "Delaunay_network_spatPlot"))
 ```
 
-![](images/visualizations/unnamed-chunk-21-3.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/Delaunay_network_spatPlot.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot(gobject = subtestobj, 
@@ -489,7 +528,9 @@ spatPlot(gobject = subtestobj,
          save_param = list(save_name = "spatial_network_spatPlot"))
 ```
 
-![](images/visualizations/unnamed-chunk-22-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/spatial_network_spatPlot.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot(gobject = subtestobj, 
@@ -501,7 +542,9 @@ spatPlot(gobject = subtestobj,
          save_param = list(save_name = "large_network_spatPlot"))
 ```
 
-![](images/visualizations/unnamed-chunk-23-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/large_network_spatPlot.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot(gobject = subtestobj, 
@@ -513,7 +556,9 @@ spatPlot(gobject = subtestobj,
          save_param = list(save_name = "distance_network_spatPlot"))
 ```
 
-![](images/visualizations/unnamed-chunk-24-1.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visualizations/distance_network_spatPlot.png")
+```
 
 # Session Info
 
@@ -522,59 +567,67 @@ sessionInfo()
 ```
 
 ```{r, eval=FALSE}
-    R version 4.2.2 (2022-10-31 ucrt)
-    Platform: x86_64-w64-mingw32/x64 (64-bit)
-    Running under: Windows 10 x64 (build 22621)
+R version 4.4.0 (2024-04-24)
+Platform: x86_64-apple-darwin20
+Running under: macOS Sonoma 14.5
 
-    Matrix products: default
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
-    locale:
-    [1] LC_COLLATE=English_United States.utf8 
-    [2] LC_CTYPE=English_United States.utf8   
-    [3] LC_MONETARY=English_United States.utf8
-    [4] LC_NUMERIC=C                          
-    [5] LC_TIME=English_United States.utf8    
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
-    attached base packages:
-    [1] stats     graphics  grDevices utils     datasets  methods   base     
+time zone: America/New_York
+tzcode source: internal
 
-    other attached packages:
-    [1] GiottoData_0.2.1 Giotto_3.2.1    
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
 
-    loaded via a namespace (and not attached):
-      [1] matrixStats_0.63.0    RcppAnnoy_0.0.20      doParallel_1.0.17    
-      [4] RColorBrewer_1.1-3    httr_1.4.5            rprojroot_2.0.3      
-      [7] tools_4.2.2           utf8_1.2.3            R6_2.5.1             
-     [10] irlba_2.3.5.1         uwot_0.1.14           lazyeval_0.2.2       
-     [13] BiocGenerics_0.44.0   colorspace_2.1-0      GetoptLong_1.0.5     
-     [16] withr_2.5.0           tidyselect_1.2.0      compiler_4.2.2       
-     [19] progressr_0.13.0      textshaping_0.3.6     cli_3.4.1            
-     [22] ggdendro_0.1.23       DelayedArray_0.24.0   plotly_4.10.1        
-     [25] labeling_0.4.2        scales_1.2.1          rappdirs_0.3.3       
-     [28] systemfonts_1.0.4     digest_0.6.30         dbscan_1.1-11        
-     [31] rmarkdown_2.21        R.utils_2.12.2        pkgconfig_2.0.3      
-     [34] htmltools_0.5.4       MatrixGenerics_1.10.0 fastmap_1.1.0        
-     [37] htmlwidgets_1.6.2     rlang_1.1.0           GlobalOptions_0.1.2  
-     [40] rstudioapi_0.14       shape_1.4.6           farver_2.1.1         
-     [43] generics_0.1.3        jsonlite_1.8.3        crosstalk_1.2.0      
-     [46] BiocParallel_1.32.6   dplyr_1.1.1           R.oo_1.25.0          
-     [49] magrittr_2.0.3        BiocSingular_1.14.0   Matrix_1.5-1         
-     [52] Rcpp_1.0.10           munsell_0.5.0         S4Vectors_0.36.2     
-     [55] fansi_1.0.4           abind_1.4-5           reticulate_1.26      
-     [58] lifecycle_1.0.3       R.methodsS3_1.8.2     terra_1.7-18         
-     [61] yaml_2.3.7            MASS_7.3-58.1         grid_4.2.2           
-     [64] parallel_4.2.2        crayon_1.5.2          lattice_0.20-45      
-     [67] cowplot_1.1.1         beachmat_2.14.0       circlize_0.4.15      
-     [70] magick_2.7.4          knitr_1.42            ComplexHeatmap_2.14.0
-     [73] pillar_1.9.0          igraph_1.4.1          rjson_0.2.21         
-     [76] codetools_0.2-18      ScaledMatrix_1.6.0    stats4_4.2.2         
-     [79] magic_1.6-1           glue_1.6.2            evaluate_0.20        
-     [82] data.table_1.14.6     png_0.1-7             vctrs_0.6.1          
-     [85] foreach_1.5.2         gtable_0.3.3          purrr_1.0.1          
-     [88] tidyr_1.3.0           clue_0.3-63           ggplot2_3.4.1        
-     [91] xfun_0.38             rsvd_1.0.5            ragg_1.2.4           
-     [94] viridisLite_0.4.1     geometry_0.4.7        tibble_3.2.1         
-     [97] iterators_1.0.14      IRanges_2.32.0        cluster_2.1.4        
-    [100] ellipsis_0.3.2        here_1.0.1           
+other attached packages:
+[1] Giotto_4.1.0      GiottoClass_0.3.4
 
+loaded via a namespace (and not attached):
+  [1] RColorBrewer_1.1-3          ggdendro_0.2.0              rstudioapi_0.16.0          
+  [4] jsonlite_1.8.8              shape_1.4.6.1               magrittr_2.0.3             
+  [7] magick_2.8.4                farver_2.1.2                rmarkdown_2.27             
+ [10] GlobalOptions_0.1.2         zlibbioc_1.50.0             ragg_1.3.2                 
+ [13] vctrs_0.6.5                 Cairo_1.6-2                 GiottoUtils_0.1.10         
+ [16] terra_1.7-78                htmltools_0.5.8.1           S4Arrays_1.4.1             
+ [19] SparseArray_1.4.8           htmlwidgets_1.6.4           plyr_1.8.9                 
+ [22] plotly_4.10.4               igraph_2.0.3                lifecycle_1.0.4            
+ [25] iterators_1.0.14            pkgconfig_2.0.3             rsvd_1.0.5                 
+ [28] Matrix_1.7-0                R6_2.5.1                    fastmap_1.2.0              
+ [31] GenomeInfoDbData_1.2.12     MatrixGenerics_1.16.0       magic_1.6-1                
+ [34] clue_0.3-65                 digest_0.6.36               colorspace_2.1-1           
+ [37] S4Vectors_0.42.1            irlba_2.3.5.1               textshaping_0.4.0          
+ [40] crosstalk_1.2.1             GenomicRanges_1.56.1        beachmat_2.20.0            
+ [43] labeling_0.4.3              progressr_0.14.0            fansi_1.0.6                
+ [46] httr_1.4.7                  abind_1.4-5                 compiler_4.4.0             
+ [49] withr_3.0.0                 doParallel_1.0.17           backports_1.5.0            
+ [52] BiocParallel_1.38.0         R.utils_2.12.3              MASS_7.3-61                
+ [55] DelayedArray_0.30.1         rjson_0.2.21                gtools_3.9.5               
+ [58] GiottoVisuals_0.2.4         tools_4.4.0                 R.oo_1.26.0                
+ [61] glue_1.7.0                  dbscan_1.2-0                grid_4.4.0                 
+ [64] checkmate_2.3.2             cluster_2.1.6               reshape2_1.4.4             
+ [67] generics_0.1.3              gtable_0.3.5                R.methodsS3_1.8.2          
+ [70] tidyr_1.3.1                 data.table_1.15.4           BiocSingular_1.20.0        
+ [73] ScaledMatrix_1.12.0         sp_2.1-4                    utf8_1.2.4                 
+ [76] XVector_0.44.0              BiocGenerics_0.50.0         RcppAnnoy_0.0.22           
+ [79] ggrepel_0.9.5               foreach_1.5.2               pillar_1.9.0               
+ [82] stringr_1.5.1               circlize_0.4.16             dplyr_1.1.4                
+ [85] lattice_0.22-6              deldir_2.0-4                tidyselect_1.2.1           
+ [88] ComplexHeatmap_2.20.0       SingleCellExperiment_1.26.0 knitr_1.48                 
+ [91] IRanges_2.38.1              SummarizedExperiment_1.34.0 scattermore_1.2            
+ [94] stats4_4.4.0                xfun_0.46                   Biobase_2.64.0             
+ [97] matrixStats_1.3.0           stringi_1.8.4               UCSC.utils_1.0.0           
+[100] lazyeval_0.2.2              yaml_2.3.10                 evaluate_0.24.0            
+[103] codetools_0.2-20            GiottoData_0.2.13           tibble_3.2.1               
+[106] colorRamp2_0.1.0            cli_3.6.3                   uwot_0.2.2                 
+[109] geometry_0.4.7              reticulate_1.38.0           systemfonts_1.1.0          
+[112] munsell_0.5.1               Rcpp_1.0.13                 GenomeInfoDb_1.40.1        
+[115] png_0.1-8                   parallel_4.4.0              ggplot2_3.5.1              
+[118] SpatialExperiment_1.14.0    viridisLite_0.4.2           scales_1.3.0               
+[121] purrr_1.0.2                 crayon_1.5.3                GetoptLong_1.0.5           
+[124] rlang_1.1.4                 cowplot_1.1.3 
 ```
