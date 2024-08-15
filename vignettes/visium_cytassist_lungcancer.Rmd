@@ -85,7 +85,7 @@ spatPlot(gobject = visium_lungcancer,
          point_alpha = 0.7)
 ```
   
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/0-spatPlot2D.png")
 ```
   
@@ -131,7 +131,7 @@ spatPlot2D(gobject = visium_lungcancer,
            point_alpha = 0.7)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/1-spatPlot2D.png")
 ```
 
@@ -143,7 +143,7 @@ spatPlot2D(gobject = visium_lungcancer,
            color_as_factor = FALSE)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/2-spatPlot2D.png")
 ```
 
@@ -165,7 +165,7 @@ screePlot(visium_lungcancer,
           ncp = 30)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/3-screePlot.png")
 ```
 
@@ -173,7 +173,7 @@ knitr::include_graphics("images/visium_cytassist_lungcancer/3-screePlot.png")
 plotPCA(gobject = visium_lungcancer)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/4-PCA.png")
 ```
 
@@ -186,7 +186,7 @@ visium_lungcancer <- runUMAP(visium_lungcancer,
 plotUMAP(gobject = visium_lungcancer)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/5-UMAP.png")
 ```
 
@@ -197,7 +197,7 @@ visium_lungcancer <- runtSNE(visium_lungcancer,
 plotTSNE(gobject = visium_lungcancer)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/6-tSNE.png")
 ```
 
@@ -225,7 +225,7 @@ plotUMAP(gobject = visium_lungcancer,
          point_size = 2)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/7-UMAP.png")
 ```
 
@@ -237,7 +237,7 @@ plotTSNE(gobject = visium_lungcancer,
          point_size = 2)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/8-tSNE.png")
 ```
 
@@ -249,7 +249,7 @@ spatDimPlot(gobject = visium_lungcancer,
             spat_point_size = 2)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/9-spatDimPlot2D.png")
 ```
 
@@ -263,7 +263,7 @@ spatDimPlot(gobject = visium_lungcancer,
             spat_point_size = 2)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/10-spatDimPlot2D.png")
 ```
 
@@ -290,7 +290,7 @@ violinPlot(visium_lungcancer,
            strip_position = "right")
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/11-violinPlot.png")
 ```
 
@@ -303,7 +303,7 @@ plotMetaDataHeatmap(visium_lungcancer,
                     y_text_size = 10)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/12-plotMetaDataHeatmap.png")
 ```
 
@@ -316,7 +316,7 @@ dimFeatPlot2D(visium_lungcancer,
               point_size = 1)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/13-dimFeatPlot2D.png")
 ```
 
@@ -338,7 +338,7 @@ violinPlot(visium_lungcancer,
            strip_position = "right")
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/14-violinPlot.png")
 ```
 
@@ -351,7 +351,7 @@ plotMetaDataHeatmap(visium_lungcancer,
                     y_text_size = 10)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/15-plotMetaDataHeatmap.png")
 ```
 
@@ -364,7 +364,7 @@ dimFeatPlot2D(visium_lungcancer,
               point_size = 1)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/visium_cytassist_lungcancer/16-dimFeatPlot2D.png")
 ```
 

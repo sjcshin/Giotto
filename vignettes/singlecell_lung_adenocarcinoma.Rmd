@@ -120,7 +120,7 @@ giotto_SC <- addCellMetadata(giotto_SC,
 giotto_SC <- filterGiotto(gobject = giotto_SC,
                           expression_threshold = 1,
                           feat_det_in_min_cells = 10,
-                          min_det_feats_per_cell = 50,
+                          min_det_feats_per_cell = 500,
                           expression_values = "raw",
                           verbose = TRUE)
 
@@ -129,8 +129,7 @@ giotto_SC <- normalizeGiotto(gobject = giotto_SC,
                              scalefactor = 6000)
 
 ## add gene & cell statistics
-giotto_SC <- addStatistics(gobject = giotto_SC,
-                           expression_values = "raw")
+giotto_SC <- addStatistics(gobject = giotto_SC)
 ```
 
 # Dimension Reduction
@@ -147,7 +146,7 @@ screePlot(giotto_SC,
           ncp = 30)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/singlecell_lung_adenocarcinoma/0-screePlot.png")
 ```
 
@@ -177,7 +176,7 @@ plotUMAP(gobject = giotto_SC,
          point_size = 1.5)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/singlecell_lung_adenocarcinoma/1-UMAP.png")
 ```
 
@@ -200,7 +199,7 @@ plotMetaDataHeatmap(giotto_SC,
                     show_values = "zscores_rescaled")
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
 knitr::include_graphics("images/singlecell_lung_adenocarcinoma/2-plotMetaDataHeatmap.png")
 ```
 
@@ -213,7 +212,7 @@ dimFeatPlot2D(giotto_SC,
               cow_n_col = 2)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
 knitr::include_graphics("images/singlecell_lung_adenocarcinoma/3-dimFeatPlot2D.png")
 ```
 
@@ -327,47 +326,46 @@ Heatmap(heatmap_matrix,
 dev.off()
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
 knitr::include_graphics("images/singlecell_lung_adenocarcinoma/4_heatmap_all_clusters_cell_types.png")
 ```
 
 ``` {r, eval=FALSE}
-lung_labels <- c("T_cells",#1
-               "macrophages",#2
-               "housekeeping",#3
-               "carcinoma_cells",#4
+lung_labels <- c("carcinoma_cells",#1
+               "housekeeping",#2
+               "T_cells",#3
+               "macrophages",#4
                "T_cells",#5
-               "macrophages",#6
-               "epithelial",#7
-               "carcinoma_cells",#8
-               "B_cells",#9
-               "T_cells",#10
-               "carcinoma_cells",#11
-               "housekeeping",#12
+               "housekeeping",#6
+               "T_cells",#7
+               "epithelial",#8
+               "macrophages",#9
+               "housekeeping",#10
+               "housekeeping",#11
+               "carcinoma_cells",#12
                "housekeeping",#13
-               "housekeeping",#14
+               "B_cells",#14
                "neutrophils",#15
-               "carcinoma_cells",#16
-               "neutrophils",#17
-               "carcinoma_cells",#18
-               "housekeeping",#19
-               "pDCs",#20
+               "pDCs",#16
+               "housekeeping",#17
+               "housekeeping",#18
+               "Mast",#19
+               "epithelial",#20
                "housekeeping",#21
-               "Mast",#22
+               "B_cells",#22
                "T_cells",#23
-               "macrophages",#24
+               "housekeeping",#24
                "macrophages",#25
-               "macrophages",#26
+               "housekeeping",#26
                "housekeeping",#27
-               "carcinoma_cells",#28
-               "carcinoma_cells",#29
-               "epithelial", #30
+               "housekeeping",#28
+               "housekeeping",#29
+               "B_cells", #30
                "dendritic", #31
-               "dendritic", #32
-               "neutrophils" #33
+               "neutrophils" #32
 )
 
-names(lung_labels) <- 1:33
+names(lung_labels) <- 1:32
 
 giotto_SC <- annotateGiotto(gobject = giotto_SC, 
                             annotation_vector = lung_labels ,
@@ -381,7 +379,7 @@ dimPlot2D(gobject = giotto_SC,
           point_size = 1.5)
 ```
 
-```{r, echo=FALSE, out.width="50%"}
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
 knitr::include_graphics("images/singlecell_lung_adenocarcinoma/4-dimPlot2D.png")
 ```
 
