@@ -107,7 +107,9 @@ spatPlot2D(gobject = visium,
            point_alpha = 0.7)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/0-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/0-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # Filtering, normalization, and statistics
@@ -133,7 +135,9 @@ spatPlot2D(gobject = visium,
            color_as_factor = FALSE)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/1-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/1-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 ## Protein feature 
@@ -165,7 +169,9 @@ spatPlot2D(gobject = visium,
            color_as_factor = FALSE)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/2-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/2-spatPlot2D.png")
+```
 
 # Dimension Reduction
 
@@ -173,8 +179,6 @@ spatPlot2D(gobject = visium,
 # Identify highly variable features (HVF)
 visium <- calculateHVF(gobject = visium)
 ```
-
-![](images/visium_cytassist_human_glioblastoma/3-HVFplot.png)
 
 ```{r, eval=FALSE}
 # PCA
@@ -185,14 +189,18 @@ visium <- runPCA(gobject = visium)
 screePlot(visium, ncp = 30)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/4-screePlot.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/3-screePlot.png")
+```
 
 ```{r, eval=FALSE}
 ### Visualize RNA PCA
 plotPCA(gobject = visium)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/5-PCA.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/4-PCA.png")
+```
 
 ```{r, eval=FALSE}
 ## Protein
@@ -206,7 +214,9 @@ screePlot(visium,
           ncp = 30)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/6-screePlot.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/5-screePlot.png")
+```
 
 ```{r, eval=FALSE}
 ### Visualize Protein PCA
@@ -215,7 +225,9 @@ plotPCA(gobject = visium,
         feat_type = "protein")
 ```
 
-![](images/visium_cytassist_human_glioblastoma/7-PCA.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/6-PCA.png")
+```
 
 # Clustering
 
@@ -261,7 +273,9 @@ plotUMAP(gobject = visium,
          point_size = 2)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/8-UMAP.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/7-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 ## Protein feature 
@@ -278,7 +292,9 @@ plotUMAP(gobject = visium,
          point_size = 2)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/9-UMAP.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/8-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 # Visualize spatial plot
@@ -290,7 +306,9 @@ spatPlot2D(gobject = visium,
            point_size = 2)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/10-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/9-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 ## Protein feature
@@ -302,7 +320,9 @@ spatPlot2D(gobject = visium,
            point_size = 2)
 ```
 
-![](images/visium_cytassist_human_glioblastoma/11-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/10-spatPlot2D.png")
+```
 
 # Multi-omics integration
 
@@ -324,7 +344,6 @@ visium <- createNearestNetwork(gobject = visium,
                                type = "kNN",
                                dimensions_to_use = 1:10,
                                k = 20)
-
 
 # Run WNN
 visium <- runWNN(visium,
@@ -369,7 +388,9 @@ plotUMAP(gobject = visium,
          axis_text = 10 )
 ```
 
-![](images/visium_cytassist_human_glioblastoma/12-UMAP.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/11-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 # Visualize spatial plot with integrated clusters
@@ -382,20 +403,24 @@ spatPlot2D(visium,
            title = "Integrated Leiden clustering")
 ```
 
-![](images/visium_cytassist_human_glioblastoma/13-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%"}
+knitr::include_graphics("images/visium_cytassist_human_glioblastoma/12-spatPlot2D.png")
+```
 
 # Session Info
 
 ```{r, eval=FALSE}
 sessionInfo()
+```
 
-R version 4.3.2 (2023-10-31)
-Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.1.2
+```{r, eval=FALSE}
+R version 4.4.0 (2024-04-24)
+Platform: x86_64-apple-darwin20
+Running under: macOS Sonoma 14.5
 
 Matrix products: default
 BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -406,11 +431,46 @@ tzcode source: internal
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] Giotto_4.1.0      GiottoClass_0.3.4
+
 loaded via a namespace (and not attached):
- [1] vctrs_0.6.5       cli_3.6.2         knitr_1.45        rlang_1.1.3       xfun_0.41         stringi_1.8.3    
- [7] purrr_1.0.2       pkgload_1.3.4     promises_1.2.1    shiny_1.8.0       xtable_1.8-4      glue_1.7.0       
-[13] htmltools_0.5.7   httpuv_1.6.13     pkgbuild_1.4.3    rmarkdown_2.25    evaluate_0.23     ellipsis_0.3.2   
-[19] fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4   memoise_2.0.1     stringr_1.5.1     compiler_4.3.2   
-[25] miniUI_0.1.1.1    sessioninfo_1.2.2 fs_1.6.3          htmlwidgets_1.6.4 Rcpp_1.0.12       urlchecker_1.0.1 
-[31] rstudioapi_0.15.0 later_1.3.2       digest_0.6.34     R6_2.5.1          usethis_2.2.2     magrittr_2.0.3   
-[37] tools_4.3.2       mime_0.12         devtools_2.4.5    profvis_0.3.8     remotes_2.4.2.1   cachem_1.0.8    
+  [1] colorRamp2_0.1.0            deldir_2.0-4                rlang_1.1.4                
+  [4] magrittr_2.0.3              RcppAnnoy_0.0.22            GiottoUtils_0.1.10         
+  [7] matrixStats_1.3.0           compiler_4.4.0              png_0.1-8                  
+ [10] systemfonts_1.1.0           vctrs_0.6.5                 reshape2_1.4.4             
+ [13] stringr_1.5.1               pkgconfig_2.0.3             SpatialExperiment_1.14.0   
+ [16] crayon_1.5.3                fastmap_1.2.0               backports_1.5.0            
+ [19] magick_2.8.4                XVector_0.44.0              labeling_0.4.3             
+ [22] utf8_1.2.4                  rmarkdown_2.27              UCSC.utils_1.0.0           
+ [25] ragg_1.3.2                  purrr_1.0.2                 xfun_0.46                  
+ [28] beachmat_2.20.0             zlibbioc_1.50.0             GenomeInfoDb_1.40.1        
+ [31] jsonlite_1.8.8              DelayedArray_0.30.1         BiocParallel_1.38.0        
+ [34] terra_1.7-78                irlba_2.3.5.1               parallel_4.4.0             
+ [37] R6_2.5.1                    stringi_1.8.4               RColorBrewer_1.1-3         
+ [40] reticulate_1.38.0           parallelly_1.38.0           GenomicRanges_1.56.1       
+ [43] scattermore_1.2             Rcpp_1.0.13                 SummarizedExperiment_1.34.0
+ [46] knitr_1.48                  future.apply_1.11.2         R.utils_2.12.3             
+ [49] IRanges_2.38.1              Matrix_1.7-0                igraph_2.0.3               
+ [52] tidyselect_1.2.1            rstudioapi_0.16.0           abind_1.4-5                
+ [55] yaml_2.3.10                 codetools_0.2-20            listenv_0.9.1              
+ [58] lattice_0.22-6              tibble_3.2.1                plyr_1.8.9                 
+ [61] Biobase_2.64.0              withr_3.0.0                 evaluate_0.24.0            
+ [64] future_1.34.0               pillar_1.9.0                MatrixGenerics_1.16.0      
+ [67] checkmate_2.3.2             stats4_4.4.0                plotly_4.10.4              
+ [70] generics_0.1.3              dbscan_1.2-0                sp_2.1-4                   
+ [73] S4Vectors_0.42.1            ggplot2_3.5.1               munsell_0.5.1              
+ [76] scales_1.3.0                globals_0.16.3              gtools_3.9.5               
+ [79] glue_1.7.0                  lazyeval_0.2.2              tools_4.4.0                
+ [82] GiottoVisuals_0.2.4         data.table_1.15.4           ScaledMatrix_1.12.0        
+ [85] cowplot_1.1.3               grid_4.4.0                  tidyr_1.3.1                
+ [88] colorspace_2.1-1            SingleCellExperiment_1.26.0 GenomeInfoDbData_1.2.12    
+ [91] BiocSingular_1.20.0         rsvd_1.0.5                  cli_3.6.3                  
+ [94] textshaping_0.4.0           fansi_1.0.6                 S4Arrays_1.4.1             
+ [97] viridisLite_0.4.2           dplyr_1.1.4                 uwot_0.2.2                 
+[100] gtable_0.3.5                R.methodsS3_1.8.2           digest_0.6.36              
+[103] BiocGenerics_0.50.0         SparseArray_1.4.8           ggrepel_0.9.5              
+[106] rjson_0.2.21                htmlwidgets_1.6.4           farver_2.1.2               
+[109] htmltools_0.5.8.1           R.oo_1.26.0                 lifecycle_1.0.4            
+[112] httr_1.4.7 
+```
