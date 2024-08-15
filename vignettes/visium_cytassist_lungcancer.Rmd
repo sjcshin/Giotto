@@ -17,8 +17,10 @@ vignette: >
 The human lung cancer (FFPE) dataset was obtained from 10x Genomics using their CytAssist Visium technology that has been recently developed to allow users to perform standard histology workflows on two standard glass slides before transferring the transcriptional probes on the two-area capture visium slide.
   
 More information about this dataset can be found [here](https://www.10xgenomics.com/resources/datasets/human-lung-cancer-ffpe-2-standard/).
-  
-![](images/visium_cytassist_lungcancer/CytAssist_Visium_workflow.png){width="90.0%"}
+
+```{r, echo=FALSE, out.width="90%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/CytAssist_Visium_workflow.png")
+```
   
 # Start Giotto
   
@@ -83,7 +85,9 @@ spatPlot(gobject = visium_lungcancer,
          point_alpha = 0.7)
 ```
   
-![](images/visium_cytassist_lungcancer/0-spatPlot2D.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/0-spatPlot2D.png")
+```
   
 How to work with Giotto instructions that are part of your Giotto object:
   
@@ -127,7 +131,9 @@ spatPlot2D(gobject = visium_lungcancer,
            point_alpha = 0.7)
 ```
 
-![](images/visium_cytassist_lungcancer/1-spatPlot2D.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/1-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = visium_lungcancer, 
@@ -137,7 +143,9 @@ spatPlot2D(gobject = visium_lungcancer,
            color_as_factor = FALSE)
 ```
 
-![](images/visium_cytassist_lungcancer/2-spatPlot2D.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/2-spatPlot2D.png")
+```
 
 # Dimension Reduction
 
@@ -146,8 +154,6 @@ spatPlot2D(gobject = visium_lungcancer,
 ```{r, eval=FALSE}
 visium_lungcancer <- calculateHVF(gobject = visium_lungcancer)
 ```
-
-![](images/visium_cytassist_lungcancer/3-HVFplot.png){width="50.0%"}
 
 -   perform PCA
 -   identify number of significant principal components (PCs)
@@ -159,13 +165,17 @@ screePlot(visium_lungcancer,
           ncp = 30)
 ```
 
-![](images/visium_cytassist_lungcancer/4-screePlot.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/3-screePlot.png")
+```
 
 ```{r, eval=FALSE}
 plotPCA(gobject = visium_lungcancer)
 ```
 
-![](images/visium_cytassist_lungcancer/5-PCA.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/4-PCA.png")
+```
 
 -   run UMAP and/or t-SNE on PCs (or directly on matrix)
 
@@ -176,7 +186,9 @@ visium_lungcancer <- runUMAP(visium_lungcancer,
 plotUMAP(gobject = visium_lungcancer)
 ```
 
-![](images/visium_cytassist_lungcancer/6-UMAP.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/5-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 visium_lungcancer <- runtSNE(visium_lungcancer, 
@@ -185,7 +197,9 @@ visium_lungcancer <- runtSNE(visium_lungcancer,
 plotTSNE(gobject = visium_lungcancer)
 ```
 
-![](images/visium_cytassist_lungcancer/7-tSNE.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/6-tSNE.png")
+```
 
 # Clustering
 
@@ -211,7 +225,9 @@ plotUMAP(gobject = visium_lungcancer,
          point_size = 2)
 ```
 
-![](images/visium_cytassist_lungcancer/8-UMAP.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/7-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 # visualize tSNE cluster results
@@ -221,7 +237,9 @@ plotTSNE(gobject = visium_lungcancer,
          point_size = 2)
 ```
 
-![](images/visium_cytassist_lungcancer/9-tSNE.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/8-tSNE.png")
+```
 
 ```{r, eval=FALSE}
 # visualize expression and spatial results
@@ -231,7 +249,9 @@ spatDimPlot(gobject = visium_lungcancer,
             spat_point_size = 2)
 ```
 
-![](images/visium_cytassist_lungcancer/10-spatDimPlot2D.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/9-spatDimPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatDimPlot(gobject = visium_lungcancer, 
@@ -243,7 +263,9 @@ spatDimPlot(gobject = visium_lungcancer,
             spat_point_size = 2)
 ```
 
-![](images/visium_cytassist_lungcancer/11-spatDimPlot2D.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/10-spatDimPlot2D.png")
+```
 
 # Differential expression
 
@@ -268,7 +290,9 @@ violinPlot(visium_lungcancer,
            strip_position = "right")
 ```
 
-![](images/visium_cytassist_lungcancer/12-violinPlot.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/11-violinPlot.png")
+```
 
 ```{r, eval=FALSE}
 # cluster heatmap
@@ -279,7 +303,9 @@ plotMetaDataHeatmap(visium_lungcancer,
                     y_text_size = 10)
 ```
 
-![](images/visium_cytassist_lungcancer/13-plotMetaDataHeatmap.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/12-plotMetaDataHeatmap.png")
+```
 
 ```{r, eval=FALSE}
 # umap plots
@@ -290,7 +316,9 @@ dimFeatPlot2D(visium_lungcancer,
               point_size = 1)
 ```
 
-![](images/visium_cytassist_lungcancer/14-dimFeatPlot2D.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/13-dimFeatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # Cell type marker detection
@@ -310,7 +338,9 @@ violinPlot(visium_lungcancer,
            strip_position = "right")
 ```
 
-![](images/visium_cytassist_lungcancer/15-violinPlot.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/14-violinPlot.png")
+```
 
 ```{r, eval=FALSE}
 # cluster heatmap
@@ -321,7 +351,9 @@ plotMetaDataHeatmap(visium_lungcancer,
                     y_text_size = 10)
 ```
 
-![](images/visium_cytassist_lungcancer/16-plotMetaDataHeatmap.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/15-plotMetaDataHeatmap.png")
+```
 
 ```{r, eval=FALSE}
 # umap plots
@@ -330,6 +362,10 @@ dimFeatPlot2D(visium_lungcancer,
               feats = scran_markers_subclusters[, head(.SD, 1), by = "cluster"]$feats,
               cow_n_col = 3, 
               point_size = 1)
+```
+
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/visium_cytassist_lungcancer/16-dimFeatPlot2D.png")
 ```
 
 # Cell Type Enrichment

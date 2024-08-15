@@ -62,15 +62,17 @@ Load data
 ```{r, eval=FALSE}
 data_path <- "/path/to/data/"
 
-raw.data <- read.csv(paste0(data_path, "S01_datafinal.csv"), 
-                     header = TRUE, 
-                     row.names = 1)
+raw.data <- as.data.frame(
+  data.table::fread(file.path(data_path, "S01_datafinal.csv"), 
+                     header = TRUE))
+rownames(raw.data) <- raw.data$V1
+raw.data <- raw.data[-1]
 ```
 
 Load metadata
 
 ```{r, eval=FALSE}
-metadata <- read.csv(paste0(data_path, "S01_metacells.csv"),
+metadata <- read.csv(file.path(data_path, "S01_metacells.csv"),
                      row.names = 1,
                      header = TRUE)
 ```
@@ -118,7 +120,7 @@ giotto_SC <- addCellMetadata(giotto_SC,
 giotto_SC <- filterGiotto(gobject = giotto_SC,
                           expression_threshold = 1,
                           feat_det_in_min_cells = 10,
-                          min_det_feats_per_cell = 500,
+                          min_det_feats_per_cell = 50,
                           expression_values = "raw",
                           verbose = TRUE)
 
@@ -142,11 +144,12 @@ giotto_SC <- runPCA(gobject = giotto_SC,
                     cale_unit = TRUE)
 
 screePlot(giotto_SC, 
-          ncp = 30, 
-          save_param = list(save_name = "3_scree_plot"))
+          ncp = 30)
 ```
 
-![](images/singlecell_lung_adenocarcinoma/3_scree_plot.png)
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/singlecell_lung_adenocarcinoma/0-screePlot.png")
+```
 
 # Cluster
 
@@ -171,11 +174,12 @@ giotto_SC <- doLeidenCluster(gobject = giotto_SC,
 plotUMAP(gobject = giotto_SC,
          cell_color = "leiden_clus", 
          show_NN_network = TRUE, 
-         point_size = 1.5,
-         save_param = list(save_name = "4_Cluster"))
+         point_size = 1.5)
 ```
 
-![](images/singlecell_lung_adenocarcinoma/4_Cluster.png)
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/singlecell_lung_adenocarcinoma/1-UMAP.png")
+```
 
 # Differential Expression
 
@@ -193,11 +197,12 @@ plotMetaDataHeatmap(giotto_SC,
                     metadata_cols = "leiden_clus", 
                     selected_feats = topgenes_scran,
                     y_text_size = 8, 
-                    show_values = "zscores_rescaled",
-                    save_param = list(save_name = "5_metaheatmap"))
+                    show_values = "zscores_rescaled")
 ```
 
-![](images/singlecell_lung_adenocarcinoma/5_metaheatmap.png)
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/singlecell_lung_adenocarcinoma/2-plotMetaDataHeatmap.png")
+```
 
 # FeaturePlot
 
@@ -205,11 +210,12 @@ plotMetaDataHeatmap(giotto_SC,
 # Plot known marker genes across different cell types. e.g. EPCAM for epithelial cells
 dimFeatPlot2D(giotto_SC, 
               feats = c("EPCAM", "PMEL", "C1QA","COL1A1"), 
-              cow_n_col = 2, 
-              save_param = list(save_name = "6_featureplot"))
+              cow_n_col = 2)
 ```
 
-![](images/singlecell_lung_adenocarcinoma/6_featureplot.png)
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/singlecell_lung_adenocarcinoma/3-dimFeatPlot2D.png")
+```
 
 # Cell type Annotation
 
@@ -286,7 +292,7 @@ panel_fun = function(index, nm) {
 }
 
 ## heatmap z-score per leiden cluster
-png(filename = paste0(results_folder, "6_heatmap_all_clusters_cell_types.png"),
+png(filename = paste0(results_folder, "4_heatmap_all_clusters_cell_types.png"),
     width = 2000,
     height = 1500,
     res = 300)
@@ -321,44 +327,47 @@ Heatmap(heatmap_matrix,
 dev.off()
 ```
 
-![](images/singlecell_lung_adenocarcinoma/6_heatmap_all_clusters_cell_types.png)
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/singlecell_lung_adenocarcinoma/4_heatmap_all_clusters_cell_types.png")
+```
 
 ``` {r, eval=FALSE}
-lung_labels <- c("carcinoma_cells",#1
-               "epithelial",#2
-               "T_cells",#3
-               "macrophages",#4
+lung_labels <- c("T_cells",#1
+               "macrophages",#2
+               "housekeeping",#3
+               "carcinoma_cells",#4
                "T_cells",#5
-               "epithelial",#6
-               "T_cells",#7
-               "epithelial",#8
-               "macrophages",#9
-               "carcinoma_cells",#10
-               "epithelial",#11
-               "carcinoma_cells",#12
-               "carcinoma_cells",#13
-               "B_cells_PB",#14
+               "macrophages",#6
+               "epithelial",#7
+               "carcinoma_cells",#8
+               "B_cells",#9
+               "T_cells",#10
+               "carcinoma_cells",#11
+               "housekeeping",#12
+               "housekeeping",#13
+               "housekeeping",#14
                "neutrophils",#15
-               "pDCs",#16
-               "carcinoma_cells",#17
+               "carcinoma_cells",#16
+               "neutrophils",#17
                "carcinoma_cells",#18
-               "mast",#19
-               "epithelial",#20
-               "carcinoma_cells",#21
-               "B_cells",#22
+               "housekeeping",#19
+               "pDCs",#20
+               "housekeeping",#21
+               "Mast",#22
                "T_cells",#23
-               "carcinoma_cells",#24
-               "carcinoma_cells",#25
-               "epithelial",#26
-               "carcinoma_cells",#27
-               "housekeeping",#28
-               "housekeeping",#29
-               "B_cells", #30
-               "dendritic", #31,
-               "neutrophils" #32
+               "macrophages",#24
+               "macrophages",#25
+               "macrophages",#26
+               "housekeeping",#27
+               "carcinoma_cells",#28
+               "carcinoma_cells",#29
+               "epithelial", #30
+               "dendritic", #31
+               "dendritic", #32
+               "neutrophils" #33
 )
 
-names(lung_labels) <- 1:32
+names(lung_labels) <- 1:33
 
 giotto_SC <- annotateGiotto(gobject = giotto_SC, 
                             annotation_vector = lung_labels ,
@@ -369,11 +378,12 @@ dimPlot2D(gobject = giotto_SC,
           dim_reduction_name = "umap",
           cell_color = "lung_labels", 
           show_NN_network = TRUE, 
-          point_size = 1.5,
-          save_param = list(save_name = "7_Annotation"))
+          point_size = 1.5)
 ```
 
-![](images/singlecell_lung_adenocarcinoma/7_Annotation.png)
+```{r, echo=FALSE, out.width="50%"}
+knitr::include_graphics("images/singlecell_lung_adenocarcinoma/4-dimPlot2D.png")
+```
 
 # Session Info
 
@@ -382,13 +392,13 @@ sessionInfo()
 ```
 
 ```{r, eval=FALSE}
-R version 4.3.2 (2023-10-31)
-Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.2.1
+R version 4.4.0 (2024-04-24)
+Platform: x86_64-apple-darwin20
+Running under: macOS Sonoma 14.5
 
 Matrix products: default
 BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -400,50 +410,75 @@ attached base packages:
 [1] grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ComplexHeatmap_2.18.0 dplyr_1.1.4           Giotto_4.0.3          GiottoClass_0.1.3    
+[1] ComplexHeatmap_2.20.0 dplyr_1.1.4           Giotto_4.1.0         
+[4] GiottoClass_0.3.4    
 
 loaded via a namespace (and not attached):
-  [1] colorRamp2_0.1.0            bitops_1.0-7                rlang_1.1.3                
-  [4] magrittr_2.0.3              clue_0.3-65                 GetoptLong_1.0.5           
-  [7] RcppAnnoy_0.0.22            GiottoUtils_0.1.5           matrixStats_1.2.0          
- [10] compiler_4.3.2              DelayedMatrixStats_1.24.0   png_0.1-8                  
- [13] systemfonts_1.0.5           vctrs_0.6.5                 shape_1.4.6                
- [16] pkgconfig_2.0.3             SpatialExperiment_1.12.0    crayon_1.5.2               
- [19] fastmap_1.1.1               backports_1.4.1             magick_2.8.3               
- [22] XVector_0.42.0              scuttle_1.12.0              labeling_0.4.3             
- [25] utf8_1.2.4                  rmarkdown_2.25              ragg_1.2.7                 
- [28] purrr_1.0.2                 xfun_0.42                   bluster_1.12.0             
- [31] zlibbioc_1.48.0             beachmat_2.18.1             GenomeInfoDb_1.38.6        
- [34] jsonlite_1.8.8              DelayedArray_0.28.0         BiocParallel_1.36.0        
- [37] terra_1.7-71                irlba_2.3.5.1               parallel_4.3.2             
- [40] cluster_2.1.6               R6_2.5.1                    RColorBrewer_1.1-3         
- [43] limma_3.58.1                reticulate_1.35.0           parallelly_1.37.0          
- [46] GenomicRanges_1.54.1        iterators_1.0.14            Rcpp_1.0.12                
- [49] SummarizedExperiment_1.32.0 knitr_1.45                  future.apply_1.11.1        
- [52] usethis_2.2.3               IRanges_2.36.0              Matrix_1.6-5               
- [55] igraph_2.0.2                tidyselect_1.2.0            rstudioapi_0.15.0          
- [58] abind_1.4-5                 yaml_2.3.8                  doParallel_1.0.17          
- [61] codetools_0.2-19            listenv_0.9.1               lattice_0.22-5             
- [64] tibble_3.2.1                Biobase_2.62.0              withr_3.0.0                
- [67] evaluate_0.23               future_1.33.1               circlize_0.4.16            
- [70] pillar_1.9.0                MatrixGenerics_1.14.0       foreach_1.5.2              
- [73] checkmate_2.3.1             stats4_4.3.2                generics_0.1.3             
- [76] dbscan_1.1-12               RCurl_1.98-1.14             S4Vectors_0.40.2           
- [79] ggplot2_3.4.4               sparseMatrixStats_1.14.0    munsell_0.5.0              
- [82] scales_1.3.0                gtools_3.9.5                globals_0.16.2             
- [85] glue_1.7.0                  metapod_1.10.1              tools_4.3.2                
- [88] GiottoVisuals_0.1.4         BiocNeighbors_1.20.2        data.table_1.15.0          
- [91] ScaledMatrix_1.10.0         locfit_1.5-9.8              fs_1.6.3                   
- [94] scran_1.30.2                Cairo_1.6-2                 cowplot_1.1.3              
- [97] tidyr_1.3.1                 edgeR_4.0.15                colorspace_2.1-0           
-[100] SingleCellExperiment_1.24.0 GenomeInfoDbData_1.2.11     BiocSingular_1.18.0        
-[103] cli_3.6.2                   rsvd_1.0.5                  textshaping_0.3.7          
-[106] fansi_1.0.6                 S4Arrays_1.2.0              uwot_0.1.16                
-[109] gtable_0.3.4                digest_0.6.34               progressr_0.14.0           
-[112] BiocGenerics_0.48.1         dqrng_0.3.2                 SparseArray_1.2.4          
-[115] ggrepel_0.9.5               rjson_0.2.21                farver_2.1.1               
-[118] htmltools_0.5.7             lifecycle_1.0.4             GlobalOptions_0.1.2        
-[121] statmod_1.5.0
+  [1] RColorBrewer_1.1-3          shape_1.4.6.1              
+  [3] rstudioapi_0.16.0           jsonlite_1.8.8             
+  [5] magrittr_2.0.3              magick_2.8.4               
+  [7] farver_2.1.2                rmarkdown_2.27             
+  [9] GlobalOptions_0.1.2         zlibbioc_1.50.0            
+ [11] ragg_1.3.2                  vctrs_0.6.5                
+ [13] Cairo_1.6-2                 DelayedMatrixStats_1.26.0  
+ [15] GiottoUtils_0.1.10          terra_1.7-78               
+ [17] htmltools_0.5.8.1           S4Arrays_1.4.1             
+ [19] BiocNeighbors_1.22.0        SparseArray_1.4.8          
+ [21] parallelly_1.38.0           htmlwidgets_1.6.4          
+ [23] plyr_1.8.9                  plotly_4.10.4              
+ [25] igraph_2.0.3                iterators_1.0.14           
+ [27] lifecycle_1.0.4             pkgconfig_2.0.3            
+ [29] rsvd_1.0.5                  Matrix_1.7-0               
+ [31] R6_2.5.1                    fastmap_1.2.0              
+ [33] clue_0.3-65                 GenomeInfoDbData_1.2.12    
+ [35] MatrixGenerics_1.16.0       future_1.34.0              
+ [37] digest_0.6.36               colorspace_2.1-1           
+ [39] S4Vectors_0.42.1            dqrng_0.4.1                
+ [41] irlba_2.3.5.1               textshaping_0.4.0          
+ [43] GenomicRanges_1.56.1        beachmat_2.20.0            
+ [45] labeling_0.4.3              progressr_0.14.0           
+ [47] fansi_1.0.6                 httr_1.4.7                 
+ [49] abind_1.4-5                 compiler_4.4.0             
+ [51] withr_3.0.0                 doParallel_1.0.17          
+ [53] backports_1.5.0             BiocParallel_1.38.0        
+ [55] DelayedArray_0.30.1         rjson_0.2.21               
+ [57] bluster_1.14.0              gtools_3.9.5               
+ [59] GiottoVisuals_0.2.4         tools_4.4.0                
+ [61] future.apply_1.11.2         glue_1.7.0                 
+ [63] dbscan_1.2-0                checkmate_2.3.2            
+ [65] cluster_2.1.6               reshape2_1.4.4             
+ [67] generics_0.1.3              gtable_0.3.5               
+ [69] tidyr_1.3.1                 data.table_1.15.4          
+ [71] BiocSingular_1.20.0         ScaledMatrix_1.12.0        
+ [73] metapod_1.12.0              sp_2.1-4                   
+ [75] utf8_1.2.4                  XVector_0.44.0             
+ [77] BiocGenerics_0.50.0         RcppAnnoy_0.0.22           
+ [79] foreach_1.5.2               ggrepel_0.9.5              
+ [81] pillar_1.9.0                stringr_1.5.1              
+ [83] limma_3.60.4                circlize_0.4.16            
+ [85] lattice_0.22-6              deldir_2.0-4               
+ [87] tidyselect_1.2.1            SingleCellExperiment_1.26.0
+ [89] locfit_1.5-9.10             scuttle_1.14.0             
+ [91] knitr_1.48                  IRanges_2.38.1             
+ [93] edgeR_4.2.1                 SummarizedExperiment_1.34.0
+ [95] scattermore_1.2             stats4_4.4.0               
+ [97] xfun_0.46                   Biobase_2.64.0             
+ [99] statmod_1.5.0               matrixStats_1.3.0          
+[101] stringi_1.8.4               UCSC.utils_1.0.0           
+[103] lazyeval_0.2.2              yaml_2.3.10                
+[105] evaluate_0.24.0             codetools_0.2-20           
+[107] tibble_3.2.1                colorRamp2_0.1.0           
+[109] cli_3.6.3                   uwot_0.2.2                 
+[111] reticulate_1.38.0           systemfonts_1.1.0          
+[113] munsell_0.5.1               Rcpp_1.0.13                
+[115] GenomeInfoDb_1.40.1         globals_0.16.3             
+[117] png_0.1-8                   parallel_4.4.0             
+[119] ggplot2_3.5.1               scran_1.32.0               
+[121] sparseMatrixStats_1.16.0    listenv_0.9.1              
+[123] SpatialExperiment_1.14.0    viridisLite_0.4.2          
+[125] scales_1.3.0                purrr_1.0.2                
+[127] crayon_1.5.3                GetoptLong_1.0.5           
+[129] rlang_1.1.4                 cowplot_1.1.3 
 ```
 
 
