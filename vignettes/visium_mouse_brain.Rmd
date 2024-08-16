@@ -89,7 +89,9 @@ spatPlot2D(gobject = visium_brain,
            image_name = "image")
 ```
 
-![](images/visium_mouse_brain/0-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/0-spatPlot2D.png")
+```
 
 # Process Giotto Visium Object
 
@@ -125,7 +127,9 @@ spatPlot2D(gobject = visium_brain,
            color_as_factor = FALSE)
 ```
 
-![](images/visium_mouse_brain/1-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/1-spatPlot2D.png")
+```
 
 # Dimension Reduction
 
@@ -135,7 +139,9 @@ visium_brain <- calculateHVF(gobject = visium_brain,
                              save_plot = TRUE)
 ```
 
-![](images/visium_mouse_brain/2-HVFplot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/2-HVFplot.png")
+```
 
 ```{r, eval=FALSE}
 ## run PCA on expression values (default)
@@ -146,17 +152,22 @@ featgenes <- gene_metadata[hvf == "yes" & perc_cells > 3 & mean_expr_det > 0.4]$
 visium_brain <- runPCA(gobject = visium_brain,
                        feats_to_use = featgenes)
 
-screePlot(visium_brain, ncp = 30)
+screePlot(visium_brain, 
+          ncp = 30)
 ```
 
-![](images/visium_mouse_brain/3-screePlot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/3-screePlot.png")
+```
 
 ```{r, eval=FALSE}
 dimPlot2D(gobject = visium_brain,
           dim_reduction_to_use = "pca")
 ```
 
-![](images/visium_mouse_brain/4-dimPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/4-dimPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 ## run UMAP and tSNE on PCA space (default)
@@ -166,7 +177,9 @@ visium_brain <- runUMAP(visium_brain,
 plotUMAP(gobject = visium_brain)
 ```
 
-![](images/visium_mouse_brain/5-UMAP.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/5-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 visium_brain <- runtSNE(visium_brain, 
@@ -175,7 +188,9 @@ visium_brain <- runtSNE(visium_brain,
 plotTSNE(gobject = visium_brain)
 ```
 
-![](images/visium_mouse_brain/6-tSNE.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/6-tSNE.png")
+```
 
 # Clustering
 
@@ -196,7 +211,9 @@ plotUMAP(gobject = visium_brain,
          point_size = 2.5)
 ```
 
-![](images/visium_mouse_brain/7-UMAP.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/7-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 # spatial and dimension plots
@@ -206,7 +223,9 @@ spatDimPlot(gobject = visium_brain,
             spat_point_size = 2.5)
 ```
 
-![](images/visium_mouse_brain/8-spatDimPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/8-spatDimPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatDimPlot(gobject = visium_brain, 
@@ -216,7 +235,9 @@ spatDimPlot(gobject = visium_brain,
             spat_point_size = 2.5)
 ```
 
-![](images/visium_mouse_brain/9-spatDimPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/9-spatDimPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # dimension plots grouped by cluster
@@ -225,7 +246,9 @@ spatPlot2D(visium_brain,
            coord_fix_ratio = 1)
 ```
 
-![](images/visium_mouse_brain/10-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/10-spatPlot2D.png")
+```
 
 Plot with group by:
 
@@ -235,11 +258,12 @@ spatPlot2D(visium_brain,
            group_by = "leiden_clus", 
            coord_fix_ratio = 1,
            cow_n_col = 6, 
-           show_legend = FALSE,
-           save_param = list(base_width = 14, base_height = 14))
+           show_legend = FALSE)
 ```
 
-![](images/visium_mouse_brain/11-spatPlot2D.png)
+```{r, echo=FALSE, out.width="90%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/11-spatPlot2D.png")
+```
 
 Highlight one or more groups:
 
@@ -251,11 +275,12 @@ spatPlot2D(visium_brain,
            show_other_cells = TRUE,
            cell_color_code = c("8" = "red"), 
            other_cell_color = "grey", 
-           other_point_size = 1.5,
-           save_param = list(base_width = 7, base_height = 7))
+           other_point_size = 1.5)
 ```
 
-![](images/visium_mouse_brain/12-spatPlot2D.png)
+```{r, echo=FALSE, out.width="90%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/12-spatPlot2D.png")
+```
 
 # Subset data
 
@@ -271,7 +296,9 @@ spatDimPlot(gobject = DG_subset,
             spat_point_size = 5)
 ```
 
-![](images/visium_mouse_brain/13-spatDimPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/13-spatDimPlot2D.png")
+```
 
 # Marker gene detection for clusters
 
@@ -293,11 +320,12 @@ violinPlot(visium_brain,
            feats = unique(topgenes_gini), 
            cluster_column = "leiden_clus",
            strip_text = 8, 
-           strip_position = "right",
-           save_param = list(base_width = 5, base_height = 10))
+           strip_position = "right")
 ```
 
-![](images/visium_mouse_brain/14-violinPlot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/14-violinPlot.png")
+```
 
 ```{r, eval=FALSE}
 # cluster heatmap
@@ -308,7 +336,9 @@ plotMetaDataHeatmap(visium_brain,
                     y_text_size = 10)
 ```
 
-![](images/visium_mouse_brain/15-plotMetaDataHeatmap.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/15-plotMetaDataHeatmap.png")
+```
 
 ```{r, eval=FALSE}
 # umap plots
@@ -316,11 +346,12 @@ dimFeatPlot2D(visium_brain,
               expression_values = "scaled",
               feats = markers_gini[, head(.SD, 1), by = "cluster"]$feats,
               cow_n_col = 4, 
-              point_size = 0.75,
-              save_param = list(base_width = 8, base_height = 8))
+              point_size = 0.75)
 ```
 
-![](images/visium_mouse_brain/16-dimFeatPlot2D.png)
+```{r, echo=FALSE, out.width="90%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/16-dimFeatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 ## ------------------ ##
@@ -337,11 +368,12 @@ violinPlot(visium_brain,
            feats = unique(topgenes_scran), 
            cluster_column = "leiden_clus",
            strip_text = 10, 
-           strip_position = "right",
-           save_param = list(base_width = 5))
+           strip_position = "right")
 ```
 
-![](images/visium_mouse_brain/17-violinPlot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/17-violinPlot.png")
+```
 
 ```{r, eval=FALSE}
 # cluster heatmap
@@ -350,7 +382,9 @@ plotMetaDataHeatmap(visium_brain,
                     metadata_cols = "leiden_clus")
 ```
 
-![](images/visium_mouse_brain/18-plotMetaDataHeatmap.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/18-plotMetaDataHeatmap.png")
+```
 
 ```{r, eval=FALSE}
 # umap plots
@@ -358,11 +392,12 @@ dimFeatPlot2D(visium_brain,
               expression_values = "scaled",
               feats = markers_scran[, head(.SD, 1), by = "cluster"]$feats,
               cow_n_col = 3, 
-              point_size = 1,
-              save_param = list(base_width = 8, base_height = 8))
+              point_size = 1)
 ```
 
-![](images/visium_mouse_brain/19-dimFeatPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/19-dimFeatPlot2D.png")
+```
 
 # Cell type enrichment
 
@@ -378,10 +413,10 @@ Visium spatial transcriptomics does not provide single-cell resolution, making c
 # if wget is installed, set method = "wget"
 # if you run into authentication issues with wgeTRUE, then add " extra = "--no-check-certificate" "
 GiottoData::getSpatialDataset(dataset = "scRNA_mouse_brain", 
-                              directory = results_folder)
+                              directory = data_path)
 
-sc_expression <- file.path(results_folder, "brain_sc_expression_matrix.txt.gz")
-sc_metadata <- file.path(results_folder, "brain_sc_metadata.csv")
+sc_expression <- file.path(data_path, "brain_sc_expression_matrix.txt.gz")
+sc_metadata <- file.path(data_path, "brain_sc_metadata.csv")
 
 giotto_SC <- createGiottoObject(expression = sc_expression,
                                 instructions = instructions)
@@ -423,6 +458,7 @@ PAGE_matrix_1 <- makeSignMatrixPAGE(sign_names = c("Granule_neurons",
 
 # 1.2 [shortcut] fully pre-prepared matrix for all cell types
 sign_matrix_path <- system.file("extdata", "sig_matrix.txt", package = "GiottoData")
+
 brain_sc_markers <- data.table::fread(sign_matrix_path) 
 
 PAGE_matrix <- as.matrix(brain_sc_markers[,-1])
@@ -467,7 +503,9 @@ plotMetaDataCellsHeatmap(gobject = visium_brain,
                          y_text_size = 8)
 ```
 
-![](images/visium_mouse_brain/20-plotMetaDataCellsHeatmap.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/20-plotMetaDataCellsHeatmap.png")
+```
 
 ```{r, eval=FALSE}
 # 1.6 visualizations
@@ -480,7 +518,9 @@ spatCellPlot2D(gobject = visium_brain,
                show_legend = TRUE)
 ```
 
-![](images/visium_mouse_brain/21-spatCellPlot2D.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/21-spatCellPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatDimCellPlot2D(gobject = visium_brain,
@@ -492,7 +532,9 @@ spatDimCellPlot2D(gobject = visium_brain,
                   save_param = list(base_width = 7, base_height = 10))
 ```
 
-![](images/visium_mouse_brain/22-spatDimCellPlot2D.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/22-spatDimCellPlot2D.png")
+```
 
 ## HyperGeometric test
 
@@ -511,7 +553,9 @@ spatCellPlot(gobject = visium_brain,
              point_size = 1.75)
 ```
 
-![](images/visium_mouse_brain/23-spatCellPlot2D.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/23-spatCellPlot2D.png")
+```
 
 ## Rank Enrichment
 
@@ -535,26 +579,27 @@ spatCellPlot2D(gobject = visium_brain,
                cell_annotation_values = colnames(rank_matrix)[1:4],
                cow_n_col = 2,
                coord_fix_ratio = 1, 
-               point_size = 1,
-               save_param = list(save_name = "spat_enr_Rank_plot"))
+               point_size = 1)
 ```
 
-![](images/visium_mouse_brain/spat_enr_Rank_plot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/24-spatCellPlot2D.png")
+```
 
 ## DWLS spatial deconvolution
 
 ```{r, eval=FALSE}
 # Create DWLS matrix, not that DWLS matrix is different from PAGE and rank
 # A count matrix a vector for a list of gene signatures and a vector for all cell labels will be needed
-DWLS_matrix <- makeSignMatrixDWLSfromMatrix(matrix = getExpression(giotto_SC,
-                                                                   values = "normalized",
-                                                                   output = "matrix"),
-                                            cell_type = pDataDT(giotto_SC)$Class,
-                                            sign_gene = top_markers$feats)
+DWLS_matrix <- makeSignMatrixDWLSfromMatrix(
+  matrix = getExpression(giotto_SC,
+                         values = "normalized",
+                         output = "matrix"),
+  cell_type = pDataDT(giotto_SC)$Class,
+  sign_gene = topgenes_scran$feats)
 
 visium_brain <- runDWLSDeconv(gobject = visium_brain, 
                               sign_matrix = DWLS_matrix)
-
 
 # Plot DWLS deconvolution result
 spatCellPlot2D(gobject = visium_brain,
@@ -562,21 +607,23 @@ spatCellPlot2D(gobject = visium_brain,
                cell_annotation_values = levels(factor(pDataDT(giotto_SC)$Class))[1:4],
                cow_n_col = 2,
                coord_fix_ratio = 1, 
-               point_size = 1,
-               save_param = list(save_name = "DWLS_plot"))
+               point_size = 1)
 ```
 
-![](images/visium_mouse_brain/DWLS_plot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/25-spatCellPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # Plot DWLS deconvolution result with Pie plots
 spatDeconvPlot(visium_brain, 
                show_image = TRUE,
-               radius = 50,
-               save_param = list(save_name = "spat_DWLS_pie_plot"))
+               radius = 50)
 ```
 
-![](images/visium_mouse_brain/spat_DWLS_pie_plot.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/26-spatDeconvPlot.png")
+```
 
 # Spatial Grid
 
@@ -595,7 +642,9 @@ spatPlot2D(visium_brain,
            spatial_grid_name = "spatial_grid")
 ```
 
-![](images/visium_mouse_brain/24-spatPlot2D.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/27-spatPlot2D.png")
+```
 
 # Spatial network
 
@@ -614,7 +663,9 @@ spatPlot2D(gobject = visium_brain,
            spatial_network_name = "spatial_network")
 ```
 
-![](images/visium_mouse_brain/25-spatPlot2D.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/28-spatPlot2D.png")
+```
 
 # Spatial Genes
 
@@ -633,7 +684,9 @@ spatFeatPlot2D(visium_brain,
                point_size = 1.5)
 ```
 
-![](images/visium_mouse_brain/26-spatFeatPlot2D.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/29-spatFeatPlot2D.png")
+```
 
 # Spatial Co-Expression modules
 
@@ -648,8 +701,8 @@ spat_cor_netw_DT <- detectSpatialCorFeats(visium_brain,
                                           subset_feats = my_spatial_genes)
 
 # 2. identify most similar spatially correlated genes for one gene
-top10_genes <- showSpatialCorFeats(spat_cor_netw_DTRUE, 
-                                   feats = "Ptprn", 
+top10_genes <- showSpatialCorFeats(spat_cor_netw_DT, 
+                                   feats = "Mbp", 
                                    show_top_feats = 10)
 
 spatFeatPlot2D(visium_brain, 
@@ -658,7 +711,10 @@ spatFeatPlot2D(visium_brain,
                point_size = 3)
 ```
 
-![](images/visium_mouse_brain/27-spatFeatPlot2D.png)
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/30-spatFeatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # cluster spatial genes
@@ -670,18 +726,19 @@ spat_cor_netw_DT <- clusterSpatialCorFeats(spat_cor_netw_DT,
 heatmSpatialCorFeats(visium_brain,
                      spatCorObject = spat_cor_netw_DT,
                      use_clus_name = "spat_netw_clus",
-                     heatmap_legend_param = list(title = NULL),
-                     save_param = list(base_height = 6, base_width = 8, units = "cm"))
+                     heatmap_legend_param = list(title = NULL))
 ```
 
-![](images/visium_mouse_brain/28-heatmSpatialCorFeats.png)
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/31-heatmSpatialCorFeats.png")
+```
 
 ```{r, eval=FALSE}
 # 4. rank spatial correlated clusters and show genes for selected clusters
 netw_ranks <- rankSpatialCorGroups(visium_brain,
                                    spatCorObject = spat_cor_netw_DT, 
-                                   use_clus_name = "spat_netw_clus",
-                                   save_param = list(base_height = 3, base_width = 5))
+                                   use_clus_name = "spat_netw_clus")
 
 top_netw_spat_cluster <- showSpatialCorFeats(spat_cor_netw_DT, 
                                              use_clus_name = "spat_netw_clus",
@@ -689,7 +746,10 @@ top_netw_spat_cluster <- showSpatialCorFeats(spat_cor_netw_DT,
                                              show_top_feats = 1)
 ```
 
-![](images/visium_mouse_brain/29-rankSpatialCorGroups.png)
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/32-rankSpatialCorGroups.png")
+```
 
 ```{r, eval=FALSE}
 # 5. create metagene enrichment score for clusters
@@ -708,11 +768,13 @@ spatCellPlot(visium_brain,
              spat_enr_names = "cluster_metagene",
              cell_annotation_values = netw_ranks$clusters,
              point_size = 1, 
-             cow_n_col = 5, 
-             save_param = list(base_width = 15))
+             cow_n_col = 5)
 ```
 
-![](images/visium_mouse_brain/30-spatCellPlot2D.png)
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/33-spatCellPlot2D.png")
+```
 
 # Spatially informed clusters
 
@@ -728,7 +790,6 @@ data.table::setorder(coexpr_dt, cluster)
 top30_coexpr_dt <- coexpr_dt[, head(.SD, 30), by = cluster]
 
 my_spatial_genes <- top30_coexpr_dt$genes
-
 
 visium_brain <- runPCA(gobject = visium_brain,
                        feats_to_use = my_spatial_genes,
@@ -763,7 +824,10 @@ spatPlot2D(visium_brain,
            coord_fix_ratio = 1)
 ```
 
-![](images/visium_mouse_brain/31-spatPlot2D.png)
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/34-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 plotUMAP(gobject = visium_brain, 
@@ -772,13 +836,16 @@ plotUMAP(gobject = visium_brain,
          point_size = 1.5)
 ```
 
-![](images/visium_mouse_brain/32-UMAP.png)
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/35-UMAP.png")
+```
 
 # Spatial domains with HMRF
 
 ```{r, eval=FALSE}
 # do HMRF with different betas on top 30 genes per spatial co-expression module
-hmrf_folder <- file.path(results_folder, "11_HMRF")
+hmrf_folder <- file.path(data_path, "HMRF")
 
 if(!file.exists(hmrf_folder)) dir.create(hmrf_folder, recursive = TRUE)
 
@@ -800,7 +867,10 @@ spatPlot2D(gobject = visium_brain,
            cell_color = "HMRF_k20_b.40")
 ```
 
-![](images/visium_mouse_brain/33-spatPlot2D.png)
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_mouse_brain/36-spatPlot2D.png")
+```
 
 # Session info
 
@@ -809,13 +879,13 @@ sessionInfo()
 ```
 
 ```{r, eval=FALSE}
-R version 4.3.2 (2023-10-31)
-Platform: x86_64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.3.1
+R version 4.4.0 (2024-04-24)
+Platform: x86_64-apple-darwin20
+Running under: macOS Sonoma 14.6.1
 
 Matrix products: default
 BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -827,62 +897,58 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] shiny_1.8.0       Giotto_4.0.2      GiottoClass_0.1.3
+[1] Giotto_4.1.0      GiottoClass_0.3.4
 
 loaded via a namespace (and not attached):
-  [1] later_1.3.2                 bitops_1.0-7                tibble_3.2.1               
-  [4] R.oo_1.26.0                 polyclip_1.10-6             lifecycle_1.0.4            
-  [7] Rdpack_2.6                  edgeR_4.0.14                doParallel_1.0.17          
- [10] globals_0.16.2              lattice_0.22-5              MASS_7.3-60.0.1            
- [13] backports_1.4.1             magrittr_2.0.3              limma_3.58.1               
- [16] sass_0.4.8                  rmarkdown_2.25              jquerylib_0.1.4            
- [19] yaml_2.3.8                  metapod_1.10.1              httpuv_1.6.14              
- [22] reticulate_1.35.0           cowplot_1.1.3               RColorBrewer_1.1-3         
- [25] abind_1.4-5                 zlibbioc_1.48.0             Rtsne_0.17                 
- [28] quadprog_1.5-8              GenomicRanges_1.54.1        purrr_1.0.2                
- [31] R.utils_2.12.3              BiocGenerics_0.48.1         RCurl_1.98-1.14            
- [34] pracma_2.4.4                tweenr_2.0.2                circlize_0.4.15            
- [37] GenomeInfoDbData_1.2.11     IRanges_2.36.0              S4Vectors_0.40.2           
- [40] ggrepel_0.9.5               irlba_2.3.5.1               listenv_0.9.1              
- [43] terra_1.7-71                dqrng_0.3.2                 parallelly_1.36.0          
- [46] DelayedMatrixStats_1.24.0   colorRamp2_0.1.0            codetools_0.2-19           
- [49] DelayedArray_0.28.0         scuttle_1.12.0              ggforce_0.4.1              
- [52] tidyselect_1.2.0            shape_1.4.6                 farver_2.1.1               
- [55] ScaledMatrix_1.10.0         matrixStats_1.2.0           stats4_4.3.2               
- [58] GiottoData_0.2.7.0          jsonlite_1.8.8              GetoptLong_1.0.5           
- [61] BiocNeighbors_1.20.2        ellipsis_0.3.2              progressr_0.14.0           
- [64] iterators_1.0.14            systemfonts_1.0.5           foreach_1.5.2              
- [67] dbscan_1.1-12               tools_4.3.2                 ragg_1.2.7                 
- [70] Rcpp_1.0.12                 glue_1.7.0                  SparseArray_1.2.3          
- [73] xfun_0.42                   MatrixGenerics_1.14.0       GenomeInfoDb_1.38.6        
- [76] dplyr_1.1.4                 withr_3.0.0                 fastmap_1.1.1              
- [79] bluster_1.12.0              fansi_1.0.6                 digest_0.6.34              
- [82] rsvd_1.0.5                  R6_2.5.1                    mime_0.12                  
- [85] textshaping_0.3.7           colorspace_2.1-0            Cairo_1.6-2                
- [88] gtools_3.9.5                R.methodsS3_1.8.2           utf8_1.2.4                 
- [91] tidyr_1.3.1                 generics_0.1.3              smfishHmrf_0.1             
- [94] data.table_1.15.0           FNN_1.1.4                   S4Arrays_1.2.0             
- [97] scatterpie_0.2.1            uwot_0.1.16                 pkgconfig_2.0.3            
-[100] gtable_0.3.4                ComplexHeatmap_2.18.0       GiottoVisuals_0.1.4        
-[103] SingleCellExperiment_1.24.0 XVector_0.42.0              htmltools_0.5.7            
-[106] clue_0.3-65                 scales_1.3.0                Biobase_2.62.0             
-[109] GiottoUtils_0.1.5           png_0.1-8                   SpatialExperiment_1.12.0   
-[112] scran_1.30.2                ggfun_0.1.4                 knitr_1.45                 
-[115] rstudioapi_0.15.0           reshape2_1.4.4              rjson_0.2.21               
-[118] checkmate_2.3.1             cachem_1.0.8                GlobalOptions_0.1.2        
-[121] stringr_1.5.1               parallel_4.3.2              miniUI_0.1.1.1             
-[124] RcppZiggurat_0.1.6          pillar_1.9.0                grid_4.3.2                 
-[127] vctrs_0.6.5                 promises_1.2.1              BiocSingular_1.18.0        
-[130] beachmat_2.18.0             xtable_1.8-4                cluster_2.1.6              
-[133] evaluate_0.23               magick_2.8.2                cli_3.6.2                  
-[136] locfit_1.5-9.8              compiler_4.3.2              rlang_1.1.3                
-[139] crayon_1.5.2                future.apply_1.11.1         labeling_0.4.3             
-[142] fs_1.6.3                    plyr_1.8.9                  stringi_1.8.3              
-[145] BiocParallel_1.36.0         munsell_0.5.0               Matrix_1.6-5               
-[148] sparseMatrixStats_1.14.0    future_1.33.1               ggplot2_3.4.4              
-[151] statmod_1.5.0               SummarizedExperiment_1.32.0 rbibutils_2.2.16           
-[154] Rfast_2.1.0                 igraph_2.0.1.1              memoise_2.0.1              
-[157] RcppParallel_5.1.7          bslib_0.6.1
+  [1] RColorBrewer_1.1-3          shape_1.4.6.1               rstudioapi_0.16.0          
+  [4] jsonlite_1.8.8              magrittr_2.0.3              magick_2.8.4               
+  [7] farver_2.1.2                rmarkdown_2.27              GlobalOptions_0.1.2        
+ [10] zlibbioc_1.50.0             ragg_1.3.2                  vctrs_0.6.5                
+ [13] Cairo_1.6-2                 DelayedMatrixStats_1.26.0   GiottoUtils_0.1.10         
+ [16] terra_1.7-78                htmltools_0.5.8.1           S4Arrays_1.4.1             
+ [19] BiocNeighbors_1.22.0        SparseArray_1.4.8           parallelly_1.38.0          
+ [22] htmlwidgets_1.6.4           plyr_1.8.9                  plotly_4.10.4              
+ [25] igraph_2.0.3                iterators_1.0.14            lifecycle_1.0.4            
+ [28] pkgconfig_2.0.3             rsvd_1.0.5                  Matrix_1.7-0               
+ [31] R6_2.5.1                    fastmap_1.2.0               clue_0.3-65                
+ [34] GenomeInfoDbData_1.2.12     MatrixGenerics_1.16.0       future_1.34.0              
+ [37] digest_0.6.36               colorspace_2.1-1            S4Vectors_0.42.1           
+ [40] dqrng_0.4.1                 irlba_2.3.5.1               textshaping_0.4.0          
+ [43] GenomicRanges_1.56.1        beachmat_2.20.0             labeling_0.4.3             
+ [46] RcppZiggurat_0.1.6          progressr_0.14.0            fansi_1.0.6                
+ [49] polyclip_1.10-7             httr_1.4.7                  abind_1.4-5                
+ [52] compiler_4.4.0              doParallel_1.0.17           withr_3.0.0                
+ [55] backports_1.5.0             BiocParallel_1.38.0         ggforce_0.4.2              
+ [58] R.utils_2.12.3              MASS_7.3-61                 DelayedArray_0.30.1        
+ [61] rjson_0.2.21                bluster_1.14.0              gtools_3.9.5               
+ [64] GiottoVisuals_0.2.4         tools_4.4.0                 scatterpie_0.2.3           
+ [67] future.apply_1.11.2         quadprog_1.5-8              R.oo_1.26.0                
+ [70] glue_1.7.0                  dbscan_1.2-0                grid_4.4.0                 
+ [73] checkmate_2.3.2             Rtsne_0.17                  cluster_2.1.6              
+ [76] reshape2_1.4.4              generics_0.1.3              gtable_0.3.5               
+ [79] R.methodsS3_1.8.2           tidyr_1.3.1                 data.table_1.15.4          
+ [82] BiocSingular_1.20.0         ScaledMatrix_1.12.0         metapod_1.12.0             
+ [85] sp_2.1-4                    utf8_1.2.4                  XVector_0.44.0             
+ [88] BiocGenerics_0.50.0         foreach_1.5.2               ggrepel_0.9.5              
+ [91] pillar_1.9.0                stringr_1.5.1               limma_3.60.4               
+ [94] circlize_0.4.16             tweenr_2.0.3                dplyr_1.1.4                
+ [97] lattice_0.22-6              FNN_1.1.4                   deldir_2.0-4               
+[100] tidyselect_1.2.1            ComplexHeatmap_2.20.0       SingleCellExperiment_1.26.0
+[103] locfit_1.5-9.10             scuttle_1.14.0              knitr_1.48                 
+[106] IRanges_2.38.1              edgeR_4.2.1                 SummarizedExperiment_1.34.0
+[109] scattermore_1.2             stats4_4.4.0                xfun_0.46                  
+[112] Biobase_2.64.0              statmod_1.5.0               matrixStats_1.3.0          
+[115] stringi_1.8.4               UCSC.utils_1.0.0            ggfun_0.1.5                
+[118] lazyeval_0.2.2              yaml_2.3.10                 evaluate_0.24.0            
+[121] codetools_0.2-20            GiottoData_0.2.13           tibble_3.2.1               
+[124] colorRamp2_0.1.0            cli_3.6.3                   RcppParallel_5.1.8         
+[127] uwot_0.2.2                  reticulate_1.38.0           systemfonts_1.1.0          
+[130] munsell_0.5.1               Rcpp_1.0.13                 GenomeInfoDb_1.40.1        
+[133] globals_0.16.3              png_0.1-8                   Rfast_2.1.0                
+[136] parallel_4.4.0              ggplot2_3.5.1               scran_1.32.0               
+[139] sparseMatrixStats_1.16.0    listenv_0.9.1               SpatialExperiment_1.14.0   
+[142] viridisLite_0.4.2           scales_1.3.0                purrr_1.0.2                
+[145] crayon_1.5.3                GetoptLong_1.0.5            rlang_1.1.4                
+[148] cowplot_1.1.3
 ```
-
 
