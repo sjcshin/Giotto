@@ -20,14 +20,19 @@ The Visium Cancer Prostate data to run this tutorial can be found [here](https:/
 
 Visium technology:
 
-![](images/general_figs/visium_technology.png){width="50.0%"}
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/general_figs/visium_technology.png")
+```
 
 High resolution png from original tissue:
 
-![](images/general_figs/Visium_FFPE_Human_Normal_Prostate_image.png){width="50.0%"}
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
+knitr::include_graphics("images/general_figs/Visium_FFPE_Human_Normal_Prostate_image.png")
+```
 
-![](images/general_figs/Visium_FFPE_Human_Prostate_Cancer_image.png){width="50.0%"}
-
+```{r, echo=FALSE, out.width="50%", fig.align="center"}
+knitr::include_graphics("images/general_figs/Visium_FFPE_Human_Prostate_Cancer_image.png")
+```
 
 # Start Giotto
 
@@ -67,7 +72,6 @@ instructions <- createGiottoInstructions(save_dir = results_folder,
                                          python_path = python_path)
 ```
 
-
 # Create Giotto objects and join
 
 ```{r, eval=FALSE}
@@ -76,7 +80,7 @@ data_path <- "/path/to/data/"
 
 ## obese upper
 N_pros <- createGiottoVisiumObject(
-    visium_dir = file.path(data_directory, "Visium_FFPE_Human_Normal_Prostate"),
+    visium_dir = file.path(data_path, "Visium_FFPE_Human_Normal_Prostate"),
     expr_data = "raw",
     png_name = "tissue_lowres_image.png",
     gene_column_index = 2,
@@ -87,7 +91,7 @@ N_pros <- createGiottoVisiumObject(
 ```{r, eval=FALSE}
 ## obese lower
 C_pros <- createGiottoVisiumObject(
-    visium_dir = file.path(data_directory, "Visium_FFPE_Human_Prostate_Cancer/"),
+    visium_dir = file.path(data_path, "Visium_FFPE_Human_Prostate_Cancer/"),
     expr_data = "raw",
     png_name = "tissue_lowres_image.png",
     gene_column_index = 2,
@@ -137,38 +141,38 @@ showGiottoExpression(testcombo)
 # this plots all the images by list_ID
 spatPlot2D(gobject = testcombo, 
            cell_color = "in_tissue",
-           show_image = TRUE, 
            image_name = c("NP-image", "CP-image"),
            group_by = "list_ID", 
-           point_alpha = 0.5,
-           save_param = list(save_name = "1a_plot"))
+           point_alpha = 0.5)
 ```
 
-![](images/visium_prostate_integration/1a_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/0-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # this plots one selected image
 spatPlot2D(gobject = testcombo, 
            cell_color = "in_tissue",
-           show_image = TRUE, 
            image_name = c("NP-image"), 
-           point_alpha = 0.3,
-           save_param = list(save_name = "1b_plot"))
+           point_alpha = 0.3)
 ```
 
-![](images/visium_prostate_integration/1b_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/1-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # this plots two selected images
 spatPlot2D(gobject = testcombo, 
            cell_color = "in_tissue",
-           show_image = TRUE, 
            image_name = c( "NP-image", "CP-image"),
-           point_alpha = 0.3,
-           save_param = list(save_name = "1c_plot"))
+           point_alpha = 0.3)
 ```
 
-![](images/visium_prostate_integration/1c_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/2-spatPlot2D.png")
+```
 
 # Process Giotto Objects
 
@@ -204,24 +208,26 @@ testcombo <- addStatistics(gobject = testcombo,
 
 gene_metadata <- fDataDT(testcombo)
 
-testfeats <- fmeta[perc_cells > 20 & perc_cells < 50][100:110]$feat_ID
+testfeats <- gene_metadata[perc_cells > 20 & perc_cells < 50][100:110]$feat_ID
 
 violinPlot(testcombo, 
            feats = testfeats, 
-           cluster_column = "list_ID", 
-           save_param = list(save_name = "2a_plot"))
+           cluster_column = "list_ID")
 ```
 
-![](images/visium_prostate_integration/2a_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/3-violinPlot.png")
+```
 
 ```{r, eval=FALSE}
 plotMetaDataHeatmap(testcombo, 
                     selected_feats = testfeats, 
-                    metadata_cols = "list_ID", 
-                    save_param = list(save_name = "2b_plot"))
+                    metadata_cols = "list_ID")
 ```
 
-![](images/visium_prostate_integration/2b_plot.png)
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/4-plotMetaDataHeatmap.png")
+```
 
 ```{r, eval=FALSE}
 ## visualize
@@ -229,11 +235,12 @@ spatPlot2D(gobject = testcombo,
            group_by = "list_ID", 
            cell_color = "nr_feats", 
            color_as_factor = FALSE, 
-           point_size = 0.75, 
-           save_param = list(save_name = "2c_plot"))
+           point_size = 0.75)
 ```
 
-![](images/visium_prostate_integration/2c_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/5-spatPlot2D.png")
+```
 
 # Dimension Reduction
 
@@ -241,8 +248,6 @@ spatPlot2D(gobject = testcombo,
 ## PCA ##
 testcombo <- calculateHVF(gobject = testcombo)
 ```
-
-![](images/visium_prostate_integration/0-HVFplot.png)
 
 ```{r, eval=FALSE}
 testcombo <- runPCA(gobject = testcombo, 
@@ -252,11 +257,12 @@ testcombo <- runPCA(gobject = testcombo,
 
 ```{r, eval=FALSE}
 screePlot(testcombo, 
-          ncp = 30, 
-          save_param = list(save_name = "3a_screeplot"))
+          ncp = 30)
 ```
 
-![](images/visium_prostate_integration/3a_screeplot.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/6-screePlot.png")
+```
 
 # Clustering
 
@@ -284,42 +290,36 @@ testcombo <- runUMAP(testcombo)
 plotUMAP(gobject = testcombo,
          cell_color = "leiden_clus", 
          show_NN_network = TRUE, 
-         point_size = 1.5,
-         save_param = list(save_name = "4.1a_plot"))
+         point_size = 1.5)
 ```
 
-![](images/visium_prostate_integration/4.1a_plot.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/7-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = testcombo, 
            group_by = "list_ID",
            cell_color = "leiden_clus",
-           point_size = 1.5,
-           save_param = list(save_name = "4.1b_plot"))
+           point_size = 1.5)
 ```
 
-![](images/visium_prostate_integration/4.1b_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/8-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatDimPlot2D(gobject = testcombo,
-              cell_color = "leiden_clus",
-              save_param = list(save_name = "4.1c_plot"))
+              cell_color = "leiden_clus")
 ```
 
-![](images/visium_prostate_integration/4.1c_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/9-spatDimPlot2D.png")
+```
 
 ## With Harmony integration
 
 Harmony is a integration algorithm developed by [Korsunsky, I. et al.](https://www.nature.com/articles/s41592-019-0619-0). It was designed for integration of single cell data but also work well on spatial datasets.
-
-```{r, eval=FALSE}
-## data integration, cluster and run UMAP ##
-
-# harmony
-#library(devtools)
-#install_github("immunogenomics/harmony")
-library(harmony)
-```
 
 ```{r, eval=FALSE}
 ## run harmony integration
@@ -354,11 +354,12 @@ plotUMAP(gobject = testcombo,
          dim_reduction_name = "umap_harmony",
          cell_color = "leiden_harmony", 
          show_NN_network = FALSE, 
-         point_size = 1.5,
-         save_param = list(save_name = "4.2a_plot"))
+         point_size = 1.5)
 ```
 
-![](images/visium_prostate_integration/4.2a_plot.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/10-UMAP.png")
+```
 
 ```{r, eval=FALSE}
 # If you want to show NN network information, you will need to specify these arguments in the plotUMAP function
@@ -369,38 +370,42 @@ plotUMAP(gobject = testcombo,
 spatPlot2D(gobject = testcombo, 
            group_by = "list_ID",
            cell_color = "leiden_harmony",
-           point_size = 1.5,
-           save_param = list(save_name = "4.2b_plot"))
+           point_size = 1.5)
 ```
 
-![](images/visium_prostate_integration/4.2b_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/11-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatDimPlot2D(gobject = testcombo,
               dim_reduction_to_use = "umap", 
               dim_reduction_name = "umap_harmony",
-              cell_color = "leiden_harmony",
-              save_param = list(save_name = "4.2c_plot"))
+              cell_color = "leiden_harmony")
 ```
 
-![](images/visium_prostate_integration/4.2c_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/12-spatDimPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 # compare to previous results
 spatPlot2D(gobject = testcombo,
-           cell_color = "leiden_clus", 
-           save_param = list(save_name = "4_w_o_integration_plot"))
+           cell_color = "leiden_clus")
 ```
 
-![](images/visium_prostate_integration/4_w_o_integration_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/13-spatPlot2D.png")
+```
 
 ```{r, eval=FALSE}
 spatPlot2D(gobject = testcombo,
-           cell_color = "leiden_harmony",
-           save_param = list(save_name = "4_w_integration_plot"))
+           cell_color = "leiden_harmony")
 ```
 
-![](images/visium_prostate_integration/4_w_integration_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/14-spatPlot2D.png")
+```
 
 # Cell type annotation
 
@@ -417,13 +422,13 @@ This is also the easiest way to integrate Visium datasets with single cell data.
 # download data to results directory ####
 # if wget is installed, set method = "wget"
 # if you run into authentication issues with wget, then add " extra = "--no-check-certificate" "
-getSpatialDataset(dataset = "scRNA_prostate", 
-                  directory = data_directory)
+GiottoData::getSpatialDataset(dataset = "scRNA_prostate", 
+                              directory = data_path)
 ```
 
 ```{r, eval=FALSE}
-sc_expression <- file.path(data_directory, "prostate_sc_expression_matrix.csv.gz")
-sc_metadata <- file.path(data_directory, "prostate_sc_metadata.csv")
+sc_expression <- file.path(data_path, "prostate_sc_expression_matrix.csv.gz")
+sc_metadata <- file.path(data_path, "prostate_sc_metadata.csv")
 
 giotto_SC <- createGiottoObject(expression = sc_expression,
                                 instructions = instructions)
@@ -476,11 +481,12 @@ spatCellPlot(gobject = testcombo,
              cell_annotation_values = cell_types[1:4],
              cow_n_col = 2,
              coord_fix_ratio = NULL, 
-             point_size = 1.25,
-             save_param = list(save_name = "5a_PAGE_plot"))
+             point_size = 1.25)
 ```
 
-![](images/visium_prostate_integration/5a_PAGE_plot.png)
+```{r, echo=FALSE, out.width="90%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/15-spatCellPlot2D.png")
+```
 
 ## Hypergeometric test
 
@@ -489,18 +495,19 @@ testcombo <- runHyperGeometricEnrich(gobject = testcombo,
                                      expression_values = "normalized",
                                      sign_matrix = PAGE_matrix)
 
-cell_types = colnames(PAGE_matrix)
+cell_types <- colnames(PAGE_matrix)
 
 spatCellPlot(gobject = testcombo, 
              spat_enr_names = "hypergeometric",
              cell_annotation_values = cell_types[1:4],
              cow_n_col = 2,
              coord_fix_ratio = NULL, 
-             point_size = 1.75,
-             save_param = list(save_name = "5b_HyperGeometric_plot"))
+             point_size = 1.75)
 ```
 
-![](images/visium_prostate_integration/5b_HyperGeometric_plot.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/16-spatCellPlot2D.png")
+```
 
 ## Rank Enrichment
 
@@ -528,11 +535,12 @@ spatCellPlot2D(gobject = testcombo,
                cell_annotation_values = cell_types[1:4],
                cow_n_col = 2,
                coord_fix_ratio = NULL, 
-               point_size = 1,
-               save_param = list(save_name = "5c_Rank_plot"))
+               point_size = 1)
 ```
 
-![](images/visium_prostate_integration/5c_Rank_plot.png)
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+knitr::include_graphics("images/visium_prostate_integration/17-spatCellPlot2D.png")
+```
 
 ## DWLS Deconvolution
 
@@ -552,11 +560,12 @@ spatCellPlot2D(gobject = testcombo,
                cell_annotation_values = levels(factor(prostate_feats))[1:4],
                cow_n_col = 2,
                coord_fix_ratio = NULL, 
-               point_size = 1,
-               save_param = list(save_name = "5d_DWLS_plot"))
+               point_size = 1)
 ```
 
-![](images/visium_prostate_integration/5d_DWLS_plot.png)
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/visium_prostate_integration/18-spatCellPlot2D.png")
+```
 
 # Session Info
 
@@ -565,13 +574,13 @@ sessionInfo()
 ```
 
 ```{r, eval=FALSE}
-R version 4.3.2 (2023-10-31)
-Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.1.2
+R version 4.4.0 (2024-04-24)
+Platform: x86_64-apple-darwin20
+Running under: macOS Sonoma 14.6.1
 
 Matrix products: default
 BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -582,12 +591,76 @@ tzcode source: internal
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] ggplot2_3.5.1     Giotto_4.1.1      GiottoClass_0.3.5
+
 loaded via a namespace (and not attached):
- [1] vctrs_0.6.5       cli_3.6.2         knitr_1.45        rlang_1.1.3       xfun_0.41         stringi_1.8.3    
- [7] purrr_1.0.2       pkgload_1.3.4     promises_1.2.1    shiny_1.8.0       xtable_1.8-4      glue_1.7.0       
-[13] htmltools_0.5.7   httpuv_1.6.13     pkgbuild_1.4.3    rmarkdown_2.25    evaluate_0.23     ellipsis_0.3.2   
-[19] fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4   memoise_2.0.1     stringr_1.5.1     compiler_4.3.2   
-[25] miniUI_0.1.1.1    sessioninfo_1.2.2 fs_1.6.3          htmlwidgets_1.6.4 Rcpp_1.0.12       urlchecker_1.0.1 
-[31] rstudioapi_0.15.0 later_1.3.2       digest_0.6.34     R6_2.5.1          usethis_2.2.2     magrittr_2.0.3   
-[37] tools_4.3.2       mime_0.12         devtools_2.4.5    profvis_0.3.8     remotes_2.4.2.1   cachem_1.0.8    
+  [1] RColorBrewer_1.1-3          rstudioapi_0.16.0          
+  [3] jsonlite_1.8.8              magrittr_2.0.3             
+  [5] magick_2.8.4                farver_2.1.2               
+  [7] rmarkdown_2.27              zlibbioc_1.50.0            
+  [9] ragg_1.3.2                  vctrs_0.6.5                
+ [11] DelayedMatrixStats_1.26.0   GiottoUtils_0.1.11         
+ [13] terra_1.7-78                htmltools_0.5.8.1          
+ [15] S4Arrays_1.4.1              BiocNeighbors_1.22.0       
+ [17] SparseArray_1.4.8           parallelly_1.38.0          
+ [19] htmlwidgets_1.6.4           plyr_1.8.9                 
+ [21] plotly_4.10.4               igraph_2.0.3               
+ [23] lifecycle_1.0.4             pkgconfig_2.0.3            
+ [25] rsvd_1.0.5                  Matrix_1.7-0               
+ [27] R6_2.5.1                    fastmap_1.2.0              
+ [29] GenomeInfoDbData_1.2.12     MatrixGenerics_1.16.0      
+ [31] future_1.34.0               digest_0.6.36              
+ [33] colorspace_2.1-1            S4Vectors_0.42.1           
+ [35] dqrng_0.4.1                 irlba_2.3.5.1              
+ [37] textshaping_0.4.0           GenomicRanges_1.56.1       
+ [39] beachmat_2.20.0             labeling_0.4.3             
+ [41] RcppZiggurat_0.1.6          progressr_0.14.0           
+ [43] fansi_1.0.6                 httr_1.4.7                 
+ [45] abind_1.4-5                 compiler_4.4.0             
+ [47] withr_3.0.0                 backports_1.5.0            
+ [49] BiocParallel_1.38.0         R.utils_2.12.3             
+ [51] DelayedArray_0.30.1         rjson_0.2.21               
+ [53] bluster_1.14.0              gtools_3.9.5               
+ [55] GiottoVisuals_0.2.5         tools_4.4.0                
+ [57] future.apply_1.11.2         quadprog_1.5-8             
+ [59] R.oo_1.26.0                 glue_1.7.0                 
+ [61] dbscan_1.2-0                grid_4.4.0                 
+ [63] checkmate_2.3.2             cluster_2.1.6              
+ [65] reshape2_1.4.4              generics_0.1.3             
+ [67] gtable_0.3.5                R.methodsS3_1.8.2          
+ [69] tidyr_1.3.1                 data.table_1.15.4          
+ [71] BiocSingular_1.20.0         ScaledMatrix_1.12.0        
+ [73] metapod_1.12.0              sp_2.1-4                   
+ [75] utf8_1.2.4                  XVector_0.44.0             
+ [77] BiocGenerics_0.50.0         RcppAnnoy_0.0.22           
+ [79] ggrepel_0.9.5               pillar_1.9.0               
+ [81] stringr_1.5.1               limma_3.60.4               
+ [83] dplyr_1.1.4                 lattice_0.22-6             
+ [85] deldir_2.0-4                tidyselect_1.2.1           
+ [87] SingleCellExperiment_1.26.0 locfit_1.5-9.10            
+ [89] scuttle_1.14.0              knitr_1.48                 
+ [91] IRanges_2.38.1              edgeR_4.2.1                
+ [93] SummarizedExperiment_1.34.0 scattermore_1.2            
+ [95] RhpcBLASctl_0.23-42         stats4_4.4.0               
+ [97] xfun_0.46                   Biobase_2.64.0             
+ [99] statmod_1.5.0               matrixStats_1.3.0          
+[101] stringi_1.8.4               UCSC.utils_1.0.0           
+[103] lazyeval_0.2.2              yaml_2.3.10                
+[105] evaluate_0.24.0             codetools_0.2-20           
+[107] GiottoData_0.2.13           tibble_3.2.1               
+[109] colorRamp2_0.1.0            cli_3.6.3                  
+[111] RcppParallel_5.1.8          uwot_0.2.2                 
+[113] reticulate_1.38.0           systemfonts_1.1.0          
+[115] munsell_0.5.1               harmony_1.2.0              
+[117] Rcpp_1.0.13                 GenomeInfoDb_1.40.1        
+[119] globals_0.16.3              png_0.1-8                  
+[121] Rfast_2.1.0                 parallel_4.4.0             
+[123] scran_1.32.0                sparseMatrixStats_1.16.0   
+[125] listenv_0.9.1               SpatialExperiment_1.14.0   
+[127] viridisLite_0.4.2           scales_1.3.0               
+[129] purrr_1.0.2                 crayon_1.5.3               
+[131] rlang_1.1.4                 cowplot_1.1.3   
 ```
+
+
