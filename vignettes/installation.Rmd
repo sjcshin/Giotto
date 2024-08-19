@@ -76,9 +76,9 @@ This should automatically install all the Giotto dependencies and other Giotto m
 
 # Installing from dev branch
 
-_pak_ tends to forcibly install all dependencies, which can have issues when working with multiple dev branch packages.
+Giotto Suite is a set of [modular packages](ecosystem.html) and _pak_ tends to forcibly install the stable version despite dev versions with higher version numbers. This can make it difficult to install the dev branch.
 
-You can install dev branch versions by using `devtools::install_github()` instead, alongside one of the following dev branch paths as shown below. Do not update other Giotto modules that should be installed from dev branch if prompted.
+Instead, you can install dev branch versions by using `devtools::install_github()` alongside one of the following dev branch paths as shown below. Do not update other Giotto modules that should be installed from dev branch if prompted.
 
 Core module dev branchs:
 
