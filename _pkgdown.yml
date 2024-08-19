@@ -257,7 +257,6 @@ articles:
   - structure
   - faqs
   - github_issues
-  - contributing
 - title: Giotto Object Creation
   navbar: ~
   contents:
