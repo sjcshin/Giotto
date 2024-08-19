@@ -27,7 +27,7 @@ template:
     fg: "#000000"
     primary: "#7E69AE"
     code_font: {google: "JetBrains Mono"}
-      
+
 
 development:
   mode: auto
@@ -60,8 +60,6 @@ navbar:
         href: articles/faqs.html
       - text: How to report a bug
         href: articles/github_issues.html
-      - text: Contributing guide
-        href: articles/contributing.html
     reference:
       text: Documentation
       href: reference/index.html
@@ -391,9 +389,7 @@ reference:
   desc: Create or change Giotto instructions.
 - contents:
   - GiottoClass::createGiottoInstructions
-  - GiottoClass::readGiottoInstructions
-  - GiottoClass::changeGiottoInstructions
-  - GiottoClass::replaceGiottoInstructions
+  - GiottoClass::instructions
 - title: Import Raw Data
   desc: Functions to help to import raw spatial data.
 - contents:
