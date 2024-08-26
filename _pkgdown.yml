@@ -155,6 +155,11 @@ navbar:
         - text: CytAssist Multi-omics Human Glioblastoma
           href: articles/visium_cytassist_human_glioblastoma.html
       - text: -------
+      - text: Slide-seq
+        menu:
+        - text: Slide-seq Mouse brain
+          href: articles/slideseq_mouse_brain.html
+      - text: -------
       - text: Spatial Genomics
         menu:
         - text: Mouse Kidney
@@ -316,6 +321,10 @@ articles:
   - visium_prostate_integration
   - visium_cytassist_lungcancer
   - visium_cytassist_human_glioblastoma
+- title: Slide-seq
+  navbar: ~
+  contents:
+  - slideseq_mouse_brain
 - title: Spatial Genomics
   navbar: ~
   contents:
