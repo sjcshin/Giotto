@@ -62,6 +62,13 @@ instructions(giotto_object, "save_dir") <- results_folder
 instructions(giotto_object, "show_plot") <- FALSE
 instructions(giotto_object, "return_plot") <- FALSE
 
+## The cell with the identifier 0 will have all the transcripts belonging to the background. Therefore, make sure to omit it from the dataset.
+cell_metadata <- pDataDT(giotto_object)
+cell_metadata <- cell_metadata[cell_metadata$cell_ID != "0",]
+
+giotto_object <- subsetGiotto(giotto_object,
+                              cell_ids = cell_metadata$cell_ID)
+
 ## show plot
 spatPlot2D(gobject = giotto_object,
            point_size = 1)
@@ -119,7 +126,7 @@ spatPlot2D(gobject = giotto_object,
            cell_color = "nr_feats", 
            color_as_factor = FALSE,
            point_size = 1,
-           gradient_limits = c(0, 500))
+           gradient_limits = c(0, 1000))
 ```
 
 ```{r, echo=FALSE, out.width="60%", fig.align="center"}
@@ -142,7 +149,7 @@ knitr::include_graphics("images/openst_mouse_hippocampus/4-screePlot.png")
 
 ```{r, eval=FALSE}
 plotPCA(gobject = giotto_object,
-         point_size = 1)
+        point_size = 1)
 ```
 
 ```{r, echo=FALSE, out.width="60%", fig.align="center"}
@@ -165,13 +172,13 @@ giotto_object <- runtSNE(giotto_object,
 ```{r, eval=FALSE}
 ## sNN network (default)
 giotto_object <- createNearestNetwork(gobject = giotto_object, 
-                                     dimensions_to_use = 1:10, 
-                                     k = 15)
+                                      dimensions_to_use = 1:10, 
+                                      k = 15)
 
 ## Leiden clustering
 giotto_object <- doLeidenCluster(gobject = giotto_object, 
-                                resolution = 0.5, 
-                                n_iterations = 1000)
+                                 resolution = 0.5, 
+                                 n_iterations = 1000)
 ```
 
 ```{r, eval=FALSE}
