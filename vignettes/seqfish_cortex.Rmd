@@ -849,7 +849,7 @@ plotICF(gobject = SS_seqfish,
 ```{r, eval=FALSE}
 ## LR expression
 ## LR activity changes
-LR_data <- data.table::fread(system.file("extdata", "mouse_ligand_receptors.txt", package = "Giotto"))
+LR_data <- data.table::fread(system.file("extdata", "mouse_ligand_receptors.txt", package = "GiottoData"))
 
 LR_data[, ligand_det := ifelse(LR_data$mouseLigand %in% SS_seqfish@feat_ID$rna, TRUE, FALSE)]
 
