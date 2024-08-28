@@ -361,7 +361,7 @@ articles:
 - title: Open-ST
   navbar: ~
   contents:
-  - articles/openst_mouse_hippocampus.html
+  - openst_mouse_hippocampus
 - title: seqFISH
   navbar: ~
   contents:
